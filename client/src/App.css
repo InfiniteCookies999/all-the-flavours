@@ -1,0 +1,32 @@
+/* Default font size */
+.med-responsive-text {
+  font-size: 1.5rem;
+}
+
+/* Mobile screens */
+@media (max-width: 575px) {
+  .med-responsive-text {
+    font-size: 1rem;
+  }
+}
+
+/* Small screens */
+@media (min-width: 576px) and (max-width: 767px) {
+  .med-responsive-text {
+    font-size: 1.2rem;
+  }
+}
+
+/* Medium screens */
+@media (min-width: 768px) and (max-width: 991px) {
+  .med-responsive-text {
+    font-size: 1.3rem;
+  }
+}
+
+/* Large screens */
+@media (min-width: 992px) {
+  .med-responsive-text {
+    font-size: 1.5rem;
+  }
+}

@@ -99,7 +99,7 @@ const RecipeListing = () => {
             flexGrow: 1
           }}
           to={`/recipe/${recipe.id}`}>
-            <img src={`${'/images/' + recipe.recipeImages[0]}`}
+            <img src={recipe.images[0]}
                 alt={`Alt ${recipe.id}`}
                 className="d-block w-100"
                 style={{

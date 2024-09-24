@@ -38,15 +38,10 @@ const Recipe = () => {
 
   return (
     <RecipeContext.Provider value={{
-      title: recipe.title,
-      description: recipe.description,
+      ...recipe,
       rating: 3.63,
       numberReviews: 20,
-      ranking: 201,
-      lastUpdated: recipe.lastUpdated,
-      images: recipe.recipeImages,
-      ingredients: recipe.ingredients,
-      directions: recipe.directions
+      ranking: 201
     }} >
       <RecipeContainer>
         <h1>{recipe.title}</h1>

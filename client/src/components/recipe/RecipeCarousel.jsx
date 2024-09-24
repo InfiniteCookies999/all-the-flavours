@@ -42,7 +42,7 @@ const RecipeCarousel = () => {
           <Carousel.Item key={index}>
             <img
               className="d-block w-100"
-              src={'/images/'+image}
+              src={image}
               alt={`Alt ${index}`}
               style={{ 
                 minHeight: '500px',
@@ -94,7 +94,7 @@ const RecipeCarousel = () => {
             >
             <img
               className="d-block w-100 h-100"
-              src={'/images/'+image}
+              src={image}
               alt={`Alt ${index}`}
               style={{ objectFit: 'cover' }}
             />

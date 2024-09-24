@@ -1,6 +1,7 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import theme from "../../theme";
 import { useState } from "react";
+import axios from 'axios';
 
 const placeholderColor = '#b0b0b0';
 
@@ -13,6 +14,26 @@ const formIconClass = {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    // TODO: validate the email and password more!
+    try {
+      console.log("submitting email: ", email);
+      console.log("submitting password: ", password);
+      await axios.post("/api/auth/login", { email, password });
+      // TODO: redirect
+
+      const status = (await axios.get("/api/auth/is-logged-in")).data.status;
+      console.log("status: ", status);
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+    }
+  };
 
   return (
     <>
@@ -22,14 +43,18 @@ const Login = () => {
             <Col xs={12} md={6} lg={4}>
               <div className="bg-white p-4 shadow-sm rounded">
                 <h2 className="text-center mb-4">Login</h2>
-                <Form>
+                <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="forEmail" className="position-relative">
-                    <Form.Control type="email" placeholder="ramen123@gmail.com" />
+                    <Form.Control type="email"
+                                  placeholder="ramen123@gmail.com"
+                                  onChange={(e) => setEmail(e.target.value)} />
                     <i className="fas fa-envelope position-absolute" style={formIconClass}></i>
                   </Form.Group>
                   
                   <Form.Group controlId="formBasicPassword" className="mt-3 position-relative">
-                    <Form.Control type={showPassword ? "text" : "password"}  placeholder="Password" />
+                    <Form.Control type={showPassword ? "text" : "password"} 
+                                  placeholder="Password"
+                                  onChange={(e) => setPassword(e.target.value)} />
                     <i className="fas fa-lock position-absolute" style={formIconClass}></i>
                   </Form.Group>
 

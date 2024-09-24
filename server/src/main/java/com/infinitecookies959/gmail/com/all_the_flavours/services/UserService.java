@@ -16,7 +16,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
-    
+
     @Transactional
     public User saveUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());

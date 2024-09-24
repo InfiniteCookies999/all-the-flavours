@@ -1,7 +1,9 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,8 +21,9 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
-    @Size(min = 1, max = 100)
+    @Column(length = RecipeConstraints.MAX_INGREDIENT_NAME_LENGTH, nullable = false)
+    @NotEmpty
+    @Size(max = RecipeConstraints.MAX_INGREDIENT_NAME_LENGTH)
     @NotNull
     private String name;
 
@@ -28,7 +31,7 @@ public class RecipeIngredient {
     @NotNull
     private Double quantity;
 
-    @Column(length = 50)
+    @Column(length = RecipeConstraints.MAX_INGREDIENT_UNIT_LENGTH)
     private String unit;
 
     @ManyToOne

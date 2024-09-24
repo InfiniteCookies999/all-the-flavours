@@ -1,6 +1,7 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,9 +24,9 @@ public class RecipeDirection {
     @NotNull
     private Integer stepNumber;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = RecipeConstraints.MAX_DIRECTION_TEXT_LENGTH, nullable = false)
     @NotNull
-    @Size(min = 3, max = 500)
+    @Size(min = RecipeConstraints.MIN_DIRECTION_TEXT_LENGTH, max = RecipeConstraints.MAX_DIRECTION_TEXT_LENGTH)
     private String text;
 
     @ManyToOne

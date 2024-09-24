@@ -25,7 +25,12 @@ public class SecurityConfig {
                 // to still be able to make requests.
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // Default to permitting all requests.
+                        // Allow the user to get recipes.
+                        .requestMatchers("GET", "/api/recipes").permitAll()
+                        .requestMatchers("GET", "/api/recipes/*").permitAll()
+                        // All other api requests must require login.
+                        .requestMatchers("/api/*").authenticated()
+                        // Allow access to all other non-API requests.
                         .anyRequest().permitAll()
                 )
                 .build();

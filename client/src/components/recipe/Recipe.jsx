@@ -30,7 +30,7 @@ const Recipe = () => {
       .then(recipe => {
         setRecipe(recipe);
       });
-  }, [id, recipe]);
+  }, [id]);
   
   if (!recipe) {
     return <div>Loading...</div>;

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useWindowResize from './useWindowResize';
 
 // Predefined breakpoints
 const breakpoints = {
@@ -25,19 +26,10 @@ const useResponsiveValue = (breakpointValues) => {
   const [value, setValue] = useState(() =>
     getResponsiveValue(breakpointValues));
 
-  useEffect(() => {
-    const handleResize = () => {
-      setValue(getResponsiveValue(breakpointValues));
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    handleResize();
-
-    // Clean up event listener
-    return () => window.removeEventListener('resize', handleResize);
-  }, [breakpointValues]);
-
+  useWindowResize(() => {
+    setValue(getResponsiveValue(breakpointValues));
+  });
+  
   return value;
 };
 

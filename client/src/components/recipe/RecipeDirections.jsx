@@ -33,7 +33,7 @@ const RecipeDirections = ({ style }) => {
 };
 
 RecipeDirections.propTypes = {
-    style: PropTypes.object,
-  };
+  style: PropTypes.object,
+};
 
 export default RecipeDirections;

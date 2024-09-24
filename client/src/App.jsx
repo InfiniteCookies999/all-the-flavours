@@ -5,10 +5,15 @@ import Recipe from "./components/recipe/Recipe";
 import './App.css';
 import SiteFooter from "./components/SiteFooter";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import RecipeListing from "./components/RecipeListing";
 
 const App = () => {
 
   const indexRouter = createBrowserRouter([
+    {
+      path: '/recipes',
+      element: <RecipeListing />
+    },
     {
       path: '/recipe/:id',
       element: <Recipe />
@@ -22,7 +27,8 @@ const App = () => {
       <Container style={{
         // All pages should have more margin between the navbar
         marginTop: '10rem',
-        marginBottom: '3rem'
+        marginBottom: '3rem',
+        minHeight: '40rem',
       }}>
         <RouterProvider router={indexRouter} />
       </Container>

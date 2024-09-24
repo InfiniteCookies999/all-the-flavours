@@ -28,7 +28,7 @@ const Rating = () => {
       display: 'flex',
       alignItems: 'center'
     }}>
-      <StarRating />
+      <StarRating rating={context.rating} numberReviews={context.numberReviews} />
       <InfoSeperationBar height={'20px'} margin="1rem" />
       {/* Indication of how popular in comparison it is. */}
       <div style={{ fontSize: '1.1rem' }}>

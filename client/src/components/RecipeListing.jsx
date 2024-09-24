@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import theme from "../theme";
-import { Link } from "react-router-dom";
 import StarRating from "./recipe/RecipeStarRating";
 import useResponsiveValue from "../hooks/useResponsitveValue";
 
@@ -45,6 +44,8 @@ const RecipeListing = () => {
 
   const loadMoreRef = useRef(null);
 
+  // Code to detect intersection with last element and so that
+  // more recipes can be loaded.
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && !loading) {
@@ -67,6 +68,7 @@ const RecipeListing = () => {
     };
   }, [recipes.length, page, prevPage, setPage, loading, setLoading]);
 
+  // Rendering two or three columns depending on page size.
   const rowCountBreakpointValues = {
     small: 2,
     medium: 2,
@@ -76,6 +78,11 @@ const RecipeListing = () => {
   const recipeRowCount = useResponsiveValue(rowCountBreakpointValues);
   const colClass = recipeRowCount === 3 ? "col-4" : "col-6";
 
+  // Scroll to top so they always start top of page.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (recipes.length === 0) {
     return <div>Loading...</div>;
   }
@@ -83,18 +90,20 @@ const RecipeListing = () => {
   return (
     <div className="row g-3">
       {recipes.map((recipe, index) => (
-        <div key={recipe.id} className={colClass}
-          ref={index === recipes.length - 1 ? loadMoreRef : null}
+        <a key={recipe.id} className={colClass}
+           ref={index === recipes.length - 1 ? loadMoreRef : null}
+           href={`/recipe/${recipe.id}`}
+           style={{
+            color: 'black',
+            textDecoration: 'none',
+           }}
         >
-          <Link className="d-flex flex-column h-100 recipe-link" style={{
+          <div className="d-flex flex-column h-100 recipe-link" style={{
             border: '1px solid gray',
             marginBottom: '2rem',
             padding: '1rem',
             backgroundColor: theme.colors.backgroundLight,
             borderRadius: '5px',
-            // Remove default link styling.
-            textDecoration: 'none',
-            color: 'inherit',
             // Flex control so all the columns are the same height.
             flexGrow: 1
           }}
@@ -119,15 +128,15 @@ const RecipeListing = () => {
                 overflow: 'hidden'
               }} />
             </div>
-          </Link>
-        </div>
+          </div>
+        </a>
       ))}
     <style>
       {`
         .recipe-link:hover {
-          color: red;
           box-shadow: 0 4px 10px rgba(0.5, 0.5, 0.5, 0.2);
           filter: brightness(0.95);
+          cursor: pointer;
         }
 
         .recipe-link:hover .recipe-title {

@@ -1,11 +1,14 @@
 import { Container } from "react-bootstrap";
 import SiteNavbar from "./components/SiteNavbar";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Recipe from "./components/recipe/Recipe";
-import './App.css';
-import SiteFooter from "./components/SiteFooter";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+import './App.css';
+import Recipe from "./components/recipe/Recipe";
+import SiteFooter from "./components/SiteFooter";
 import RecipeListing from "./components/RecipeListing";
+import Login from "./components/auth/Login";
 
 const App = () => {
 
@@ -17,6 +20,10 @@ const App = () => {
     {
       path: '/recipe/:id',
       element: <Recipe />
+    },
+    {
+      path: '/login',
+      element: <Login />
     }
   ]);
 

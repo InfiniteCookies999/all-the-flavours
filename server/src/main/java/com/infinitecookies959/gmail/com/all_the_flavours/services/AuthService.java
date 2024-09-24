@@ -4,7 +4,6 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

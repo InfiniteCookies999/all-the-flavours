@@ -4,6 +4,8 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +21,23 @@ public class RecipeService {
         this.recipeRepository = recipeRepository;
     }
 
+    private Recipe prefixImages(Recipe recipe) {
+        List<String> prefixedImages = recipe.getImages().stream()
+                .map(image -> "/images/upload/recipes/" + image)
+                .toList();
+        recipe.setImages(prefixedImages);
+        return recipe;
+    }
+
     @Transactional(readOnly = true)
     public Optional<Recipe> getRecipeById(Long id) {
-        return recipeRepository.findById(id);
+        return recipeRepository.findById(id).map(this::prefixImages);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> getRecipes(int page, int pageSize) {
+        Page<Recipe> recipePage = recipeRepository.findAll(PageRequest.of(page, pageSize));
+        return recipePage.getContent().stream().map(this::prefixImages).toList();
     }
 
     @Transactional

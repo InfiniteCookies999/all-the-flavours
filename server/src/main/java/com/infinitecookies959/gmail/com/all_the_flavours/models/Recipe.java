@@ -55,7 +55,7 @@ public class Recipe {
     @CollectionTable(name = "recipe_images", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "image_path")
     @Size(min = 1, max = 10)
-    private List<String> recipeImages;
+    private List<String> images;
 
     public Recipe(String title, String description) {
         this.title = title;

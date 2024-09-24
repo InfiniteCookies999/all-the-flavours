@@ -4,11 +4,9 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.RecipeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +14,8 @@ import java.util.Optional;
 public class RecipeController {
 
     private final RecipeService recipeService;
+
+    private static final int VIEWING_PAGE_SIZE = 12;
 
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
@@ -26,5 +26,10 @@ public class RecipeController {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
         return recipe.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping
+    public  ResponseEntity<List<Recipe>> getRecipes(@RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok(recipeService.getRecipes(page, VIEWING_PAGE_SIZE));
     }
 }

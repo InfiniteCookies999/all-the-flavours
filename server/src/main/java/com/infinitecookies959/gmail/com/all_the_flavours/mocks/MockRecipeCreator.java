@@ -1,4 +1,4 @@
-package com.infinitecookies959.gmail.com.all_the_flavours;
+package com.infinitecookies959.gmail.com.all_the_flavours.mocks;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MockRecipeCreator {
+public class MockRecipeCreator implements MockCreator {
 
     private final RecipeService recipeService;
+
+    private final List<Recipe> recipeMocks = new ArrayList<>();
 
     public MockRecipeCreator(RecipeService recipeService) {
         this.recipeService = recipeService;
@@ -46,7 +48,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Classic Chocolate Chip Cookies", "A timeless recipe for warm, gooey chocolate chip cookies that everyone loves.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
         return recipe;
     }
 
@@ -79,7 +81,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Chocolate Chip Muffins", "These muffins are soft, fluffy, and filled with rich chocolate chips, perfect for breakfast or a snack.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -129,7 +131,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Tonkotsu Ramen", "A rich, creamy ramen with a savory pork broth, topped with traditional ingredients.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -165,7 +167,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Skillet Garlic/Pepper Pork Chops", "Tender pork chops cooked with a savory garlic and pepper sauce.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -205,7 +207,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Rice Sushi Bowl", "A fresh and vibrant sushi bowl featuring sushi-grade raw fish, seasoned rice, and fresh toppings.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
         return recipe;
     }
 
@@ -240,7 +242,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Sausage with Pasta", "A savory pasta dish with Italian sausage, rich tomato sauce, and fresh basil.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -267,7 +269,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Soft Serve Ice Cream", "A creamy and delightful soft serve ice cream perfect for a hot day.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -305,7 +307,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Spaghetti with Tomato Sauce", "A classic spaghetti dish with a rich and flavorful tomato sauce.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -333,7 +335,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Cooked Shrimp", "Quick and flavorful cooked shrimp, perfect as an appetizer or for adding to other dishes.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -365,7 +367,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Hawaiian Pizza", "A delicious pizza topped with ham and pineapple, combining sweet and savory flavors.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -398,7 +400,7 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Broccoli Alfredo", "A creamy and comforting pasta dish featuring fettuccine tossed with a rich Alfredo sauce and tender broccoli florets.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
@@ -433,27 +435,34 @@ public class MockRecipeCreator {
         Recipe recipe = new Recipe("Mac and Cheese with Hot Dogs", "A comforting and hearty dish combining creamy macaroni and cheese with crispy hot dogs for a family-friendly meal.");
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
-        recipe.setRecipeImages(images);
+        recipe.setImages(images);
 
         return recipe;
     }
 
-    public void createMockRecipes() {
+    private void mockWithTitleIndex(Recipe recipe, int index) {
+        if (index != 0) {
+            recipe.setTitle(recipe.getTitle() + " " + index);
+        }
+        recipeMocks.add((recipe));
+    }
 
-        List<Recipe> recipeMocks = new ArrayList<>();
-
-        recipeMocks.add(chocolateChipCookiesRecipe());
-        recipeMocks.add(muffinRecipe());
-        recipeMocks.add(tonkotsuRamenRecipe());
-        recipeMocks.add(skilletPepperAndGarlicPorkChopsRecipe());
-        recipeMocks.add(sushiBowlRecipe());
-        recipeMocks.add(sausagePastaRecipe());
-        recipeMocks.add(softServeIceCream());
-        recipeMocks.add(spaghettiAndSauceRecipe());
-        recipeMocks.add(cookedShrimpRecipe());
-        recipeMocks.add(hawaiianPizzaRecipe());
-        recipeMocks.add(broccoliAlfredoRecipe());
-        recipeMocks.add(macAndCheeseWithHotDogsRecipe());
+    @Override
+    public void createMocks() {
+        for (int i = 0; i < 10; i++) {
+            mockWithTitleIndex(chocolateChipCookiesRecipe(), i);
+            mockWithTitleIndex(muffinRecipe(), i);
+            mockWithTitleIndex(tonkotsuRamenRecipe(), i);
+            mockWithTitleIndex(skilletPepperAndGarlicPorkChopsRecipe(), i);
+            mockWithTitleIndex(sushiBowlRecipe(), i);
+            mockWithTitleIndex(sausagePastaRecipe(), i);
+            mockWithTitleIndex(softServeIceCream(), i);
+            mockWithTitleIndex(spaghettiAndSauceRecipe(), i);
+            mockWithTitleIndex(cookedShrimpRecipe(), i);
+            mockWithTitleIndex(hawaiianPizzaRecipe(), i);
+            mockWithTitleIndex(broccoliAlfredoRecipe(), i);
+            mockWithTitleIndex(macAndCheeseWithHotDogsRecipe(), i);
+        }
 
         for (Recipe recipeMock : recipeMocks) {
             if (!recipeService.recipeExists(recipeMock.getTitle())) {

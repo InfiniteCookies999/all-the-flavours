@@ -41,6 +41,11 @@ public class SecurityConfig {
                         // Allow access to all other non-API requests.
                         .anyRequest().permitAll()
                 )
+                .logout(logout -> {
+                    logout.logoutUrl("/logout")
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID");
+                })
                 .build();
     }
 }

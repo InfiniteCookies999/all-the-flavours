@@ -22,6 +22,15 @@ const SiteNavbar = () => {
       
   }, []);
 
+  const onLogout = () => {
+    console.log("LOGGING OUT!");
+    axios.post('/api/auth/logout')
+      .then(() => {
+        window.location.href = '/'; // Redirect to home
+      })
+      .catch(error => console.error(error));
+  };
+
   // TODO: Deal with better
   if (loading) {
     return;
@@ -60,7 +69,7 @@ const SiteNavbar = () => {
               <Nav.Link className='nav-link' href='/'>Home</Nav.Link>
               <Nav.Link className='nav-link' href='/about-us'>About Us</Nav.Link>
               <Nav.Link className='nav-link' href='/recipes'>Search Recipes</Nav.Link>
-              {isLoggedIn ? <Nav.Link className='nav-link' >Logout</Nav.Link>
+              {isLoggedIn ? <Nav.Link className='nav-link' onClick={onLogout}>Logout</Nav.Link>
                           : <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>}
               
             </Nav>

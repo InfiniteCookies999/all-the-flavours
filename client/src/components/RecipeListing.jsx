@@ -3,12 +3,15 @@ import theme from "../theme";
 import StarRating from "./recipe/RecipeStarRating";
 import useResponsiveValue from "../hooks/useResponsitveValue";
 import axios from "axios";
+import { useError } from "../contexts/ErrorContext";
 
 function useFetchRecipes() {
   const [prevPage, setPrevPage] = useState(-1);
   const [page, setPage] = useState(0);
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { setError } = useError();
 
   useEffect(() => {
     if (prevPage === page) {
@@ -27,8 +30,8 @@ function useFetchRecipes() {
       setLoading(false);
     })
     .catch((error) => {
-      if (error.name !== "AbortError") {
-        console.log(error);
+      if (error.name !== "AbortError" && error.name !== "CanceledError") {
+        setError(error);
       }
       setLoading(false);
     });
@@ -36,7 +39,7 @@ function useFetchRecipes() {
     return () => {
       controller.abort();
     };
-  }, [page, prevPage]);
+  }, [page, prevPage, setError]);
 
   return [recipes, page, setPage, prevPage, loading, setLoading];
 }

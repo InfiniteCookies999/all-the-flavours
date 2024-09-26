@@ -9,7 +9,8 @@ import Recipe from "./components/recipe/Recipe";
 import SiteFooter from "./components/SiteFooter";
 import RecipeListing from "./components/RecipeListing";
 import Login from "./components/auth/Login";
-import NotFound from "./components/NotFound";
+import NotFound from "./components/error/NotFound";
+import { ErrorProvider } from "./contexts/ErrorContext";
 
 const App = () => {
 
@@ -42,7 +43,9 @@ const App = () => {
         marginBottom: '3rem',
         minHeight: '40rem',
       }}>
-        <RouterProvider router={indexRouter} />
+        <ErrorProvider>
+          <RouterProvider router={indexRouter} />
+        </ErrorProvider>
       </Container>
       <SiteFooter />
     </div>

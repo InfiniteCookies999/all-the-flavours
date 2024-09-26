@@ -1,7 +1,8 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import theme from "../../theme";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
+import { useError } from "../../contexts/ErrorContext";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const placeholderColor = '#b0b0b0';
@@ -30,6 +31,8 @@ const Login = () => {
   const [submitError, setSubmitError] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  const { setError } = useError();
 
   const updatePasswordError = () => {
     
@@ -73,23 +76,20 @@ const Login = () => {
 
     setLoading(true);
 
-    try {
-
-      await axios.post("/api/auth/login", { email, password });
-      
-      window.location.href = "/";
-
-    } catch (error) {
-      if (error.response && error.response.status === 401 &&
+    axios.post("/api/auth/login", { email, password })
+      .then(() => {
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401 &&
           error.response.data) {
-        setSubmitError(error.response.data);
-        setSubmitValid(false);
-      } else {
-        console.log(error);
-      }
-    } finally {
-      setLoading(false);
-    }
+          setSubmitError(error.response.data);
+          setSubmitValid(false);
+          return;
+        }
+        setError(error);
+      })
+      .finally(() => setLoading(false));    
   };
 
   return (

@@ -1,10 +1,7 @@
 import { Col, Container, Row } from "react-bootstrap";
-import theme from "../theme";
-import { useLocation } from 'react-router-dom';
+import theme from "../../theme";
 
-const NotFound = () => {
-  const location = useLocation();
-
+const ErrorInfo = ({ infoColumn }) => {
   return (
     <Container style={{
       backgroundColor: theme.colors.backgroundLight,
@@ -13,9 +10,7 @@ const NotFound = () => {
     }}>
       <Row>
         <Col md={6}>
-          <span style={{ fontSize: '5rem' }}>404</span>
-            <h1>Page not found!</h1>
-          <span className="med-responsive-text">Could not find page <code>{location.pathname}</code></span>
+          {infoColumn}
         </Col>
         <Col md={6}>
           <img src="/coffee-error-page.svg" style={{
@@ -28,4 +23,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default ErrorInfo;

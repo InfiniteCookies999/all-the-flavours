@@ -8,6 +8,7 @@ import RecipeDirections from "./RecipeDirections";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useError } from "../../contexts/ErrorContext";
 
 const RecipeContainer = styled.div`
   width: 100%;
@@ -23,13 +24,14 @@ const Recipe = () => {
 
   const [recipe, setRecipe] = useState(null);
 
+  const { setError } = useError();
   // TODO: Deal with no recipe being found!
 
   useEffect(() => {
     axios.get(`/api/recipes/${id}`)
       .then(response => setRecipe(response.data))
-      .catch(error => console.log(error));
-  }, [id]);
+      .catch(error => setError(error));
+  }, [id, setError]);
   
   if (!recipe) {
     return <div>Loading...</div>;

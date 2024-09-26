@@ -37,7 +37,7 @@ const SiteNavbar = () => {
             <Nav className="ms-auto">
               <Nav.Link className='nav-link' href='/'>Home</Nav.Link>
               <Nav.Link className='nav-link' href='/about-us'>About Us</Nav.Link>
-              <Nav.Link className='nav-link' href='/search-recipes'>Search Recipes</Nav.Link>
+              <Nav.Link className='nav-link' href='/recipes'>Search Recipes</Nav.Link>
               <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>
             </Nav>
             <style>

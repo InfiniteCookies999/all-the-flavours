@@ -9,6 +9,7 @@ import Recipe from "./components/recipe/Recipe";
 import SiteFooter from "./components/SiteFooter";
 import RecipeListing from "./components/RecipeListing";
 import Login from "./components/auth/Login";
+import NotFound from "./components/NotFound";
 
 const App = () => {
 
@@ -24,6 +25,10 @@ const App = () => {
     {
       path: '/login',
       element: <Login />
+    },
+    {
+      path: '*',
+      element: <NotFound />,
     }
   ]);
 

@@ -1,10 +1,32 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import SiteLogo from './SiteLogo';
 import theme from '../theme';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const navbarHoverClass ='navbar-hover';
 
 const SiteNavbar = () => {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+      axios.get("/api/auth/is-logged-in")
+        .then(reponse => {
+          setIsLoggedIn(reponse.data.status)
+          setLoading(false);
+        })
+        .catch(error => console.log(error));
+      
+  }, []);
+
+  // TODO: Deal with better
+  if (loading) {
+    return;
+  }
+
   return (
     <div>
       <Navbar bg='dark' variant='dark' expand='lg' style={{
@@ -38,7 +60,9 @@ const SiteNavbar = () => {
               <Nav.Link className='nav-link' href='/'>Home</Nav.Link>
               <Nav.Link className='nav-link' href='/about-us'>About Us</Nav.Link>
               <Nav.Link className='nav-link' href='/recipes'>Search Recipes</Nav.Link>
-              <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>
+              {isLoggedIn ? <Nav.Link className='nav-link' >Logout</Nav.Link>
+                          : <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>}
+              
             </Nav>
             <style>
               {`

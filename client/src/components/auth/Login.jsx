@@ -2,7 +2,6 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import theme from "../../theme";
 import { useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const placeholderColor = '#b0b0b0';
@@ -31,8 +30,6 @@ const Login = () => {
   const [submitError, setSubmitError] = useState("");
 
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const updatePasswordError = () => {
     
@@ -80,7 +77,7 @@ const Login = () => {
 
       await axios.post("/api/auth/login", { email, password });
       
-      navigate('/');
+      window.location.href = "/";
 
     } catch (error) {
       if (error.response && error.response.status === 401 &&

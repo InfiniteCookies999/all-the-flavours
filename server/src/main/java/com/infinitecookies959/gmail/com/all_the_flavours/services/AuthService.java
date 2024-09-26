@@ -1,5 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
+import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.UserRepository;
@@ -45,7 +46,10 @@ public class AuthService {
         // TODO: Probably a good idea to not rely on the UsernamePasswordAuthenticationToken
         //       and just replicate the logic ourselves.
         Authentication auth = new UsernamePasswordAuthenticationToken(
-                user.getId(), null, AuthorityUtils.createAuthorityList("ROLE_USER"));
+                new SessionPrincipal(user.getId()),
+                null,
+                AuthorityUtils.createAuthorityList("ROLE_USER")
+        );
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(auth);

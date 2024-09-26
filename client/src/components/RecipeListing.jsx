@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import theme from "../theme";
 import StarRating from "./recipe/RecipeStarRating";
 import useResponsiveValue from "../hooks/useResponsitveValue";
+import axios from "axios";
 
 function useFetchRecipes() {
   const [prevPage, setPrevPage] = useState(-1);
@@ -16,10 +17,11 @@ function useFetchRecipes() {
 
     const controller = new AbortController();
 
-    fetch(`/api/recipes?page=${page}`, {
+    axios.get(`/api/recipes?page=${page}`, {
       signal: controller.signal
-    }).then(response => response.json())
-    .then(recipes => {
+    })
+    .then(response => {
+      const recipes = response.data;
       setRecipes(prevRecipes => [...prevRecipes, ...recipes]);
       setPrevPage(page);
       setLoading(false);

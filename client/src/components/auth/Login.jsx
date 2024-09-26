@@ -105,7 +105,9 @@ const Login = () => {
                     <Form.Control type="email"
                                   placeholder="ramen123@gmail.com"
                                   onChange={(e) => {
-                                    updateEmailError();
+                                    if (updateEmailError()) {
+                                      setEmailValid(true);
+                                    }
                                     setEmail(e.target.value)
                                   }}
                                   className={!emailValid ? 'is-invalid' : ''} />
@@ -117,7 +119,9 @@ const Login = () => {
                     <Form.Control type={showPassword ? "text" : "password"} 
                                   placeholder="Password"
                                   onChange={(e) => {
-                                    updatePasswordError();
+                                    if (updatePasswordError()) {
+                                      setPasswordValid(true);
+                                    }
                                     setPassword(e.target.value);
                                   }}
                                   className={!passwordValid ? 'is-invalid' : ''} />

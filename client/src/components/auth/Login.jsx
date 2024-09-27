@@ -35,32 +35,26 @@ const Login = () => {
 
   const { setError } = useError();
 
-  const updatePasswordError = () => {
-    
+  const updatePasswordError = (password) => {
     const passwordValid = password.length > 0;
-
     if (!passwordValid) {
       setPasswordError("empty");
     }
-
     return passwordValid;
   }
 
-  const updateEmailError = () => {
-
+  const updateEmailError = (email) => {
     const emailValid = emailPattern.test(email);
-
     if (!emailValid) {
       setEmailError(email.length === 0 ? "empty" : "invalid email");
     }
-
     return emailValid;
   };
 
   const updateErrors = () => {
 
-    const emailValid = updateEmailError();
-    const passwordValid = updatePasswordError();
+    const emailValid = updateEmailError(email);
+    const passwordValid = updatePasswordError(password);
 
     setEmailValid(emailValid);
     setPasswordValid(passwordValid);
@@ -101,11 +95,13 @@ const Login = () => {
             <Form.Group controlId="forEmail" className="position-relative">
               <Form.Control type="email"
                             placeholder="ramen123@gmail.com"
+                            maxLength={254}
                             onChange={(e) => {
-                              if (updateEmailError()) {
+                              const email = e.target.value;
+                              if (updateEmailError(email)) {
                                 setEmailValid(true);
                               }
-                              setEmail(e.target.value)
+                              setEmail(email);
                             }}
                             className={!emailValid ? 'is-invalid' : ''} />
               <i className="fas fa-envelope position-absolute" style={formIconClass}></i>
@@ -116,10 +112,11 @@ const Login = () => {
               <Form.Control type={showPassword ? "text" : "password"} 
                             placeholder="Password"
                             onChange={(e) => {
-                              if (updatePasswordError()) {
+                              const password = e.target.value;
+                              if (updatePasswordError(password)) {
                                 setPasswordValid(true);
                               }
-                              setPassword(e.target.value);
+                              setPassword(password);
                             }}
                             className={!passwordValid ? 'is-invalid' : ''} />
               <i className="fas fa-lock position-absolute" style={formIconClass}></i>

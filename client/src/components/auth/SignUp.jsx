@@ -4,6 +4,12 @@ import { useState } from "react";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import PrimaryButton from "../PrimaryButton";
 
+const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
+const namePattern = /^[A-Za-z\s-]*$/;
+const usernamePattern = /^[A-Za-z0-9_-]*$/;
+const phonePattern = /^(\d)*(-(\d)*)?(-(\d)*)?$/;
+const passwordPattern = /^[a-zA-Z0-9@$!%*?&]*$/;
+
 const SignUp = () => {
 
   const [firstName, setFirstName] = useState('');
@@ -14,6 +20,116 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
 
+  const [firstNameValid, setFirstNameValid] = useState(true);
+  const [lastNameValid, setLastNameValid] = useState(true);
+  const [usernameValid, setUsernameValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+  const [repeatedPasswordValid, setRepeatedPasswordValid] = useState(true);
+
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [repeatedPasswordError, setRepeatedPasswordError] = useState('');
+
+  const updateNotEmptyError = (field, setError) => {
+    const fieldValid = field.length !== 0;
+    if (!fieldValid) {
+      setError("empty");
+    }
+    return fieldValid;
+  };
+
+  const updateEmailError = (email) => {
+    const emailValid = emailPattern.test(email);
+    if (!emailValid) {
+      setEmailError(email.length === 0 ? "empty" : "invalid email");
+    }
+    return emailValid;
+  };
+
+  const updatePhoneError = (phone) => {
+    if (phone.length === 0) {
+      setPhoneError("empty");
+      return false;
+    } else if (phone.length !== 12) {
+      setPhoneError("incomplete");
+      return false;
+    }
+    return true;
+  };
+
+  const updatePasswordError = (password) => {
+    if (password.length === 0) {
+      setPasswordError("empty");
+      return false;
+    } else if (password.length < 8) {
+      setPasswordError("too short");
+      return false;
+    } else if (!/[a-z]/.test(password)) {
+      setPasswordError("missing lowercase letter");
+      return false;
+    } else if (!/[A-Z]/.test(password)) {
+      setPasswordError("missing uppercase letter");
+      return false;
+    } else if (!/[@$!%*?&]/.test(password)) {
+      setPasswordError("missing special character");
+      return false;
+    }
+    return true;
+  };
+
+  const updateRepeatedPasswordError = (repeatedPassword, password) => {
+    if (repeatedPassword.length === 0) {
+      setRepeatedPasswordError("empty");
+      return false;
+    } else if (repeatedPassword !== password) {
+      setRepeatedPasswordError("password does not match");
+      return false;
+    }
+    return true;
+  };
+
+  const updateErrors = () => {
+    const firstNameValid = updateNotEmptyError(firstName, setFirstNameError);
+    const lastNameValid = updateNotEmptyError(lastName, setLastNameError);
+    const usernameValid = updateNotEmptyError(username, setUsernameError);
+    const emailValid = updateEmailError(email);
+    const phoneValid = updatePhoneError(phone);
+    const passwordValid = updatePasswordError(password);
+    const repeatedPasswordValid = updateRepeatedPasswordError(repeatedPassword, password);
+
+    setFirstNameValid(firstNameValid);
+    setLastNameValid(lastNameValid);
+    setUsernameValid(usernameValid);
+    setEmailValid(emailValid);
+    setPhoneValid(phoneValid);
+    setPasswordValid(passwordValid);
+    setRepeatedPasswordValid(repeatedPasswordValid);
+
+    return !(
+        firstNameValid &&
+        lastNameValid &&
+        usernameValid &&
+        emailValid &&
+        phoneValid &&
+        passwordValid &&
+        repeatedPasswordValid
+    );
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  
+    if (!updateErrors()) {
+      return;
+    }
+  };
+
   const collapsedBreakpoints = {
     small: true,
     medium: true,
@@ -23,9 +139,8 @@ const SignUp = () => {
   
   const collapsed = useResponsiveValue(collapsedBreakpoints);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
+  // TODO: Add a show password button
+  // TODO: Fix issue with rows not aligning because of errors
 
   return (
     <AuthContainer xs={12} md={8} lg={7}>
@@ -40,10 +155,24 @@ const SignUp = () => {
                   type="text"
                   placeholder="Susan"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  className={!firstNameValid ? 'is-invalid' : ''}
+                  maxLength={40}
+                  onChange={(e) => {
+                    const firstName = e.target.value;
+                    if (!namePattern.test(firstName)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    if (updateNotEmptyError(firstName, setFirstNameError)) {
+                      setFirstNameValid(true);
+                    }
+                    setFirstName(firstName);
+                  }}
                   required
                 />
               </Form.Group>
+              {!firstNameValid && <div className="text-danger mt-1">{firstNameError}</div>}
 
               <Form.Group controlId="username" className="mt-2">
                 <Form.Label>Username</Form.Label>
@@ -51,10 +180,24 @@ const SignUp = () => {
                   type="text"
                   placeholder="susan241"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  className={!usernameValid ? 'is-invalid' : ''}
+                  maxLength={32}
+                  onChange={(e) => {
+                    const username = e.target.value;
+                    if (!usernamePattern.test(username)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    if (updateNotEmptyError(username, setUsernameError)) {
+                      setUsernameValid(true);
+                    }
+                    setUsername(username);
+                  }}
                   required
                 />
               </Form.Group>
+              {!usernameValid && <div className="text-danger mt-1">{usernameError}</div>}
 
               <Form.Group controlId="email" className="mt-2">
                 <Form.Label>Email</Form.Label>
@@ -62,21 +205,47 @@ const SignUp = () => {
                   type="text"
                   placeholder="susan-smith@gmail.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  className={!emailValid ? 'is-invalid' : ''}
+                  maxLength={254}
+                  onChange={(e) => {
+                    const email = e.target.value;
+                    if (updateEmailError(email)) {
+                      setEmailValid(true);
+                    }
+                    setEmail(email);
+                  }}
                   required
                 />
               </Form.Group>
+              {!emailValid && <div className="text-danger mt-1">{emailError}</div>}
 
               <Form.Group controlId="password" className="mt-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="password"
                   placeholder="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  className={!passwordValid ? 'is-invalid' : ''}
+                  maxLength={100}
+                  onChange={(e) => {
+                    const password = e.target.value;
+                    if (!passwordPattern.test(password)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    if (updateRepeatedPasswordError(repeatedPassword, password)) {
+                      setRepeatedPasswordValid(true);
+                    }
+                    if (updatePasswordError(password)) {
+                      setPasswordValid(true);
+                    }
+                    setPassword(password);
+                  }}
                   required
                 />
               </Form.Group>
+              {!passwordValid && <div className="text-danger mt-1">{passwordError}</div>}
 
               <div className="mt-2" style={{
                 color: 'gray',
@@ -98,10 +267,24 @@ const SignUp = () => {
                     type="text"
                     placeholder="Smith"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    className={!lastNameValid ? 'is-invalid' : ''}
+                    maxLength={40}
+                    onChange={(e) => {
+                      const lastName = e.target.value;
+                      if (!namePattern.test(lastName)) {
+                        e.preventDefault();
+                        return;
+                      }
+
+                      if (updateNotEmptyError(lastName, setLastNameError)) {
+                        setLastNameValid(true);
+                      }
+                      setLastName(lastName);
+                    }}
                     required
                   />
               </Form.Group>
+              {!lastNameValid && <div className="text-danger mt-1">{lastNameError}</div>}
 
               {!collapsed && (
                 <Form.Group className="mt-2" style={{
@@ -118,21 +301,66 @@ const SignUp = () => {
                   type="text"
                   placeholder="777-777-7777"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  className={!phoneValid ? 'is-invalid' : ''}
+                  maxLength={12}
+                  onChange={(e) => {
+                    let phone = e.target.value;
+                    // Making sure it is either all digits or
+                    // digits with dashes in the correct positions.
+                    if (!phonePattern.test(phone)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    // Inserting dashes at appropriate locations.
+                    const phoneNoDashes = phone.replaceAll("-", "");
+                    if (phoneNoDashes.length > 6) {
+                      phone = phoneNoDashes.substring(0, 3) + '-' +
+                              phoneNoDashes.substring(3, 6) + '-' +
+                              phoneNoDashes.substring(6);
+                    } else if (phoneNoDashes.length > 3) {
+                      phone = phoneNoDashes.substring(0, 3) + '-' +
+                              phoneNoDashes.substring(3);
+                    }
+
+                    if (phone.endsWith('-')) {
+                      phone = phone.substring(0, phone.length - 1);
+                    }
+
+                    if (updatePhoneError(phone)) {
+                      setPhoneValid(true);
+                    }
+                    setPhone(phone);
+                  }}
                   required
                 />
               </Form.Group>
+              {!phoneValid && <div className="text-danger mt-1">{phoneError}</div>}
 
               <Form.Group controlId="passwordRepeat" className="mt-2">
                 <Form.Label>Repeat Password</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="password"
                   placeholder="repeated password"
                   value={repeatedPassword}
-                  onChange={(e) => setRepeatedPassword(e.target.value)}
+                  className={!repeatedPasswordValid ? 'is-invalid' : ''}
+                  maxLength={100}
+                  onChange={(e) => {
+                    const repeatedPassword = e.target.value;
+                    if (!passwordPattern.test(repeatedPassword)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    if (updateRepeatedPasswordError(repeatedPassword, password)) {
+                      setRepeatedPasswordValid(true);
+                    }
+                    setRepeatedPassword(repeatedPassword);
+                  }}
                   required
                 />
               </Form.Group>
+              {!repeatedPasswordValid && <div className="text-danger mt-1">{repeatedPasswordError}</div>}
             </Col>
           </Row>
 

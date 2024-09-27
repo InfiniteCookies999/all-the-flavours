@@ -69,6 +69,7 @@ const StyledFooter = styled.footer`
   color: white;
   border-top: 3.5rem solid ${theme.colors.primaryLight};
   padding: 6rem 0;
+  margin-top: 10rem;
 
   .sm-top-margin {
     margin-top: 5rem;
@@ -79,6 +80,7 @@ const StyledFooter = styled.footer`
       margin-top: 0rem;
     }
   }
+
 `;
 
 const SiteFooter = () => {

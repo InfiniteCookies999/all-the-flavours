@@ -11,6 +11,7 @@ import RecipeListing from "./components/RecipeListing";
 import Login from "./components/auth/Login";
 import NotFound from "./components/error/NotFound";
 import { ErrorProvider } from "./contexts/ErrorContext";
+import SignUp from "./components/auth/SignUp";
 
 const App = () => {
 
@@ -26,6 +27,10 @@ const App = () => {
     {
       path: '/login',
       element: <Login />
+    },
+    {
+      path: '/sign-up',
+      element: <SignUp />
     },
     {
       path: '*',

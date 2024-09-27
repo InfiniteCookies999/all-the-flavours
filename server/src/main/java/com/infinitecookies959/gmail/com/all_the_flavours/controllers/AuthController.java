@@ -2,20 +2,17 @@ package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController

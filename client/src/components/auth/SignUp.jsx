@@ -11,7 +11,6 @@ const phonePattern = /^(\d)*(-(\d)*)?(-(\d)*)?$/;
 const passwordPattern = /^[a-zA-Z0-9@$!%*?&]*$/;
 
 const FormError = ({ valid, otherValid, errorMsg, collapsed }) => {
-  //!valid ? errorMsg : ''
   return (
     <>
       {(!valid || (!otherValid && !collapsed)) && (
@@ -155,13 +154,13 @@ const SignUp = () => {
   // TODO: Add a show password button
 
   return (
-    <AuthContainer xs={12} md={8} lg={7}>
+    <AuthContainer xs={12} md={10} lg={7}>
       <div style={{ backgroundColor: 'white' }}>
-        <h2 className="text-center mb-4" style={{ cursor: 'default' }}>Sign Up</h2>
+      <h2 className="text-center mb-4" style={{ cursor: 'default' }}>Sign Up</h2>
         <Form onSubmit={handleSubmit} noValidate>
-          <Row>
+          <Row className="flex-column flex-md-row">
+
             <Col xs={12} md={6}>
-            
               <Form.Group controlId="firstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
@@ -189,7 +188,39 @@ const SignUp = () => {
                          otherValid={lastNameValid}
                          errorMsg={firstNameError}
                          collapsed={collapsed} />
+            </Col>
 
+            <Col xs={12} md={6}>
+              <Form.Group controlId="lastName" className={collapsed ? 'mt-2' : ''}>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Smith"
+                    value={lastName}
+                    className={!lastNameValid ? 'is-invalid' : ''}
+                    maxLength={40}
+                    onChange={(e) => {
+                      const lastName = e.target.value;
+                      if (!namePattern.test(lastName)) {
+                        e.preventDefault();
+                        return;
+                      }
+
+                      if (updateNotEmptyError(lastName, setLastNameError)) {
+                        setLastNameValid(true);
+                      }
+                      setLastName(lastName);
+                    }}
+                    required
+                  />
+              </Form.Group>
+              <FormError valid={lastNameValid}
+                         otherValid={firstNameValid}
+                         errorMsg={lastNameError}
+                         collapsed={collapsed} />
+            </Col>
+
+            <Col xs={12} md={6}>
               <Form.Group controlId="username" className="mt-2">
                 <Form.Label>Username</Form.Label>
                 <Form.Control
@@ -217,118 +248,49 @@ const SignUp = () => {
                          otherValid={true}
                          errorMsg={usernameError}
                          collapsed={collapsed} />
-
-              <Form.Group controlId="email" className="mt-2">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="susan-smith@gmail.com"
-                  value={email}
-                  className={!emailValid ? 'is-invalid' : ''}
-                  maxLength={254}
-                  onChange={(e) => {
-                    const email = e.target.value;
-                    if (updateEmailError(email)) {
-                      setEmailValid(true);
-                    }
-                    setEmail(email);
-                  }}
-                  required
-                />
-              </Form.Group>
-              <FormError valid={emailValid}
-                         otherValid={phoneValid}
-                         errorMsg={emailError}
-                         collapsed={collapsed} />
-            
-              <Form.Group controlId="password" className="mt-2">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="password"
-                  value={password}
-                  className={!passwordValid ? 'is-invalid' : ''}
-                  maxLength={100}
-                  onChange={(e) => {
-                    const password = e.target.value;
-                    if (!passwordPattern.test(password)) {
-                      e.preventDefault();
-                      return;
-                    }
-
-                    if (updateRepeatedPasswordError(repeatedPassword, password)) {
-                      setRepeatedPasswordValid(true);
-                    }
-                    if (updatePasswordError(password)) {
-                      setPasswordValid(true);
-                    }
-                    setPassword(password);
-                  }}
-                  required
-                />
-              </Form.Group>
-              <FormError valid={passwordValid}
-                         otherValid={repeatedPasswordValid}
-                         errorMsg={passwordError}
-                         collapsed={collapsed} />
-
-              <div className="mt-2" style={{
-                color: 'gray',
-                cursor: 'default'
-                }}>
-                <ul>
-                  <li>At least 8 characters</li>
-                  <li>At least 1 lowercase letter</li>
-                  <li>At least 1 uppercase letter</li>
-                  <li>At least 1 special character (@ $ ! % * ? &)</li>
-                </ul>
-              </div>
             </Col>
 
-            <Col xs={12} md={6}>
-              <Form.Group controlId="lastName">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Smith"
-                    value={lastName}
-                    className={!lastNameValid ? 'is-invalid' : ''}
-                    maxLength={40}
-                    onChange={(e) => {
-                      const lastName = e.target.value;
-                      if (!namePattern.test(lastName)) {
-                        e.preventDefault();
-                        return;
-                      }
+            {!collapsed && (
+              <Col xs={12} md={6}>
+                <Form.Group className="mt-2" style={{
+                  opacity: 0
+                }}>
+                  <Form.Label>Hidden</Form.Label>
+                  <Form.Control type="text" />
+                </Form.Group>
+                <FormError valid={true}
+                            otherValid={usernameValid}
+                            errorMsg={''}
+                            collapsed={collapsed} />
+              </Col>
+            )}
 
-                      if (updateNotEmptyError(lastName, setLastNameError)) {
-                        setLastNameValid(true);
+            <Col xs={12} md={6}>
+              <Form.Group controlId="email" className="mt-2">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="susan-smith@gmail.com"
+                    value={email}
+                    className={!emailValid ? 'is-invalid' : ''}
+                    maxLength={254}
+                    onChange={(e) => {
+                      const email = e.target.value;
+                      if (updateEmailError(email)) {
+                        setEmailValid(true);
                       }
-                      setLastName(lastName);
+                      setEmail(email);
                     }}
                     required
                   />
-              </Form.Group>
-              <FormError valid={lastNameValid}
-                         otherValid={firstNameValid}
-                         errorMsg={lastNameError}
-                         collapsed={collapsed} />
+                </Form.Group>
+                <FormError valid={emailValid}
+                          otherValid={phoneValid}
+                          errorMsg={emailError}
+                          collapsed={collapsed} />
+            </Col>
 
-              {!collapsed && (
-                <>
-                  <Form.Group className="mt-2" style={{
-                    opacity: 0
-                  }}>
-                    <Form.Label>Hidden</Form.Label>
-                    <Form.Control type="text" />
-                  </Form.Group>
-                  <FormError valid={true}
-                             otherValid={usernameValid}
-                             errorMsg={''}
-                             collapsed={collapsed} />
-                </>
-              )}
-
+            <Col xs={12} md={6}>
               <Form.Group controlId="phone" className="mt-2">
                 <Form.Label>Phone</Form.Label>
                 <Form.Control
@@ -373,7 +335,42 @@ const SignUp = () => {
                          otherValid={emailValid}
                          errorMsg={phoneError}
                          collapsed={collapsed} />
+            </Col>
 
+            <Col xs={12} md={6}>
+              <Form.Group controlId="password" className="mt-2">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="password"
+                  value={password}
+                  className={!passwordValid ? 'is-invalid' : ''}
+                  maxLength={100}
+                  onChange={(e) => {
+                    const password = e.target.value;
+                    if (!passwordPattern.test(password)) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    if (updateRepeatedPasswordError(repeatedPassword, password)) {
+                      setRepeatedPasswordValid(true);
+                    }
+                    if (updatePasswordError(password)) {
+                      setPasswordValid(true);
+                    }
+                    setPassword(password);
+                  }}
+                  required
+                />
+              </Form.Group>
+              <FormError valid={passwordValid}
+                         otherValid={repeatedPasswordValid}
+                         errorMsg={passwordError}
+                         collapsed={collapsed} />
+            </Col>
+
+            <Col xs={12} md={6}>
               <Form.Group controlId="passwordRepeat" className="mt-2">
                 <Form.Label>Repeat Password</Form.Label>
                 <Form.Control
@@ -402,7 +399,21 @@ const SignUp = () => {
                          errorMsg={repeatedPasswordError}
                          collapsed={collapsed} />
             </Col>
+
           </Row>
+
+          <div className="mt-2" style={{
+            color: 'gray',
+            cursor: 'default'
+            }}>
+            <ul>
+              <li>At least 8 characters</li>
+              <li>At least 1 lowercase letter</li>
+              <li>At least 1 uppercase letter</li>
+              <li>At least 1 special character (@ $ ! % * ? &)</li>
+            </ul>
+          </div>
+        
 
           <div className={`${collapsed ? 'mt-4' : 'mt-2'}`}>
             <PrimaryButton type="submit" style={{

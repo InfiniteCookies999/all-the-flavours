@@ -5,6 +5,7 @@ import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import AuthContainer from "./AuthContainer";
 import PrimaryButton from "../PrimaryButton";
+import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 
@@ -123,19 +124,7 @@ const Login = () => {
             </Form.Group>
             {!passwordValid && <div className="text-danger mt-1">{passwordError}</div>}
 
-            {/* Show password checkbox */}
-            <Form.Group controlId="formShowPassword" className="mt-2">
-              <Form.Check 
-                className="better-checkbox"
-                type="checkbox"
-                // Wrap the label in a span with userSelect set to none so that
-                // the text of the show password cannot be selected.
-                label={<span style={{ userSelect: 'none' }}>Show Password</span>}
-                onChange={() => {
-                  setShowPassword(!showPassword);
-                }} 
-              />
-            </Form.Group>
+            <ShowPasswordCheckbox showPassword={showPassword} setShowPassword={setShowPassword} />
 
             <div className="mt-2">
               <span style={{
@@ -177,25 +166,6 @@ const Login = () => {
               .submit-btn:not[submit-invalid-btn]:focus {
                 outline: none !important;
                 box-shadow: none !important;
-              }
-
-              .better-checkbox .form-check-input:focus {
-                outline: none !important;
-                box-shadow: none !important;
-                border-color: gray;
-              }
-
-              .better-checkbox .form-check-input:checked {
-                background-color: ${theme.colors.primaryLight};
-                border-color: ${theme.colors.primaryLight};
-              }
-
-              .better-checkbox .form-check-input:checked:focus {
-                box-shadow: none;
-              }
-
-              .better-checkbox .form-check-input {
-                cursor: pointer;
               }
 
               .submit-invalid-btn {

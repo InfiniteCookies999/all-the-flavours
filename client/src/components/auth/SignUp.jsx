@@ -3,6 +3,7 @@ import AuthContainer from "./AuthContainer";
 import { useState } from "react";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import PrimaryButton from "../PrimaryButton";
+import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const namePattern = /^[A-Za-z\s-]*$/;
@@ -47,6 +48,8 @@ const SignUp = () => {
   const [phoneError, setPhoneError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [repeatedPasswordError, setRepeatedPasswordError] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const updateNotEmptyError = (field, setError) => {
     const fieldValid = field.length !== 0;
@@ -150,8 +153,6 @@ const SignUp = () => {
   };
   
   const collapsed = useResponsiveValue(collapsedBreakpoints);
-
-  // TODO: Add a show password button
 
   return (
     <AuthContainer xs={12} md={10} lg={7}>
@@ -341,7 +342,7 @@ const SignUp = () => {
               <Form.Group controlId="password" className="mt-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="password"
                   value={password}
                   className={!passwordValid ? 'is-invalid' : ''}
@@ -374,7 +375,7 @@ const SignUp = () => {
               <Form.Group controlId="passwordRepeat" className="mt-2">
                 <Form.Label>Repeat Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="repeated password"
                   value={repeatedPassword}
                   className={!repeatedPasswordValid ? 'is-invalid' : ''}
@@ -402,6 +403,8 @@ const SignUp = () => {
 
           </Row>
 
+          <ShowPasswordCheckbox showPassword={showPassword} setShowPassword={setShowPassword} />
+
           <div className="mt-2" style={{
             color: 'gray',
             cursor: 'default'
@@ -413,7 +416,6 @@ const SignUp = () => {
               <li>At least 1 special character (@ $ ! % * ? &)</li>
             </ul>
           </div>
-        
 
           <div className={`${collapsed ? 'mt-4' : 'mt-2'}`}>
             <PrimaryButton type="submit" style={{

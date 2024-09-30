@@ -12,6 +12,7 @@ import Login from "./components/auth/Login";
 import NotFound from "./components/error/NotFound";
 import { ErrorProvider } from "./contexts/ErrorContext";
 import SignUp from "./components/auth/SignUp";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const App = () => {
 
@@ -39,9 +40,10 @@ const App = () => {
   ]);
 
   return (
-    <div>
+    <AuthProvider>
       <SiteNavbar />
-      {/* Rest of pages */}
+      {/* Rest of page */}
+
       <Container style={{
         // All pages should have more margin between the navbar
         marginTop: '10rem',
@@ -53,7 +55,7 @@ const App = () => {
         </ErrorProvider>
       </Container>
       <SiteFooter />
-    </div>
+    </AuthProvider>
   );
 }
 

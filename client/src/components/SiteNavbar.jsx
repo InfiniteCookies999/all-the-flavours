@@ -1,34 +1,14 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import SiteLogo from './SiteLogo';
 import theme from '../theme';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 const navbarHoverClass ='navbar-hover';
 
 const SiteNavbar = () => {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    
-      axios.get("/api/auth/is-logged-in")
-        .then(reponse => {
-          setIsLoggedIn(reponse.data.status)
-          setLoading(false);
-        })
-        .catch(error => console.log(error));
-      
-  }, []);
-
-  const onLogout = () => {
-    axios.post('/api/auth/logout')
-      .then(() => {
-        window.location.href = '/'; // Redirect to home
-      })
-      .catch(error => console.error(error));
-  };
+  const { isLoggedIn, loading, onLogout } = useContext(AuthContext);
 
   if (loading) {
     return;

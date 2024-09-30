@@ -74,7 +74,7 @@ public class AuthService {
         if (userByUsername.isPresent()) {
             throw new CredentialTakenException("username taken");
         }
-        
+
         String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
         userRequest.setEncodedPassword(encodedPassword);
 

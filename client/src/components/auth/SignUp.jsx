@@ -1,12 +1,13 @@
 import { Col, Form, Row } from "react-bootstrap";
 import AuthContainer from "./AuthContainer";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import PrimaryButton from "../PrimaryButton";
 import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
 import { useError } from "../../contexts/ErrorContext";
 import axios from "axios";
 import theme from "../../theme";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const namePattern = /^[A-Za-z\s-]*$/;
@@ -60,6 +61,8 @@ const SignUp = () => {
   const { setError } = useError();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   const updateNotEmptyError = (field, setError) => {
     const fieldValid = field.length !== 0;
@@ -187,6 +190,11 @@ const SignUp = () => {
   };
   
   const collapsed = useResponsiveValue(collapsedBreakpoints);
+
+  if (isLoggedIn) {
+    window.location.href = "/";
+    return;
+  }
 
   return (
     <AuthContainer xs={12} md={10} lg={7}>

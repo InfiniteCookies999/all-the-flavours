@@ -1,11 +1,12 @@
 import { Form } from "react-bootstrap";
 import theme from "../../theme";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import AuthContainer from "./AuthContainer";
 import PrimaryButton from "../PrimaryButton";
 import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 
@@ -35,6 +36,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const { setError } = useError();
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   const updatePasswordError = (password) => {
     const passwordValid = password.length > 0;
@@ -87,6 +90,11 @@ const Login = () => {
       })
       .finally(() => setLoading(false));    
   };
+
+  if (isLoggedIn) {
+    window.location.href = "/";
+    return;
+  }
 
   return (
       <AuthContainer xs={12} md={6} lg={4}>

@@ -3,7 +3,9 @@ package com.infinitecookies959.gmail.com.all_the_flavours.mocks;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.RecipeService;
+import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,14 +15,16 @@ import java.util.List;
 public class MockRecipeCreator implements MockCreator {
 
     private final RecipeService recipeService;
+    private final UserService userService;
 
     private final List<Recipe> recipeMocks = new ArrayList<>();
 
-    public MockRecipeCreator(RecipeService recipeService) {
+    public MockRecipeCreator(RecipeService recipeService, UserService userService) {
         this.recipeService = recipeService;
+        this.userService = userService;
     }
 
-    private Recipe chocolateChipCookiesRecipe() {
+    private Recipe chocolateChipCookiesRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Preheat the oven to 375 degrees F (190 degrees C). Grease or line baking sheets with parchment paper."));
         directions.add(new RecipeDirection("In a small bowl, whisk together flour, baking soda, and salt. Set aside."));
@@ -49,10 +53,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe muffinRecipe() {
+    private Recipe muffinRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Preheat the oven to 375 degrees F (190 degrees C). Grease a muffin tin or line with paper muffin cups."));
         directions.add(new RecipeDirection("Whisk together flour, sugar, baking powder, and salt in a large bowl."));
@@ -82,11 +87,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe tonkotsuRamenRecipe() {
+    private Recipe tonkotsuRamenRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("In a large pot, bring the pork bones and water to a boil. Reduce heat and simmer for 10 minutes. Discard the water and rinse the bones to remove impurities."));
         directions.add(new RecipeDirection("Return the bones to the pot and add fresh water to cover the bones by about 2 inches. Bring to a boil, then reduce heat to low and simmer for 4-6 hours, occasionally skimming off any foam or impurities that rise to the surface."));
@@ -132,11 +137,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    public Recipe skilletPepperAndGarlicPorkChopsRecipe() {
+    public Recipe skilletPepperAndGarlicPorkChopsRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Pat the pork chops dry with paper towels. Season both sides generously with salt and black pepper."));
         directions.add(new RecipeDirection("Heat the olive oil in a large skillet over medium-high heat."));
@@ -168,11 +173,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe sushiBowlRecipe() {
+    private Recipe sushiBowlRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Prepare the sushi rice: Rinse the rice under cold water until the water runs clear. Cook the rice according to package instructions and let it cool slightly."));
         directions.add(new RecipeDirection("In a small bowl, mix the rice vinegar, sugar, and salt until dissolved. Gently fold the mixture into the cooked rice and set aside."));
@@ -208,10 +213,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe sausagePastaRecipe() {
+    private Recipe sausagePastaRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Cook the pasta in salted boiling water according to the package instructions until al dente. Drain and set aside."));
         directions.add(new RecipeDirection("In a large skillet, heat olive oil over medium heat. Add the sausage and cook until browned on all sides, breaking it into pieces with a spoon."));
@@ -243,11 +249,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe softServeIceCream() {
+    private Recipe softServeIceCream(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("In a large bowl, whisk together the milk, heavy cream, sugar, and vanilla extract until the sugar is completely dissolved."));
         directions.add(new RecipeDirection("Pour the mixture into an ice cream maker and churn according to the manufacturer's instructions until it reaches a soft-serve consistency."));
@@ -270,11 +276,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe spaghettiAndSauceRecipe() {
+    private Recipe spaghettiAndSauceRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Cook the spaghetti in a large pot of salted boiling water according to the package instructions until al dente. Drain and set aside."));
         directions.add(new RecipeDirection("In a large skillet, heat olive oil over medium heat. Add the chopped onion and cook until translucent."));
@@ -308,11 +314,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe cookedShrimpRecipe() {
+    private Recipe cookedShrimpRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("In a large bowl, toss the shrimp with olive oil, garlic, lemon juice, paprika, salt, and black pepper until well coated."));
         directions.add(new RecipeDirection("Heat a large skillet over medium-high heat. Add the shrimp and cook for 2-3 minutes per side, or until the shrimp are pink and opaque."));
@@ -336,11 +342,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe hawaiianPizzaRecipe() {
+    private Recipe hawaiianPizzaRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Preheat your oven to 475°F (245°C). If using a pizza stone, place it in the oven while it heats up."));
         directions.add(new RecipeDirection("Roll out the pizza dough on a floured surface to your desired thickness. Transfer the dough to a pizza peel or a baking sheet lined with parchment paper."));
@@ -368,11 +374,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe broccoliAlfredoRecipe() {
+    private Recipe broccoliAlfredoRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Cook the fettuccine according to package instructions until al dente. Drain and set aside."));
         directions.add(new RecipeDirection("In a large skillet, melt 2 tablespoons of butter over medium heat. Add the chopped onion and cook until translucent, about 3-4 minutes."));
@@ -401,11 +407,11 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
-    private Recipe macAndCheeseWithHotDogsRecipe() {
+    private Recipe macAndCheeseWithHotDogsRecipe(User user) {
         List<RecipeDirection> directions = new ArrayList<>();
         directions.add(new RecipeDirection("Preheat your oven to 375°F (190°C). Grease a baking dish and set aside."));
         directions.add(new RecipeDirection("Cook the macaroni according to package instructions until al dente. Drain and set aside."));
@@ -436,7 +442,7 @@ public class MockRecipeCreator implements MockCreator {
         recipe.setDirections(directions);
         recipe.setIngredients(ingredients);
         recipe.setImages(images);
-
+        recipe.setUser(user);
         return recipe;
     }
 
@@ -449,19 +455,21 @@ public class MockRecipeCreator implements MockCreator {
 
     @Override
     public void createMocks() {
+        User user = userService.getUserByEmail("susan-smith@gmail.com").orElseThrow();
+
         for (int i = 0; i < 10; i++) {
-            mockWithTitleIndex(chocolateChipCookiesRecipe(), i);
-            mockWithTitleIndex(muffinRecipe(), i);
-            mockWithTitleIndex(tonkotsuRamenRecipe(), i);
-            mockWithTitleIndex(skilletPepperAndGarlicPorkChopsRecipe(), i);
-            mockWithTitleIndex(sushiBowlRecipe(), i);
-            mockWithTitleIndex(sausagePastaRecipe(), i);
-            mockWithTitleIndex(softServeIceCream(), i);
-            mockWithTitleIndex(spaghettiAndSauceRecipe(), i);
-            mockWithTitleIndex(cookedShrimpRecipe(), i);
-            mockWithTitleIndex(hawaiianPizzaRecipe(), i);
-            mockWithTitleIndex(broccoliAlfredoRecipe(), i);
-            mockWithTitleIndex(macAndCheeseWithHotDogsRecipe(), i);
+            mockWithTitleIndex(chocolateChipCookiesRecipe(user), i);
+            mockWithTitleIndex(muffinRecipe(user), i);
+            mockWithTitleIndex(tonkotsuRamenRecipe(user), i);
+            mockWithTitleIndex(skilletPepperAndGarlicPorkChopsRecipe(user), i);
+            mockWithTitleIndex(sushiBowlRecipe(user), i);
+            mockWithTitleIndex(sausagePastaRecipe(user), i);
+            mockWithTitleIndex(softServeIceCream(user), i);
+            mockWithTitleIndex(spaghettiAndSauceRecipe(user), i);
+            mockWithTitleIndex(cookedShrimpRecipe(user), i);
+            mockWithTitleIndex(hawaiianPizzaRecipe(user), i);
+            mockWithTitleIndex(broccoliAlfredoRecipe(user), i);
+            mockWithTitleIndex(macAndCheeseWithHotDogsRecipe(user), i);
         }
 
         for (Recipe recipeMock : recipeMocks) {

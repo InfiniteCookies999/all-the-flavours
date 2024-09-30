@@ -33,6 +33,10 @@ public class Recipe {
     @UpdateTimestamp
     private LocalDateTime lastUpdated;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(length = RecipeConstraints.MAX_TITLE_LENGTH, nullable = false)
     @Size(min = RecipeConstraints.MIN_TITLE_LENGTH, max = RecipeConstraints.MAX_TITLE_LENGTH)
     @NotNull

@@ -25,8 +25,7 @@ const Recipe = () => {
   const [recipe, setRecipe] = useState(null);
 
   const { setError } = useError();
-  // TODO: Deal with no recipe being found!
-
+  
   useEffect(() => {
     axios.get(`/api/recipes/${id}`)
       .then(response => setRecipe(response.data))

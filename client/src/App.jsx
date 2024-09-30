@@ -7,12 +7,12 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
 import Recipe from "./components/recipe/Recipe";
 import SiteFooter from "./components/SiteFooter";
-import RecipeListing from "./components/RecipeListing";
 import Login from "./components/auth/Login";
 import NotFound from "./components/error/NotFound";
 import { ErrorProvider } from "./contexts/ErrorContext";
 import SignUp from "./components/auth/SignUp";
 import { AuthProvider } from "./contexts/AuthContext";
+import RecipeListing from "./components/recipe/RecipeListing";
 
 const App = () => {
 

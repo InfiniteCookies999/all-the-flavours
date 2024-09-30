@@ -70,11 +70,14 @@ const RecipeInfo = () => {
           alignContent: 'center',
           width: 'fit-content'
         }}>
+          {/* TODO: loading the user profile */}
           <UserAvatar src={'/example-profile.jpg'} style={{
             width: '40px',
             height: '40px'
           }}/>
-          <span style={{ marginLeft: '0.2rem', color: '#1c1c1c' }}>Maddie Rugh</span>
+          <span style={{ marginLeft: '0.2rem', color: '#1c1c1c' }}>
+            {context.user.firstName} {context.user.lastName}
+          </span>
         </div>
         <InfoSeperationBar height={'20px'} margin="0.8rem" />
         <span style={{

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import theme from "../theme";
-import StarRating from "./recipe/RecipeStarRating";
-import useResponsiveValue from "../hooks/useResponsitveValue";
+import theme from "../../theme";
+import StarRating from "./RecipeStarRating";
+import useResponsiveValue from "../../hooks/useResponsitveValue";
 import axios from "axios";
-import { useError } from "../contexts/ErrorContext";
+import { useError } from "../../contexts/ErrorContext";
 
 function useFetchRecipes() {
   const [prevPage, setPrevPage] = useState(-1);

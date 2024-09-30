@@ -2,6 +2,7 @@ package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.UserConstraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -75,5 +77,9 @@ public class User {
 
     @Column(length = UserConstraints.MAX_BIO_LENGTH)
     private String bio;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Recipe> recipes;
 
 }

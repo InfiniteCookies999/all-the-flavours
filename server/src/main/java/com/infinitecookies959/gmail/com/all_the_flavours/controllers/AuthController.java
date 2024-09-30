@@ -1,7 +1,9 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.CredentialTakenException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,7 +58,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public void register() {
-
+    public ResponseEntity<?> register(@RequestBody User userRequest, HttpServletRequest request) {
+        try {
+            User user = authService.register(userRequest, request.getSession(true));
+            return ResponseEntity.ok(user);
+        } catch (CredentialTakenException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 }

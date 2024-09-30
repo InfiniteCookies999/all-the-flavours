@@ -137,8 +137,7 @@ const Login = () => {
             <PrimaryButton
               type="submit"
               className={"w-100 mt-4 submit-btn " + (!submitValid ? 'submit-invalid-btn' : '')}
-              disabled={loading}
-              >
+              disabled={loading}>
               Submit
             </PrimaryButton>
             {!submitValid && <div className="text-danger mt-1">{submitError}</div>}
@@ -158,20 +157,7 @@ const Login = () => {
                 padding-left: 2.5rem;
               }
 
-              .submit-btn:hover {
-                background-color: ${theme.colors.primaryDark} !important;
-                border-color: ${theme.colors.primaryDark} !important;
-              }
-
-              .submit-btn:not[submit-invalid-btn]:focus {
-                outline: none !important;
-                box-shadow: none !important;
-              }
-
-              .submit-invalid-btn {
-                border-color: red !important;
-                box-shadow: 0 0 2px red;
-              }
+              ${theme.styles.submitBtn}
             `}
           </style>
         </>

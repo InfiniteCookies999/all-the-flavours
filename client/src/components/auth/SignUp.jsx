@@ -4,6 +4,9 @@ import { useState } from "react";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import PrimaryButton from "../PrimaryButton";
 import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
+import { useError } from "../../contexts/ErrorContext";
+import axios from "axios";
+import theme from "../../theme";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const namePattern = /^[A-Za-z\s-]*$/;
@@ -48,6 +51,13 @@ const SignUp = () => {
   const [phoneError, setPhoneError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [repeatedPasswordError, setRepeatedPasswordError] = useState('');
+
+  const [submitValid, setSubmitValid] = useState(true);
+  const [submitError, setSubmitError] = useState("");
+  
+  const [loading, setLoading] = useState(false);
+
+  const { setError } = useError();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -140,9 +150,33 @@ const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
   
-    if (!updateErrors()) {
+    if (updateErrors()) {
       return;
     }
+
+    setLoading(true);
+
+    axios.post("/api/auth/register", {
+      firstName,
+      lastName,
+      email,
+      password,
+      username,
+      phone
+    })
+      .then(() => {
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 409 &&
+          error.response.data) {
+          setSubmitError(error.response.data);
+          setSubmitValid(false);
+          return;
+        }
+        setError(error);
+      })
+      .finally(() => setLoading(false));    
   };
 
   const collapsedBreakpoints = {
@@ -420,10 +454,14 @@ const SignUp = () => {
           <div className={`${collapsed ? 'mt-4' : 'mt-2'}`}>
             <PrimaryButton type="submit" style={{
               width: (collapsed ? '100%' : '48%')
-              }}>
+              }}
+              className={"w-100 mt-4 submit-btn " + (!submitValid ? 'submit-invalid-btn' : '')}
+              disabled={loading}>
               Sign Up
             </PrimaryButton>
+            {!submitValid && <div className="text-danger mt-1">{submitError}</div>}
           </div>
+          <style>{theme.styles.submitBtn}</style>
           
           <div className="mt-2">
             <span>

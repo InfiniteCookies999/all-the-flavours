@@ -1,6 +1,7 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.UserConstraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -47,16 +48,15 @@ public class User {
     @Email
     private String email;
 
-    @JsonIgnore
+    @JsonIgnore // Do not send to client.
     @Column(length = 100, nullable = false)
     @NotEmpty
     private String encodedPassword;
 
-    // Not saved to the database. Used when registering the user.
-    // Contains the plain text of the password.
-    @Transient
+    @Transient // Do not save to database.
     @NotEmpty
     @Pattern(regexp = UserConstraints.PASSWORD_PATTERN)
+    @JsonProperty(required = true, access = JsonProperty.Access.WRITE_ONLY) // Enforce that when the user sends this object they include the password.
     private String password;
 
     @Column(length = UserConstraints.MAX_USERNAME_LENGTH, unique = true)

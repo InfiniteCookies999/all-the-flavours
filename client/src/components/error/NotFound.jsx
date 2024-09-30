@@ -1,8 +1,7 @@
 import ErrorInfo from "./ErrorInfo";
-import { useLocation } from 'react-router-dom';
 
 const NotFound = () => {
-  const location = useLocation();
+  const location = window.location;
 
   return <ErrorInfo infoColumn={
     <>

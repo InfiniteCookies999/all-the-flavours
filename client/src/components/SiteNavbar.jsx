@@ -23,7 +23,6 @@ const SiteNavbar = () => {
   }, []);
 
   const onLogout = () => {
-    console.log("LOGGING OUT!");
     axios.post('/api/auth/logout')
       .then(() => {
         window.location.href = '/'; // Redirect to home
@@ -31,7 +30,6 @@ const SiteNavbar = () => {
       .catch(error => console.error(error));
   };
 
-  // TODO: Deal with better
   if (loading) {
     return;
   }

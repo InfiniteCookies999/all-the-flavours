@@ -10,6 +10,19 @@ const usernamePattern = /^[A-Za-z0-9_-]*$/;
 const phonePattern = /^(\d)*(-(\d)*)?(-(\d)*)?$/;
 const passwordPattern = /^[a-zA-Z0-9@$!%*?&]*$/;
 
+const FormError = ({ valid, otherValid, errorMsg, collapsed }) => {
+  //!valid ? errorMsg : ''
+  return (
+    <>
+      {(!valid || (!otherValid && !collapsed)) && (
+        <div className="text-danger mt-1" style={{ opacity: valid ? 0 : 1 }}>
+          {!valid ? errorMsg : ';'}
+        </div>
+    )}
+    </>
+  );
+};
+
 const SignUp = () => {
 
   const [firstName, setFirstName] = useState('');
@@ -140,7 +153,6 @@ const SignUp = () => {
   const collapsed = useResponsiveValue(collapsedBreakpoints);
 
   // TODO: Add a show password button
-  // TODO: Fix issue with rows not aligning because of errors
 
   return (
     <AuthContainer xs={12} md={8} lg={7}>
@@ -149,6 +161,7 @@ const SignUp = () => {
         <Form onSubmit={handleSubmit} noValidate>
           <Row>
             <Col xs={12} md={6}>
+            
               <Form.Group controlId="firstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
@@ -172,7 +185,10 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!firstNameValid && <div className="text-danger mt-1">{firstNameError}</div>}
+              <FormError valid={firstNameValid}
+                         otherValid={lastNameValid}
+                         errorMsg={firstNameError}
+                         collapsed={collapsed} />
 
               <Form.Group controlId="username" className="mt-2">
                 <Form.Label>Username</Form.Label>
@@ -197,7 +213,10 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!usernameValid && <div className="text-danger mt-1">{usernameError}</div>}
+              <FormError valid={usernameValid}
+                         otherValid={true}
+                         errorMsg={usernameError}
+                         collapsed={collapsed} />
 
               <Form.Group controlId="email" className="mt-2">
                 <Form.Label>Email</Form.Label>
@@ -217,8 +236,11 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!emailValid && <div className="text-danger mt-1">{emailError}</div>}
-
+              <FormError valid={emailValid}
+                         otherValid={phoneValid}
+                         errorMsg={emailError}
+                         collapsed={collapsed} />
+            
               <Form.Group controlId="password" className="mt-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -245,7 +267,10 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!passwordValid && <div className="text-danger mt-1">{passwordError}</div>}
+              <FormError valid={passwordValid}
+                         otherValid={repeatedPasswordValid}
+                         errorMsg={passwordError}
+                         collapsed={collapsed} />
 
               <div className="mt-2" style={{
                 color: 'gray',
@@ -284,15 +309,24 @@ const SignUp = () => {
                     required
                   />
               </Form.Group>
-              {!lastNameValid && <div className="text-danger mt-1">{lastNameError}</div>}
+              <FormError valid={lastNameValid}
+                         otherValid={firstNameValid}
+                         errorMsg={lastNameError}
+                         collapsed={collapsed} />
 
               {!collapsed && (
-                <Form.Group className="mt-2" style={{
-                  opacity: 0
-                }}>
-                  <Form.Label>Hidden</Form.Label>
-                  <Form.Control type="text" />
-                </Form.Group>
+                <>
+                  <Form.Group className="mt-2" style={{
+                    opacity: 0
+                  }}>
+                    <Form.Label>Hidden</Form.Label>
+                    <Form.Control type="text" />
+                  </Form.Group>
+                  <FormError valid={true}
+                             otherValid={usernameValid}
+                             errorMsg={''}
+                             collapsed={collapsed} />
+                </>
               )}
 
               <Form.Group controlId="phone" className="mt-2">
@@ -335,7 +369,10 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!phoneValid && <div className="text-danger mt-1">{phoneError}</div>}
+              <FormError valid={phoneValid}
+                         otherValid={emailValid}
+                         errorMsg={phoneError}
+                         collapsed={collapsed} />
 
               <Form.Group controlId="passwordRepeat" className="mt-2">
                 <Form.Label>Repeat Password</Form.Label>
@@ -360,7 +397,10 @@ const SignUp = () => {
                   required
                 />
               </Form.Group>
-              {!repeatedPasswordValid && <div className="text-danger mt-1">{repeatedPasswordError}</div>}
+              <FormError valid={repeatedPasswordValid} 
+                         otherValid={passwordValid}
+                         errorMsg={repeatedPasswordError}
+                         collapsed={collapsed} />
             </Col>
           </Row>
 

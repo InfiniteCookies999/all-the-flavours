@@ -10,6 +10,7 @@ function useFetchRecipes() {
   const [page, setPage] = useState(0);
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [delayed, setDelayed] = useState(null);
 
   const { setError } = useError();
 
@@ -26,6 +27,7 @@ function useFetchRecipes() {
     .then(response => {
       const recipes = response.data;
       setRecipes(prevRecipes => [...prevRecipes, ...recipes]);
+      setDelayed(prevDelayed => prevDelayed === null);
       setPrevPage(page);
       setLoading(false);
     })
@@ -41,11 +43,20 @@ function useFetchRecipes() {
     };
   }, [page, prevPage, setError]);
 
-  return [recipes, page, setPage, prevPage, loading, setLoading];
+  return [recipes, page, setPage, prevPage, loading, setLoading, delayed, setDelayed];
 }
 
 const RecipeListing = () => {
-  const [recipes, page, setPage, prevPage, loading, setLoading] = useFetchRecipes();
+  const [
+    recipes,
+    page,
+    setPage,
+    prevPage,
+    loading,
+    setLoading, 
+    delayed,
+    setDelayed
+  ] = useFetchRecipes();
 
   const loadMoreRef = useRef(null);
 
@@ -88,12 +99,26 @@ const RecipeListing = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    if (delayed === null) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDelayed(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [delayed, setDelayed]);
+
   if (recipes.length === 0) {
-    return <div>Loading...</div>;
+    return;
   }
 
   return (
-    <div className="row g-3">
+    <div className="row g-3" style={{
+      opacity: delayed ? 0 : 1
+    }}>
       {recipes.map((recipe, index) => (
         <a key={recipe.id} className={colClass}
            ref={index === recipes.length - 1 ? loadMoreRef : null}

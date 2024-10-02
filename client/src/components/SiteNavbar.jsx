@@ -23,7 +23,7 @@ const SiteNavbar = () => {
         top: '0',
         width: '100%',
         zIndex: 999,
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' // Light box shadow for visuals
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)' // Light box shadow for visuals
       }}>
         <Container>
           <Navbar.Brand href='/' className={navbarHoverClass} style={{

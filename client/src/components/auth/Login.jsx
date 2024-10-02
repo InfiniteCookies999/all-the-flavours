@@ -112,7 +112,7 @@ const Login = () => {
                               }
                               setEmail(email);
                             }}
-                            className={!emailValid ? 'is-invalid' : ''} />
+                            className={"login-input " + (!emailValid ? 'is-invalid' : '')} />
               <i className="fas fa-envelope position-absolute" style={formIconClass}></i>
             </Form.Group>
             {!emailValid && <div className="text-danger mt-1">{emailError}</div>}
@@ -127,7 +127,7 @@ const Login = () => {
                               }
                               setPassword(password);
                             }}
-                            className={!passwordValid ? 'is-invalid' : ''} />
+                            className={"login-input " + (!passwordValid ? 'is-invalid' : '')} />
               <i className="fas fa-lock position-absolute" style={formIconClass}></i>
             </Form.Group>
             {!passwordValid && <div className="text-danger mt-1">{passwordError}</div>}
@@ -161,7 +161,7 @@ const Login = () => {
                 pointer-events: none;
               }
               
-              .form-control {
+              .login-input {
                 padding-left: 2.5rem;
               }
 

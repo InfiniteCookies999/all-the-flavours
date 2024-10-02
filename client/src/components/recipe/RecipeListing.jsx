@@ -4,97 +4,10 @@ import StarRating from "./RecipeStarRating";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
-import { Container, Form } from "react-bootstrap";
-import useCollapsed from "../../hooks/useCollapsed";
 import { useSearchParams } from "react-router-dom";
-
-const RecipeSearchInput = () => {
-  
-  const [searchParams] = useSearchParams();
-  const paramSearchTerm = searchParams.get("search") || "";
-
-  const collapsed = useCollapsed();
-  const [searchTerm, setSearchTerm] = useState(paramSearchTerm);
-  
-  const handleSearch = () => {
-    if (searchTerm !== '') {
-      window.location.href = "/recipes?search=" + searchTerm;
-    } else {
-      window.location.href = "/recipes";
-    }
-  };
-
-  return (
-    <div style={{
-      width: '100%',
-      height: '12rem',
-      backgroundColor: '#e0e0e0',
-      position: 'absolute',
-      top: 0,
-      left: 0
-    }}>
-      <Container style={{ marginTop: '8rem' }}>
-        <div className="position-relative">
-          <Form.Control type="text" style={{
-              width: collapsed ? '95%' : '48%',
-              border: '1px solid gray',
-              height: '2.5rem'
-            }}
-            className="search-input"
-            placeholder="search"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                handleSearch();
-              }
-            }}
-            value={searchTerm}>
-          </Form.Control>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: collapsed ? 'calc(100% - 2rem)' : 'calc(50% - 2rem)',
-            borderTopRightRadius: '5px',
-            borderBottomRightRadius: '5px',
-            paddingLeft: '0.5rem',
-            paddingRight: '0.5rem',
-            backgroundColor: theme.colors.primary,
-            borderRight: '1px solid gray',
-            borderTop: '1px solid gray',
-            borderBottom: '1px solid gray',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            color: '#424242'
-          }}
-          className="search-btn"
-          onClick={handleSearch}>
-            <i className="fas fa-magnifying-glass"></i>
-          </div>
-        </div>
-      </Container>
-      <style>
-        {`
-          .search-input {
-            outline: none;
-            box-shadow: none !important;
-          }
-
-          .search-input:focus {
-            box-shadow: 0 0 2px gray !important;
-          }
-
-          .search-btn:hover {
-            cursor: pointer;
-            background-color: ${theme.colors.primaryDark} !important;
-            color: black !important;
-          }
-        `}
-      </style>
-    </div>
-  );
-};
+import RecipeSearchInput from "./RecipeSearchInput";
+import { Container } from "react-bootstrap";
+import useCollapsed from "../../hooks/useCollapsed";
 
 function useFetchRecipes() {
 
@@ -171,6 +84,8 @@ const RecipeListing = () => {
 
   const loadMoreRef = useRef(null);
 
+  const collapsed = useCollapsed();
+
   // Code to detect intersection with last element and so that
   // more recipes can be loaded.
   useEffect(() => {
@@ -232,9 +147,23 @@ const RecipeListing = () => {
 
   return (
     <div style={{ opacity: delayed ? 0 : 1 }}>
-      <RecipeSearchInput />
+      <div style={{
+        width: '100%',
+        height: '13rem',
+        backgroundColor: '#e0e0e0',
+        position: 'absolute',
+        top: 0,
+        left: 0
+      }}>
+        <Container style={{ marginTop: '7rem' }}>
+          <h3>Search for recipe</h3>
+          <RecipeSearchInput style={{
+            width: collapsed ? '100%' : '50%'
+          }} />
+        </Container>
+      </div>
       {recipes.length !== 0 ? (
-        <div className="row g-3" style={{ marginTop: '12rem' }}>
+        <div className="row g-3" style={{ marginTop: '14rem' }}>
           {recipes.map((recipe, index) => (
             <a key={recipe.id} className={colClass}
               ref={index === recipes.length - 1 ? loadMoreRef : null}

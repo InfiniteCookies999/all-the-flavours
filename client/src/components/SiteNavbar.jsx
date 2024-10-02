@@ -3,6 +3,8 @@ import SiteLogo from './SiteLogo';
 import theme from '../theme';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import RecipeSearchInput from './recipe/RecipeSearchInput';
+import useResponsiveValue from '../hooks/useResponsitveValue';
 
 const navbarHoverClass ='navbar-hover';
 
@@ -10,8 +12,17 @@ const SiteNavbar = () => {
 
   const { isLoggedIn, loading, onLogout } = useContext(AuthContext);
 
+  const collapsedBreakpoints = {
+    small: true,
+    medium: true,
+    large: true,
+    other: false
+  };
+  
+  const collapsed = useResponsiveValue(collapsedBreakpoints);
+
   if (loading) {
-    return;
+    return null;
   }
 
   return (
@@ -25,7 +36,11 @@ const SiteNavbar = () => {
         zIndex: 999,
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)' // Light box shadow for visuals
       }}>
-        <Container>
+        <Container style={{
+          margin: '0 2rem 0 2rem',
+          maxWidth: '100%',
+          width: '100%'
+        }}>
           <Navbar.Brand href='/' className={navbarHoverClass} style={{
             display: 'flex',
             alignItems: 'center',
@@ -41,6 +56,10 @@ const SiteNavbar = () => {
               `}
             </style>
           </Navbar.Brand>
+          <RecipeSearchInput style={{ 
+            width: collapsed ? '50%' : '38%',
+            marginLeft: '1rem'
+            }} />
           <Navbar.Toggle aria-controls='collapsable-navbar' />
           <Navbar.Collapse id='collapsable-navbar'>
             <Nav className="ms-auto">
@@ -83,7 +102,7 @@ const SiteNavbar = () => {
         </Container>
       </Navbar>
     </div>
-  )
+  );
 }
 
 export default SiteNavbar;

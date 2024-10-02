@@ -28,11 +28,11 @@ const AuthContainer = ({ children, xs, md, lg }) => {
             box-shadow: none !important;
           }
 
-          .form-control::placeholder {
+          .login-input::placeholder {
             color: var(--placeholder-color);
           }
           
-          .form-control:focus {
+          .login-input:focus {
             outline: none;
             box-shadow: none; /* Remove the blue glow */
             border-color: #999; /* Change the border color to a more subtle gray */

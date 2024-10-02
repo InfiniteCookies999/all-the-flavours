@@ -6,11 +6,24 @@ import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import { Container, Form } from "react-bootstrap";
 import useCollapsed from "../../hooks/useCollapsed";
+import { useSearchParams } from "react-router-dom";
 
 const RecipeSearchInput = () => {
   
+  const [searchParams] = useSearchParams();
+  const paramSearchTerm = searchParams.get("search") || "";
+
   const collapsed = useCollapsed();
+  const [searchTerm, setSearchTerm] = useState(paramSearchTerm);
   
+  const handleSearch = () => {
+    if (searchTerm !== '') {
+      window.location.href = "/recipes?search=" + searchTerm;
+    } else {
+      window.location.href = "/recipes";
+    }
+  };
+
   return (
     <div style={{
       width: '100%',
@@ -24,10 +37,18 @@ const RecipeSearchInput = () => {
         <div className="position-relative">
           <Form.Control type="text" style={{
               width: collapsed ? '95%' : '48%',
-              border: '1px solid gray'
+              border: '1px solid gray',
+              height: '2.5rem'
             }}
             className="search-input"
-            placeholder="search">
+            placeholder="search"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            value={searchTerm}>
           </Form.Control>
           <div style={{
             position: 'absolute',
@@ -47,7 +68,8 @@ const RecipeSearchInput = () => {
             height: '100%',
             color: '#424242'
           }}
-          className="search-btn">
+          className="search-btn"
+          onClick={handleSearch}>
             <i className="fas fa-magnifying-glass"></i>
           </div>
         </div>
@@ -75,11 +97,15 @@ const RecipeSearchInput = () => {
 };
 
 function useFetchRecipes() {
+
+  const [searchParams] = useSearchParams();
+
   const [prevPage, setPrevPage] = useState(-1);
   const [page, setPage] = useState(0);
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [delayed, setDelayed] = useState(null);
+  const [noMoreRecipes, setNoMoreRecipes] = useState(false);
 
   const { setError } = useError();
 
@@ -90,7 +116,8 @@ function useFetchRecipes() {
 
     const controller = new AbortController();
 
-    axios.get(`/api/recipes?page=${page}`, {
+    const searchTerm = searchParams.get("search") || "";
+    axios.get(`/api/recipes?page=${page}&search=${searchTerm}`, {
       signal: controller.signal
     })
     .then(response => {
@@ -99,6 +126,9 @@ function useFetchRecipes() {
       setDelayed(prevDelayed => prevDelayed === null);
       setPrevPage(page);
       setLoading(false);
+      if (recipes.length === 0) {
+        setNoMoreRecipes(true);
+      }
     })
     .catch((error) => {
       if (error.name !== "AbortError" && error.name !== "CanceledError") {
@@ -110,9 +140,20 @@ function useFetchRecipes() {
     return () => {
       controller.abort();
     };
-  }, [page, prevPage, setError]);
+  }, [page, prevPage, setError, searchParams, setNoMoreRecipes]);
 
-  return [recipes, page, setPage, prevPage, loading, setLoading, delayed, setDelayed];
+  return [
+    recipes,
+    page, 
+    setPage, 
+    prevPage, 
+    loading, 
+    setLoading, 
+    delayed, 
+    setDelayed, 
+    noMoreRecipes, 
+    setNoMoreRecipes
+  ];
 }
 
 const RecipeListing = () => {
@@ -124,7 +165,8 @@ const RecipeListing = () => {
     loading,
     setLoading, 
     delayed,
-    setDelayed
+    setDelayed,
+    noMoreRecipes
   ] = useFetchRecipes();
 
   const loadMoreRef = useRef(null);
@@ -169,6 +211,10 @@ const RecipeListing = () => {
   }, []);
 
   useEffect(() => {
+    if (noMoreRecipes) {
+      setDelayed(false);
+      return;
+    }
     if (delayed === null) {
       return;
     }
@@ -178,74 +224,81 @@ const RecipeListing = () => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [delayed, setDelayed]);
+  }, [delayed, setDelayed, noMoreRecipes]);
 
-  if (recipes.length === 0) {
+  if (recipes.length === 0 && !noMoreRecipes) {
     return;
   }
 
   return (
     <div style={{ opacity: delayed ? 0 : 1 }}>
       <RecipeSearchInput />
-      <div className="row g-3" style={{ marginTop: '12rem' }}>
-        {recipes.map((recipe, index) => (
-          <a key={recipe.id} className={colClass}
-            ref={index === recipes.length - 1 ? loadMoreRef : null}
-            href={`/recipe/${recipe.id}`}
-            style={{
-              color: 'black',
-              textDecoration: 'none',
-            }}
-          >
-            <div className="d-flex flex-column h-100 recipe-link" style={{
-              border: '1px solid gray',
-              marginBottom: '2rem',
-              padding: '1rem',
-              backgroundColor: theme.colors.backgroundLight,
-              borderRadius: '5px',
-              // Flex control so all the columns are the same height.
-              flexGrow: 1
-            }}
-            to={`/recipe/${recipe.id}`}>
-              <img src={recipe.images[0]}
-                  alt={`Alt ${recipe.id}`}
-                  className="d-block w-100"
-                  style={{
-                    width: '100%',
-                    aspectRatio: '1 / 1',
-                    objectFit: 'cover',
+      {recipes.length !== 0 ? (
+        <div className="row g-3" style={{ marginTop: '12rem' }}>
+          {recipes.map((recipe, index) => (
+            <a key={recipe.id} className={colClass}
+              ref={index === recipes.length - 1 ? loadMoreRef : null}
+              href={`/recipe/${recipe.id}`}
+              style={{
+                color: 'black',
+                textDecoration: 'none',
+              }}
+            >
+              <div className="d-flex flex-column h-100 recipe-link" style={{
+                border: '1px solid gray',
+                marginBottom: '2rem',
+                padding: '1rem',
+                backgroundColor: theme.colors.backgroundLight,
+                borderRadius: '5px',
+                // Flex control so all the columns are the same height.
+                flexGrow: 1
+              }}
+              to={`/recipe/${recipe.id}`}>
+                <img src={recipe.images[0]}
+                    alt={`Alt ${recipe.id}`}
+                    className="d-block w-100"
+                    style={{
+                      width: '100%',
+                      aspectRatio: '1 / 1',
+                      objectFit: 'cover',
+                    }}>
+                </img>
+                {/* This part can have varied height so need to use flex-grow-1 */}
+                <div className="flex-grow-1" style={{ 
+                  marginTop: '1rem',
+                  height: 'fit-content',
+                  marginBottom: '0rem',
                   }}>
-              </img>
-              {/* This part can have varied height so need to use flex-grow-1 */}
-              <div className="flex-grow-1" style={{ 
-                marginTop: '1rem',
-                height: 'fit-content',
-                marginBottom: '0rem',
-                }}>
-                <h3 className="recipe-title">{recipe.title}</h3>
-                <StarRating rating={4.5} numberReviews={20} style={{
-                  overflow: 'hidden'
-                }} />
+                  <h3 className="recipe-title">{recipe.title}</h3>
+                  <StarRating rating={4.5} numberReviews={20} style={{
+                    overflow: 'hidden'
+                  }} />
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
-      <style>
-        {`
-          .recipe-link:hover {
-            box-shadow: 0 4px 10px rgba(0.5, 0.5, 0.5, 0.2);
-            filter: brightness(0.95);
-            cursor: pointer;
-          }
+            </a>
+          ))}
+        <style>
+          {`
+            .recipe-link:hover {
+              box-shadow: 0 4px 10px rgba(0.5, 0.5, 0.5, 0.2);
+              filter: brightness(0.95);
+              cursor: pointer;
+            }
 
-          .recipe-link:hover .recipe-title {
-            text-decoration: underline !important;
-          }
-        `}
-      </style>
-      </div> 
+            .recipe-link:hover .recipe-title {
+              text-decoration: underline !important;
+            }
+          `}
+        </style>
+        </div> 
+      ) : (
+        <div style={{ marginTop: '14rem', textAlign: 'center' }}>
+          <h2>No recipe found.</h2>
+          <span>Please try a different search</span>
+        </div>
+      )}
     </div>
-  )
+  );
 };
 
 export default RecipeListing;

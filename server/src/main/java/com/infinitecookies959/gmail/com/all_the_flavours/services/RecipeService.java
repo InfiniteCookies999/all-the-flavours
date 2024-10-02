@@ -6,6 +6,7 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,10 +35,21 @@ public class RecipeService {
         return recipeRepository.findById(id).map(this::prefixImages);
     }
 
-    @Transactional(readOnly = true)
-    public List<Recipe> getRecipes(int page, int pageSize) {
-        Page<Recipe> recipePage = recipeRepository.findAll(PageRequest.of(page, pageSize));
+    private List<Recipe> fixupRecipes(Page<Recipe> recipePage) {
         return recipePage.getContent().stream().map(this::prefixImages).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> getRecipes(int page, int pageSize, String search) {
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Recipe> recipePage;
+        if (search != null && !search.isEmpty()) {
+            recipePage = recipeRepository.findByTitleContainingIgnoreCase(search, pageable);
+        } else {
+            recipePage = recipeRepository.findAll(pageable);
+        }
+        return fixupRecipes(recipePage);
     }
 
     @Transactional

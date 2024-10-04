@@ -86,6 +86,8 @@ const RecipeListing = () => {
 
   const collapsed = useCollapsed();
 
+  document.title = "Recipes";
+
   // Code to detect intersection with last element and so that
   // more recipes can be loaded.
   useEffect(() => {

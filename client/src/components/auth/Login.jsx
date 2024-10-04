@@ -39,6 +39,8 @@ const Login = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
+  document.title = "Login";
+
   const updatePasswordError = (password) => {
     const passwordValid = password.length > 0;
     if (!passwordValid) {

@@ -25,6 +25,8 @@ const Recipe = () => {
   const [recipe, setRecipe] = useState(null);
 
   const { setError } = useError();
+
+  document.title = "Recipe";
   
   useEffect(() => {
     axios.get(`/api/recipes/${id}`)

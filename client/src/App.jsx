@@ -39,6 +39,8 @@ const App = () => {
     }
   ]);
 
+  document.title = "";
+
   return (
     <AuthProvider>
       <SiteNavbar />
@@ -51,7 +53,11 @@ const App = () => {
         minHeight: '40rem',
       }}>
         <ErrorProvider>
-          <RouterProvider router={indexRouter} />
+          <RouterProvider 
+            render={() =>{
+              document.title = "Test";
+            }} 
+            router={indexRouter} />
         </ErrorProvider>
       </Container>
       <SiteFooter />

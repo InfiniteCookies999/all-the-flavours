@@ -64,6 +64,8 @@ const SignUp = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
+  document.title = "Sign up";
+
   const updateNotEmptyError = (field, setError) => {
     const fieldValid = field.length !== 0;
     if (!fieldValid) {

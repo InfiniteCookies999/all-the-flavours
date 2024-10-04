@@ -44,12 +44,12 @@ const Recipe = () => {
       rating: 3.63,
       numberReviews: 20,
       ranking: 201
-    }} >
+    }}>
       <RecipeContainer>
         <h1>{recipe.title}</h1>
         <RecipeInfo />
         <div style={{ marginTop: '1rem' }}>
-          <RecipeCarousel />
+          <RecipeCarousel showImages={recipe.images} />
         </div>
         <RecipeDescription style={{ marginTop: '1rem' }} />
         <RecipeIngredients style={{ marginTop: '1rem' }} />

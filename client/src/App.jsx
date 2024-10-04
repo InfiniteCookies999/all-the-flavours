@@ -13,6 +13,7 @@ import { ErrorProvider } from "./contexts/ErrorContext";
 import SignUp from "./components/auth/SignUp";
 import { AuthProvider } from "./contexts/AuthContext";
 import RecipeListing from "./components/recipe/RecipeListing";
+import CreateRecipe from "./components/recipe/CreateRecipe";
 
 const App = () => {
 
@@ -32,6 +33,10 @@ const App = () => {
     {
       path: '/sign-up',
       element: <SignUp />
+    },
+    {
+      path: '/create-recipe',
+      element: <CreateRecipe />
     },
     {
       path: '*',

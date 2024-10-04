@@ -25,7 +25,14 @@ const IngredientRow = ({
         <Form.Control 
           type="text"
           value={ingredient.wholeAmount}
-          onChange={(e) => handleIngredientChange(index, 'wholeAmount', e.target.value)} 
+          onChange={(e) => {
+            const wholeAmount = e.target.value;
+            if (!/^[0-9]*$/.test(wholeAmount) || (wholeAmount.startsWith("0") && wholeAmount !== '0')) {
+              e.preventDefault();
+              return;
+            }
+            handleIngredientChange(index, 'wholeAmount', wholeAmount);
+          }} 
         />
         <Form.Control
           style={{ width: '4rem' }}
@@ -44,14 +51,28 @@ const IngredientRow = ({
         <Form.Control 
           type="text"
           value={ingredient.unit}
-          onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)} 
+          onChange={(e) => {
+            const unit = e.target.value;
+            if (!/^[a-zA-Z]*$/.test(unit)) {
+              e.preventDefault();
+              return;
+            }
+            handleIngredientChange(index, 'unit', unit);
+          }} 
         />
       </td>
       <td>
         <Form.Control 
           type="text"
           value={ingredient.name}
-          onChange={(e) => handleIngredientChange(index, 'name', e.target.value)} 
+          onChange={(e) => {
+            const name = e.target.value;
+            if (!/^[a-zA-Z ]*$/.test(name)) {
+              e.preventDefault();
+              return;
+            }
+            handleIngredientChange(index, 'name', name)
+          }} 
         />
       </td>
       <td>
@@ -62,13 +83,12 @@ const IngredientRow = ({
           width: '100%'
         }}>
           {addIngredient ? (
-            // TODO: change to a better icon.
             <span className="material-icons add-ingredient-icon" style={{
               color: '#383838',
               transform: 'translateY(0.4rem)'
             }}
             onClick={() => onIngredientAdd()}>
-              data_saver_on
+              add_circle
             </span>
           ) : (
             <span className="material-icons remove-ingredient-icon" style={{

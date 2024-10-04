@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, Table } from "react-bootstrap";
 import styled from "styled-components";
 import RecipeCarousel from "./RecipeCarousel";
+import theme from "../../theme";
 
 const CreateRecipeContainer = styled.div`
   width: 100%;
@@ -24,6 +25,7 @@ const IngredientRow = ({
       <td style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <Form.Control 
           type="text"
+          className="recipe-input"
           value={ingredient.wholeAmount}
           onChange={(e) => {
             const wholeAmount = e.target.value;
@@ -37,6 +39,7 @@ const IngredientRow = ({
         <Form.Control
           style={{ width: '4rem' }}
           as="select"
+          className="recipe-input"
           value={ingredient.fractionAmount}
           onChange={(e) => handleIngredientChange(index, 'fractionAmount', e.target.value)}>
           <option>0</option>
@@ -50,6 +53,7 @@ const IngredientRow = ({
       <td>
         <Form.Control 
           type="text"
+          className="recipe-input"
           value={ingredient.unit}
           onChange={(e) => {
             const unit = e.target.value;
@@ -64,6 +68,7 @@ const IngredientRow = ({
       <td>
         <Form.Control 
           type="text"
+          className="recipe-input"
           value={ingredient.name}
           onChange={(e) => {
             const name = e.target.value;
@@ -177,6 +182,7 @@ const CreateRecipe = () => {
       <h1>Create Recipe</h1>
       <Form className="mt-3" onSubmit={handleSubmit} noValidate>
         <Form.Control type="text"
+                      className="recipe-input"
                       placeholder="Original Cookies"
                       maxLength={70}
                       value={title}
@@ -191,6 +197,7 @@ const CreateRecipe = () => {
         <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Description</Form.Label>
         <Form.Control 
           as="textarea" 
+          className="recipe-input"
           rows={5} // Adjust rows as needed
           placeholder="Enter a description for the recipe"
           value={description}
@@ -226,22 +233,27 @@ const CreateRecipe = () => {
             onIngredientAdd={handleIngredientAdd}
           />
           </tbody>
-          <style>
-            {`
-              .remove-ingredient-icon:hover {
-                cursor: pointer;
-                color: red !important;
-              }
-
-              .add-ingredient-icon:hover {
-                cursor: pointer;
-                color: green !important;
-                }
-            `}
-          </style>
         </Table>
-
       </Form>
+      <style>
+        {`
+          .remove-ingredient-icon:hover {
+            cursor: pointer;
+            color: red !important;
+          }
+
+          .add-ingredient-icon:hover {
+            cursor: pointer;
+            color: green !important;
+          }
+
+          .recipe-input:focus {
+            outline: none;
+            box-shadow: none;
+            border: 1px solid ${theme.colors.primaryDark};
+          }
+        `}
+      </style>
     </CreateRecipeContainer>
   );
 };

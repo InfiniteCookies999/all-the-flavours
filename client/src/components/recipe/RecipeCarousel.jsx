@@ -74,7 +74,7 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
 
   const deleteImage = (indexToDelete) => {
     setImages((prevImages) => {
-      const updatedImages = prevImages.filter((_, index) => index !== indexToDelete)
+      const updatedImages = prevImages.filter((_, index) => index !== indexToDelete);
       
       setDisableTransition(true);
       if (activeIndex >= updatedImages.length) {

@@ -205,7 +205,7 @@ const SignUp = () => {
                   type="text"
                   placeholder="Susan"
                   value={firstName}
-                  className={!firstNameValid ? 'is-invalid' : ''}
+                  className={"auth-input " +  (!firstNameValid ? 'is-invalid' : '')}
                   maxLength={40}
                   onChange={(e) => {
                     const firstName = e.target.value;
@@ -235,7 +235,7 @@ const SignUp = () => {
                     type="text"
                     placeholder="Smith"
                     value={lastName}
-                    className={!lastNameValid ? 'is-invalid' : ''}
+                    className={"auth-input " + (!lastNameValid ? 'is-invalid' : '')}
                     maxLength={40}
                     onChange={(e) => {
                       const lastName = e.target.value;
@@ -265,7 +265,7 @@ const SignUp = () => {
                   type="text"
                   placeholder="susan241"
                   value={username}
-                  className={!usernameValid ? 'is-invalid' : ''}
+                  className={"auth-input " + (!usernameValid ? 'is-invalid' : '')}
                   maxLength={32}
                   onChange={(e) => {
                     const username = e.target.value;
@@ -310,7 +310,7 @@ const SignUp = () => {
                     type="text"
                     placeholder="susan-smith@gmail.com"
                     value={email}
-                    className={!emailValid ? 'is-invalid' : ''}
+                    className={"auth-input " + (!emailValid ? 'is-invalid' : '')}
                     maxLength={254}
                     onChange={(e) => {
                       const email = e.target.value;
@@ -335,7 +335,7 @@ const SignUp = () => {
                   type="text"
                   placeholder="777-777-7777"
                   value={phone}
-                  className={!phoneValid ? 'is-invalid' : ''}
+                  className={"auth-input " + (!phoneValid ? 'is-invalid' : '')}
                   maxLength={12}
                   onChange={(e) => {
                     let phone = e.target.value;
@@ -382,7 +382,7 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="password"
                   value={password}
-                  className={!passwordValid ? 'is-invalid' : ''}
+                  className={"auth-input " + (!passwordValid ? 'is-invalid' : '')}
                   maxLength={100}
                   onChange={(e) => {
                     const password = e.target.value;
@@ -415,7 +415,7 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="repeated password"
                   value={repeatedPassword}
-                  className={!repeatedPasswordValid ? 'is-invalid' : ''}
+                  className={"auth-input " + (!repeatedPasswordValid ? 'is-invalid' : '')}
                   maxLength={100}
                   onChange={(e) => {
                     const repeatedPassword = e.target.value;

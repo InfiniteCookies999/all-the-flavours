@@ -128,96 +128,107 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
         accept={acceptedFileTypes.join(', ')}
         hidden={true} />
       {images.length > 0 ? (
-        <Carousel
-          interval={null} // Prevent auto-scrolling
-          activeIndex={activeIndex}
-          onSelect={(index) => setActiveIndex(index)}
-          onSlide={() => setIsTransitioning(true)}
-          onSlid={() => {
-            setIsTransitioning(false)
-            setDisableTransition(false);
-          }}
-          controls={images.length > 0}
-          className={disableTransition ? "disable-transition" : ""}
-        >
-          {images.map((image, index) => (
-            <Carousel.Item
-              key={index}
-              onDragOver={(e) => {
-                if (index === images.length - 1) {
-                  handleImageDragOver(e);
-                }
-              }}
-              onDragLeave={() => {
-                if (index === images.length - 1) {
-                  handleImageDragLeave();
-                }
-              }}
-              onDrop={(e) => {
-                if (index === images.length - 1) {
-                  handleImageDragDrop(e)
-                }
-              }}>
-              {showEdit && !isTransitioning && (
-                <>
-                  <span className="material-icons position-absolute trash-img-icon" style={{
-                    right: 0,
-                    ...editIconClass
-                  }}
-                  onClick={() => deleteImage(index)}>
-                    delete
-                  </span>
-                  <span className="material-icons position-absolute add-img-icon" style={
-                    editIconClass
+        <>
+          <Carousel
+            interval={null} // Prevent auto-scrolling
+            activeIndex={activeIndex}
+            onSelect={(index) => setActiveIndex(index)}
+            onSlide={() => setIsTransitioning(true)}
+            onSlid={() => {
+              setIsTransitioning(false)
+              setDisableTransition(false);
+            }}
+            controls={images.length > 0}
+            className={disableTransition ? "disable-transition" : ""}
+          >
+            {images.map((image, index) => (
+              <Carousel.Item
+                key={index}
+                onDragOver={(e) => {
+                  if (index === images.length - 1) {
+                    handleImageDragOver(e);
                   }
-                  onClick={selectImage}>
-                    add_circle
-                  </span>
-                </>
-              )}
-              <img
-                className="d-block w-100"
-                src={image}
-                alt={`Alt ${index}`}
-                style={{ 
-                  minHeight: imageSize,
-                  maxHeight: imageSize,
-                  objectFit: 'cover',
                 }}
-              />
-              <style>
-                {`
-                  .carousel-control-prev, .carousel-control-next {
-                    filter: invert(1) grayscale(1) contrast(1) brightness(0.8);
-                    color: white;                
+                onDragLeave={() => {
+                  if (index === images.length - 1) {
+                    handleImageDragLeave();
                   }
+                }}
+                onDrop={(e) => {
+                  if (index === images.length - 1) {
+                    handleImageDragDrop(e)
+                  }
+                }}>
+                {showEdit && !isTransitioning && (
+                  <>
+                    <span className="material-icons position-absolute trash-img-icon" style={{
+                      right: 0,
+                      ...editIconClass
+                    }}
+                    onClick={() => deleteImage(index)}>
+                      delete
+                    </span>
+                    <span className="material-icons position-absolute add-img-icon" style={
+                      editIconClass
+                    }
+                    onClick={selectImage}>
+                      add_circle
+                    </span>
+                    <div style={{
+                      width: '100%',
+                      height: imageSize,
+                      position: 'absolute',
+                      border: draggingImage ? "2px solid black" : "",
+                      zIndex: 25,
+                      pointerEvents: 'none'
+                    }}>
+                    </div>
+                  </>
+                )}
+                <img
+                  className="d-block w-100"
+                  src={image}
+                  alt={`Alt ${index}`}
+                  style={{ 
+                    minHeight: imageSize,
+                    maxHeight: imageSize,
+                    objectFit: 'cover',
+                  }}
+                />
+              </Carousel.Item>
+            ))}
+          </Carousel>
+          <style>
+            {`
+              .carousel-control-prev, .carousel-control-next {
+                filter: invert(1) grayscale(1) contrast(1) brightness(0.8);
+                color: white;                
+              }
 
-                  .carousel-indicators .active {
-                    background-color: orange !important; /* Dark color for active indicator */
-                  }
+              .carousel-indicators .active {
+                background-color: orange !important; /* Dark color for active indicator */
+              }
 
-                  .carousel-indicators button {
-                    background-color: black !important; /* Dark color for indicators */
-                  }
+              .carousel-indicators button {
+                background-color: black !important; /* Dark color for indicators */
+              }
 
-                  .trash-img-icon:hover {
-                    color: red !important;
-                    cursor: pointer;
-                  }
+              .trash-img-icon:hover {
+                color: red !important;
+                cursor: pointer;
+              }
 
-                  .add-img-icon:hover {
-                    color: gray !important;
-                    cursor: pointer;
-                  }
+              .add-img-icon:hover {
+                color: gray !important;
+                cursor: pointer;
+              }
 
-                  .disable-transition .carousel-item {
-                    transition: none !important;
-                  }
-                `}
-              </style>
-            </Carousel.Item>
-          ))}
-        </Carousel>
+              .disable-transition .carousel-item {
+                transition: none !important;
+              }
+            `}
+          </style>
+        </>
       ) : (
         <>
           <div className="click-drag-area" style={{

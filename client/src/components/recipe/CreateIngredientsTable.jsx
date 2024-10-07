@@ -43,6 +43,7 @@ const CreateIngredientRow = ({
           type="text"
           className="recipe-input"
           value={ingredient.unit}
+          placeholder="cup"
           onChange={(e) => {
             const unit = e.target.value;
             if (!/^[a-zA-Z]*$/.test(unit)) {
@@ -58,6 +59,7 @@ const CreateIngredientRow = ({
           type="text"
           className="recipe-input"
           value={ingredient.name}
+          placeholder="butter"
           onChange={(e) => {
             const name = e.target.value;
             if (!/^[a-zA-Z ]*$/.test(name)) {
@@ -68,7 +70,7 @@ const CreateIngredientRow = ({
           }} 
         />
       </td>
-      <td>
+      <td style={{ width: '5rem' }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -98,12 +100,29 @@ const CreateIngredientRow = ({
   );
 };
 
-const CreateIngredientsTable = ({ 
-  ingredients,
-  handleIngredientAdd, 
-  handleIngredientDelete,
-  handleIngredientChange
-}) => {
+const CreateIngredientsTable = ({ ingredients, setIngredients }) => {
+
+  const handleIngredientDelete = (indexToDelete) => {
+    setIngredients(prevIngredients => {
+      return prevIngredients.filter((_, index) => index !== indexToDelete);
+    });
+  };
+
+  const handleIngredientChange = (index, field, value) => {
+      const newIngredients = [...ingredients];
+      newIngredients[index][field] = value;
+      setIngredients(newIngredients);
+  };
+
+  const handleIngredientAdd = () => {
+    setIngredients(prevIngredients => [...prevIngredients, {
+      wholeAmount: 0,
+      fractionAmount: 0,
+      unit: '',
+      name: ''
+    }]);
+  };
+
   return (
     <>
       <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Ingredients</Form.Label>
@@ -120,8 +139,8 @@ const CreateIngredientsTable = ({
           {ingredients.map((ingredient, index) =>
             <CreateIngredientRow
               key={index}
-              ingredient={ingredient}
               index={index}
+              ingredient={ingredient}
               addIngredient={index === ingredients.length - 1}
               handleIngredientAdd={handleIngredientAdd}
               handleIngredientChange={handleIngredientChange}
@@ -130,18 +149,21 @@ const CreateIngredientsTable = ({
           )}
         </tbody>
       </Table>
+      <style>
+        {`
+          .remove-ingredient-icon:hover {
+            cursor: pointer;
+            color: red !important;
+          }
+
+          .add-ingredient-icon:hover {
+            cursor: pointer;
+            color: green !important;
+          }
+        `}
+      </style>
     </>
   );
 };
-
-/*
- <CreateIngredientRow
-          addIngredient={true}
-          ingredient={incompleteIngredient}
-          index={ingredients.length}
-          handleIngredientChange={handleIngredientChange}
-          onIngredientAdd={handleIngredientAdd}
-        />
-*/
 
 export default CreateIngredientsTable;

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Form, Table } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import RecipeCarousel from "./RecipeCarousel";
 import theme from "../../theme";
 import CreateIngredientsTable from "./CreateIngredientsTable";
+import CreateDirectionsTable from "./CreateDirectionsTable";
 
 const CreateRecipeContainer = styled.div`
   width: 100%;
@@ -25,29 +26,9 @@ const CreateRecipe = () => {
       name: ''
     }
   ]);
+  const [directions, setDirections] = useState([ '' ]);
 
   document.title = "Create recipe";
-  
-  const handleIngredientDelete = (indexToDelete) => {
-    setIngredients(prevIngredients => {
-      return prevIngredients.filter((_, index) => index !== indexToDelete);
-    });
-  };
-
-  const handleIngredientChange = (index, field, value) => {
-      const newIngredients = [...ingredients];
-      newIngredients[index][field] = value;
-      setIngredients(newIngredients);
-  };
-
-  const handleIngredientAdd = () => {
-    setIngredients(prevIngredients => [...prevIngredients, {
-      wholeAmount: 0,
-      fractionAmount: 0,
-      unit: '',
-      name: ''
-    }]);
-  };
 
   const handleSubmit = () => {
 
@@ -74,7 +55,7 @@ const CreateRecipe = () => {
         <Form.Control 
           as="textarea" 
           className="recipe-input"
-          rows={5} // Adjust rows as needed
+          rows={5}
           placeholder="Enter a description for the recipe"
           value={description}
           maxLength={300}
@@ -83,47 +64,17 @@ const CreateRecipe = () => {
 
         <CreateIngredientsTable
           ingredients={ingredients}
-          handleIngredientAdd={handleIngredientAdd}
-          handleIngredientDelete={handleIngredientDelete}
-          handleIngredientChange={handleIngredientChange}
+          setIngredients={setIngredients}
           />
 
-        <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Directions</Form.Label>
-        <Table striped bordered>
-          <thead>
-            <tr>
-              <th>Step</th>
-              <th>Direction</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
+        <CreateDirectionsTable
+          directions={directions}
+          setDirections={setDirections}
+          />
 
-              </td>
-              <td>
-
-              </td>
-              <td>
-
-              </td>
-            </tr>
-          </tbody>
-        </Table>
       </Form>
       <style>
         {`
-          .remove-ingredient-icon:hover {
-            cursor: pointer;
-            color: red !important;
-          }
-
-          .add-ingredient-icon:hover {
-            cursor: pointer;
-            color: green !important;
-          }
-
           .recipe-input:focus {
             outline: none;
             box-shadow: none;

@@ -9,8 +9,15 @@ const CreateDirectionRow = ({
   handleDirectionAdd,
   handleDirectionDelete,
   handleDirectionMoveUp,
-  handleDirectionMoveDown
+  handleDirectionMoveDown,
+  directionFieldsValid,
+  directionsFieldErrors
 }) => {
+  // TODO: the up/down arrows should not work for the current direction that has not even
+  // been added.
+
+  const directionStepNotValid = !directionFieldsValid && directionsFieldErrors[index] !== '';
+
   return (
     <tr>
       <td>
@@ -21,7 +28,7 @@ const CreateDirectionRow = ({
             onClick={() => handleDirectionMoveUp(index)}>
             keyboard_arrow_up
           </span>
-          <span style={{ fontSize: '1.3rem' }}>1</span>
+          <span style={{ fontSize: '1.3rem' }}>{index + 1}</span>
           <span 
             className={"material-icons " + (index === numDirections - 1 ? '' : 'direction-hover-pos-icon')}
             style={{ fontSize: '2rem', color: index === numDirections - 1 ? 'gray' : 'inherit', }}
@@ -33,13 +40,14 @@ const CreateDirectionRow = ({
       <td>
         <Form.Control 
           as="textarea" 
-          className="recipe-input"
+          className={"recipe-input " + (directionStepNotValid ? 'is-invalid' : '')}
           rows={3}
           placeholder="Describe direction step"
           value={direction}
           maxLength={300}
           onChange={(e) => handleDirectionChange(index, e.target.value)} 
         />
+        {directionStepNotValid && <div className="text-danger mt-1">{directionsFieldErrors[index]}</div>}
       </td>
       <td style={{ width: '5rem' }}>
         <div style={{
@@ -71,9 +79,21 @@ const CreateDirectionRow = ({
   );
 }
 
-const CreateDirectionsTable = ({ directions, setDirections }) => {
+const CreateDirectionsTable = ({
+  directions,
+  setDirections,
+  directionsValid,
+  directionsError,
+  setDirectionsValid,
+  directionFieldsValid,
+  directionsFieldErrors,
+  setDirectionsFieldsValid,
+  updateDirectionsFieldsErrors
+}) => {
 
   const handleDirectionDelete = (indexToDelete) => {
+    setDirectionsFieldsValid(true);
+
     setDirections(prevDirections => {
       return prevDirections.filter((_, index) => index !== indexToDelete);
     });
@@ -83,13 +103,18 @@ const CreateDirectionsTable = ({ directions, setDirections }) => {
       const newDirections = [...directions];
       newDirections[index] = value;
       setDirections(newDirections);
+      updateDirectionsFieldsErrors(newDirections);
   };
 
   const handleDirectionAdd = () => {
+    setDirectionsFieldsValid(true);
+
+    setDirectionsValid(true);
     setDirections(prevDirections => [...prevDirections, '']);
   };
 
   const handleDirectionMoveUp = (index) => {
+    setDirectionsFieldsValid(true);
     const newDirections = [...directions];
     const temp = newDirections[index];
     newDirections[index] = newDirections[index - 1];
@@ -98,6 +123,7 @@ const CreateDirectionsTable = ({ directions, setDirections }) => {
   };
 
   const handleDirectionMoveDown = (index) => {
+    setDirectionsFieldsValid(true);
     const newDirections = [...directions];
     const temp = newDirections[index];
     newDirections[index] = newDirections[index + 1];
@@ -108,48 +134,56 @@ const CreateDirectionsTable = ({ directions, setDirections }) => {
   return (
     <>
       <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Directions</Form.Label>
-      <Table striped bordered>
-        <thead>
-          <tr>
-            <th>Step</th>
-            <th>Direction</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {directions.map((direction, index) => 
-            <CreateDirectionRow
-              key={index}
-              index={index}
-              direction={direction}
-              numDirections={directions.length}
-              handleDirectionChange={handleDirectionChange}
-              handleDirectionAdd={handleDirectionAdd}
-              handleDirectionDelete={handleDirectionDelete}
-              handleDirectionMoveUp={handleDirectionMoveUp}
-              handleDirectionMoveDown={handleDirectionMoveDown}
-            />
-          )}
-        </tbody>
-        <style>
-          {`
-            .direction-hover-pos-icon:hover {
-              cursor: pointer;
-              color: ${theme.colors.primary} !important;
-            }
+      <div style={{
+        ...(!directionsValid ? { border: '1px solid red' } : {}),
+        height: 'fit-content'
+      }}>
+        <Table striped bordered className="m-0">
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Direction</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {directions.map((direction, index) => 
+              <CreateDirectionRow
+                key={index}
+                index={index}
+                direction={direction}
+                numDirections={directions.length}
+                handleDirectionChange={handleDirectionChange}
+                handleDirectionAdd={handleDirectionAdd}
+                handleDirectionDelete={handleDirectionDelete}
+                handleDirectionMoveUp={handleDirectionMoveUp}
+                handleDirectionMoveDown={handleDirectionMoveDown}
+                directionFieldsValid={directionFieldsValid}
+                directionsFieldErrors={directionsFieldErrors}
+              />
+            )}
+          </tbody>
+          <style>
+            {`
+              .direction-hover-pos-icon:hover {
+                cursor: pointer;
+                color: ${theme.colors.primary} !important;
+              }
 
-            .remove-direction-icon:hover {
-              cursor: pointer;
-              color: red !important;
-            }
+              .remove-direction-icon:hover {
+                cursor: pointer;
+                color: red !important;
+              }
 
-            .add-direction-icon:hover {
-              cursor: pointer;
-              color: green !important;
-            }
-          `}
-        </style>
-      </Table>
+              .add-direction-icon:hover {
+                cursor: pointer;
+                color: green !important;
+              }
+            `}
+          </style>
+        </Table>
+      </div>
+      {!directionsValid && <div className="text-danger mt-1">{directionsError}</div>}
     </>
   );
 }

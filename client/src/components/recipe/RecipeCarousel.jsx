@@ -1,21 +1,16 @@
+import PropTypes from 'prop-types';
 import { Carousel } from "react-bootstrap";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const acceptedFileTypes = [ 'image/jpg', 'image/jpeg', 'image/png' ];
 
-const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
+const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=false }) => {
 
   const [activeIndex, setActiveIndex] = useState(0); // State for active carousel index.
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
   const [draggingImage, setDraggingImage] = useState(false);
-
-  const [images, setImages] = useState([]);
-
-  useEffect(() => {
-    setImages(() => showImages ? showImages : []); // Set initial images from the prop
-  }, [showImages]);
 
   // Creating a use effect that will allow us to recalculate the number
   // of images that are displayed based on the window size.
@@ -27,10 +22,6 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
   };
   
   const imageCount = useResponsiveValue(imageBreakpointValues);
-
-  if (!images) {
-    return;
-  }
 
   // Get the number of images to display
   const limitedImages = images.slice(0, imageCount);
@@ -48,6 +39,8 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
   };
 
   const addNewImage = (file) => {
+    setImagesValid(true);
+
     const newImageUrl = URL.createObjectURL(file);
       setImages(prevImages => {
         const updatedImages = [...prevImages, newImageUrl];
@@ -121,7 +114,8 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
       padding: '0.2rem',
       backgroundColor: '#dedede',
       ...style
-    }}>
+    }}
+    >
       <input
         id="file-selector"
         type="file"
@@ -326,4 +320,12 @@ const RecipeCarousel = ({ showImages, style, showEdit=false }) => {
     </div>
   );
 }
+
+RecipeCarousel.propTypes = {
+  images: PropTypes.array.isRequired,
+  setImages: PropTypes.func,
+  style: PropTypes.object,
+  showEdit: PropTypes.bool
+};
+
 export default RecipeCarousel;

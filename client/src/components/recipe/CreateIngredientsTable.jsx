@@ -6,42 +6,52 @@ const CreateIngredientRow = ({
   handleIngredientChange,
   handleDeleteIngredient,
   handleIngredientAdd,
-  addIngredient=false
+  ingredientsFieldsValid,
+  ingredientsFieldErrors,
+  addIngredient
 }) => {
+  const amountNotValid = !ingredientsFieldsValid && ingredientsFieldErrors[index].amountError !== '';
+  const unitNotValid = !ingredientsFieldsValid && ingredientsFieldErrors[index].unitError !== '';
+  const nameNotValid = !ingredientsFieldsValid && ingredientsFieldErrors[index].nameError !== '';
+
   return (
     <tr>
-      <td style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <Form.Control 
-          type="text"
-          className="recipe-input"
-          value={ingredient.wholeAmount}
-          onChange={(e) => {
-            const wholeAmount = e.target.value;
-            if (!/^[0-9]*$/.test(wholeAmount) || (wholeAmount.startsWith("0") && wholeAmount !== '0')) {
-              e.preventDefault();
-              return;
-            }
-            handleIngredientChange(index, 'wholeAmount', wholeAmount);
-          }} 
-        />
-        <Form.Control
-          style={{ width: '3rem' }}
-          as="select"
-          className="recipe-input"
-          value={ingredient.fractionAmount}
-          onChange={(e) => handleIngredientChange(index, 'fractionAmount', e.target.value)}>
-          <option>0</option>
-          <option value="0.5">½</option>
-          <option value="0.333">⅓</option>
-          <option value="0.666">⅔</option>
-          <option value="0.25">¼</option>
-          <option value="0.75">¾</option>
-        </Form.Control>
+      <td>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Form.Control 
+            type="text"
+            className={"recipe-input " + (amountNotValid ? 'is-invalid' : '')}
+            value={ingredient.wholeAmount}
+            onChange={(e) => {
+              const wholeAmount = e.target.value;
+              if (!/^[0-9]*$/.test(wholeAmount) || (wholeAmount.startsWith("0") && wholeAmount !== '0')) {
+                e.preventDefault();
+                return;
+              }
+              
+              handleIngredientChange(index, 'wholeAmount', wholeAmount);
+            }} 
+          />
+          <Form.Control
+            style={{ width: '3rem' }}
+            as="select"
+            className={"recipe-input " + (amountNotValid ? 'is-invalid' : '')}
+            value={ingredient.fractionAmount}
+            onChange={(e) => handleIngredientChange(index, 'fractionAmount', e.target.value)}>
+            <option>0</option>
+            <option value="0.5">½</option>
+            <option value="0.333">⅓</option>
+            <option value="0.666">⅔</option>
+            <option value="0.25">¼</option>
+            <option value="0.75">¾</option>
+          </Form.Control>
+        </div>
+        {amountNotValid && <div className="text-danger mt-1">{ingredientsFieldErrors[index].amountError}</div>}
       </td>
       <td>
         <Form.Control 
           type="text"
-          className="recipe-input"
+          className={"recipe-input " + (unitNotValid ? 'is-invalid' : '')}
           value={ingredient.unit}
           placeholder="cup"
           onChange={(e) => {
@@ -51,13 +61,14 @@ const CreateIngredientRow = ({
               return;
             }
             handleIngredientChange(index, 'unit', unit);
-          }} 
+          }}
         />
+        {!ingredientsFieldsValid && <div className="text-danger mt-1">{ingredientsFieldErrors[index].unitError}</div>}
       </td>
       <td>
         <Form.Control 
           type="text"
-          className="recipe-input"
+          className={"recipe-input " + (nameNotValid ? 'is-invalid' : '')}
           value={ingredient.name}
           placeholder="butter"
           onChange={(e) => {
@@ -69,6 +80,7 @@ const CreateIngredientRow = ({
             handleIngredientChange(index, 'name', name)
           }} 
         />
+        {!ingredientsFieldsValid && <div className="text-danger mt-1">{ingredientsFieldErrors[index].nameError}</div>}
       </td>
       <td style={{ width: '5rem' }}>
         <div style={{
@@ -100,9 +112,21 @@ const CreateIngredientRow = ({
   );
 };
 
-const CreateIngredientsTable = ({ ingredients, setIngredients }) => {
+const CreateIngredientsTable = ({ 
+  ingredients,
+  setIngredients,
+  ingredientsValid,
+  ingredientsError,
+  setIngredientsValid,
+  ingredientsFieldsValid,
+  ingredientsFieldErrors,
+  updateIngredientsFieldErrors,
+  setIngredientsFieldsValid
+}) => {
 
   const handleIngredientDelete = (indexToDelete) => {
+    setIngredientsFieldsValid(true); // Set to true because it is complicated to recompute
+
     setIngredients(prevIngredients => {
       return prevIngredients.filter((_, index) => index !== indexToDelete);
     });
@@ -112,12 +136,18 @@ const CreateIngredientsTable = ({ ingredients, setIngredients }) => {
       const newIngredients = [...ingredients];
       newIngredients[index][field] = value;
       setIngredients(newIngredients);
+      if (updateIngredientsFieldErrors(newIngredients)) {
+        setIngredientsFieldsValid(true);
+      }
   };
 
   const handleIngredientAdd = () => {
+    setIngredientsFieldsValid(true); // Set to true because it is complicated to recompute
+    setIngredientsValid(true);
+
     setIngredients(prevIngredients => [...prevIngredients, {
-      wholeAmount: 0,
-      fractionAmount: 0,
+      wholeAmount: '0',
+      fractionAmount: '0',
       unit: '',
       name: ''
     }]);
@@ -126,42 +156,50 @@ const CreateIngredientsTable = ({ ingredients, setIngredients }) => {
   return (
     <>
       <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Ingredients</Form.Label>
-      <Table striped bordered>
-       <thead>
-          <tr>
-            <th>Whole Amount</th>
-            <th>Unit</th>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ingredients.map((ingredient, index) =>
-            <CreateIngredientRow
-              key={index}
-              index={index}
-              ingredient={ingredient}
-              addIngredient={index === ingredients.length - 1}
-              handleIngredientAdd={handleIngredientAdd}
-              handleIngredientChange={handleIngredientChange}
-              handleDeleteIngredient={handleIngredientDelete}
-              />
-          )}
-        </tbody>
-      </Table>
-      <style>
-        {`
-          .remove-ingredient-icon:hover {
-            cursor: pointer;
-            color: red !important;
-          }
+      <div style={{
+        ...(!ingredientsValid ? { border: '1px solid red' } : {}),
+        height: 'fit-content'
+      }}>
+        <Table striped bordered className="m-0">
+        <thead>
+            <tr>
+              <th>Whole Amount</th>
+              <th>Unit</th>
+              <th>Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ingredients.map((ingredient, index) =>
+              <CreateIngredientRow
+                key={index}
+                index={index}
+                ingredient={ingredient}
+                addIngredient={index === ingredients.length - 1}
+                handleIngredientAdd={handleIngredientAdd}
+                handleIngredientChange={handleIngredientChange}
+                handleDeleteIngredient={handleIngredientDelete}
+                ingredientsFieldsValid={ingredientsFieldsValid}
+                ingredientsFieldErrors={ingredientsFieldErrors}
+                />
+            )}
+          </tbody>
+        </Table>
+        <style>
+          {`
+            .remove-ingredient-icon:hover {
+              cursor: pointer;
+              color: red !important;
+            }
 
-          .add-ingredient-icon:hover {
-            cursor: pointer;
-            color: green !important;
-          }
-        `}
-      </style>
+            .add-ingredient-icon:hover {
+              cursor: pointer;
+              color: green !important;
+            }
+          `}
+        </style>
+      </div>
+      {!ingredientsValid && <div className="text-danger mt-1">{ingredientsError}</div>}
     </>
   );
 };

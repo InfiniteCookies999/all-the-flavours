@@ -49,7 +49,7 @@ const Recipe = () => {
         <h1>{recipe.title}</h1>
         <RecipeInfo />
         <div style={{ marginTop: '1rem' }}>
-          <RecipeCarousel showImages={recipe.images} />
+          <RecipeCarousel images={recipe.images} />
         </div>
         <RecipeDescription style={{ marginTop: '1rem' }} />
         <RecipeIngredients style={{ marginTop: '1rem' }} />

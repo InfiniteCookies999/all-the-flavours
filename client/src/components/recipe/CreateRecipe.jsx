@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import RecipeCarousel from "./RecipeCarousel";
@@ -199,6 +199,24 @@ const CreateRecipe = () => {
 
     // TODO: send request!
   };
+
+  useEffect(() => {
+    const handleDragOver = (event) => {
+      event.preventDefault();
+    };
+
+    const handleDrop = (event) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener('dragover', handleDragOver);
+    window.addEventListener('drop', handleDrop);
+
+    return () => {
+      window.removeEventListener('dragover', handleDragOver);
+      window.removeEventListener('drop', handleDrop);
+    };
+  }, []);
   
   return (
     <CreateRecipeContainer>

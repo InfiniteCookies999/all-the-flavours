@@ -4,6 +4,7 @@ import useResponsiveValue from "../../hooks/useResponsitveValue";
 import { useState } from "react";
 
 const acceptedFileTypes = [ 'image/jpg', 'image/jpeg', 'image/png' ];
+const maxImages = 10;
 
 const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=false }) => {
 
@@ -35,7 +36,7 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
     margin: '1rem',
     fontSize: '2.4rem',
     zIndex: 20,
-    color: '#3b3b3b'
+    userSelect: 'none'
   };
 
   const addNewImage = (file) => {
@@ -139,18 +140,22 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
               <Carousel.Item
                 key={index}
                 onDragOver={(e) => {
-                  if (index === images.length - 1) {
+                  if (images.length < maxImages) {
                     handleImageDragOver(e);
+                  } else {
+                    e.preventDefault();
                   }
                 }}
                 onDragLeave={() => {
-                  if (index === images.length - 1) {
+                  if (images.length < maxImages) {
                     handleImageDragLeave();
                   }
                 }}
                 onDrop={(e) => {
-                  if (index === images.length - 1) {
-                    handleImageDragDrop(e)
+                  if (images.length < maxImages) {
+                    handleImageDragDrop(e);
+                  } else {
+                    e.preventDefault();
                   }
                 }}>
                 {showEdit && !isTransitioning && (
@@ -162,21 +167,25 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
                     onClick={() => deleteImage(index)}>
                       delete
                     </span>
-                    <span className="material-icons position-absolute add-img-icon" style={
-                      editIconClass
-                    }
-                    onClick={selectImage}>
-                      add_circle
-                    </span>
-                    <div style={{
-                      width: '100%',
-                      height: imageSize,
-                      position: 'absolute',
-                      border: draggingImage ? "2px solid black" : "",
-                      zIndex: 25,
-                      pointerEvents: 'none'
-                    }}>
-                    </div>
+                    {images.length < maxImages && (
+                      <>
+                        <span className="material-icons position-absolute add-img-icon" style={
+                          editIconClass
+                        }
+                        onClick={selectImage}>
+                          add_circle
+                        </span>
+                        <div style={{
+                          width: '100%',
+                          height: imageSize,
+                          position: 'absolute',
+                          border: draggingImage ? "2px solid black" : "",
+                          zIndex: 25,
+                          pointerEvents: 'none'
+                        }}>
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
                 <img

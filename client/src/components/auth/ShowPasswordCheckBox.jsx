@@ -19,23 +19,23 @@ const ShowPasswordCheckbox = ({ showPassword, setShowPassword }) => {
       <style>
         {`
           .better-checkbox .form-check-input:focus {
-                  outline: none !important;
-                  box-shadow: none !important;
-                  border-color: gray;
-                }
+            outline: none !important;
+            box-shadow: none !important;
+            border-color: gray;
+          }
 
-                .better-checkbox .form-check-input:checked {
-                  background-color: ${theme.colors.primaryLight};
-                  border-color: ${theme.colors.primaryLight};
-                }
+          .better-checkbox .form-check-input:checked {
+            background-color: ${theme.colors.primaryLight};
+            border-color: ${theme.colors.primaryLight};
+          }
 
-                .better-checkbox .form-check-input:checked:focus {
-                  box-shadow: none;
-                }
+          .better-checkbox .form-check-input:checked:focus {
+            box-shadow: none;
+          }
 
-                .better-checkbox .form-check-input {
-                  cursor: pointer;
-                }
+          .better-checkbox .form-check-input {
+            cursor: pointer;
+          }
         `}
       </style>
     </>

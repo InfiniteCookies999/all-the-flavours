@@ -104,8 +104,10 @@ const CreateDirectionsTable = ({
       const newDirections = [...directions];
       newDirections[index] = value;
       setDirections(newDirections);
-      updateDirectionsFieldsErrors(newDirections);
-  }, [directions, setDirections, updateDirectionsFieldsErrors]);
+      if (updateDirectionsFieldsErrors(newDirections)) {
+        setDirectionsFieldsValid(true);
+      }
+  }, [directions, setDirections, updateDirectionsFieldsErrors, setDirectionsFieldsValid]);
 
   const handleDirectionAdd = useCallback(() => {
     setDirectionsFieldsValid(true);

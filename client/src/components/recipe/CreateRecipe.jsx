@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import RecipeCarousel from "./RecipeCarousel";
@@ -96,7 +96,7 @@ const CreateRecipe = () => {
     return true;
   };
 
-  const updateIngredientsFieldErrors = (ingredients) => {
+  const updateIngredientsFieldErrors = useCallback((ingredients) => {
     
     const fieldErrors = [];
     let fieldsValid = true;
@@ -137,9 +137,9 @@ const CreateRecipe = () => {
 
     setIngredientsFieldErrors(fieldErrors);
     return fieldsValid;
-  };
+  }, []);
 
-  const updateDirectionsFieldsErrors = (directions) => {
+  const updateDirectionsFieldsErrors = useCallback((directions) => {
 
     const fieldErrors = [];
     let fieldsValid = true;
@@ -160,7 +160,7 @@ const CreateRecipe = () => {
 
     setDirectionsFieldErrors(fieldErrors);
     return fieldsValid;
-  };
+  }, []);
 
   const updateErrors = () => {
     const titleValid = updateTitleError();

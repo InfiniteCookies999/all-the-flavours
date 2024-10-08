@@ -1,5 +1,6 @@
 import { Form, Table } from "react-bootstrap";
 import theme from "../../theme";
+import { useCallback } from "react";
 
 const CreateDirectionRow = ({ 
   index, 
@@ -91,45 +92,45 @@ const CreateDirectionsTable = ({
   updateDirectionsFieldsErrors
 }) => {
 
-  const handleDirectionDelete = (indexToDelete) => {
+  const handleDirectionDelete = useCallback((indexToDelete) => {
     setDirectionsFieldsValid(true);
 
     setDirections(prevDirections => {
       return prevDirections.filter((_, index) => index !== indexToDelete);
     });
-  };
+  }, [setDirections, setDirectionsFieldsValid]);
 
-  const handleDirectionChange = (index, value) => {
+  const handleDirectionChange = useCallback((index, value) => {
       const newDirections = [...directions];
       newDirections[index] = value;
       setDirections(newDirections);
       updateDirectionsFieldsErrors(newDirections);
-  };
+  }, [directions, setDirections, updateDirectionsFieldsErrors]);
 
-  const handleDirectionAdd = () => {
+  const handleDirectionAdd = useCallback(() => {
     setDirectionsFieldsValid(true);
 
     setDirectionsValid(true);
     setDirections(prevDirections => [...prevDirections, '']);
-  };
+  }, [setDirections, setDirectionsFieldsValid, setDirectionsValid]);
 
-  const handleDirectionMoveUp = (index) => {
+  const handleDirectionMoveUp = useCallback((index) => {
     setDirectionsFieldsValid(true);
     const newDirections = [...directions];
     const temp = newDirections[index];
     newDirections[index] = newDirections[index - 1];
     newDirections[index - 1] = temp;
     setDirections(newDirections);
-  };
+  }, [directions, setDirections, setDirectionsFieldsValid]);
 
-  const handleDirectionMoveDown = (index) => {
+  const handleDirectionMoveDown = useCallback((index) => {
     setDirectionsFieldsValid(true);
     const newDirections = [...directions];
     const temp = newDirections[index];
     newDirections[index] = newDirections[index + 1];
     newDirections[index + 1] = temp;
     setDirections(newDirections);
-  };
+  }, [directions, setDirections, setDirectionsFieldsValid]);
 
   return (
     <>

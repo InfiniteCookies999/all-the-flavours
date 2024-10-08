@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Form, Table } from "react-bootstrap";
 
 const CreateIngredientRow = ({
@@ -124,24 +125,24 @@ const CreateIngredientsTable = ({
   setIngredientsFieldsValid
 }) => {
 
-  const handleIngredientDelete = (indexToDelete) => {
+  const handleIngredientDelete = useCallback((indexToDelete) => {
     setIngredientsFieldsValid(true); // Set to true because it is complicated to recompute
 
     setIngredients(prevIngredients => {
       return prevIngredients.filter((_, index) => index !== indexToDelete);
     });
-  };
+  }, [setIngredients, setIngredientsFieldsValid]);
 
-  const handleIngredientChange = (index, field, value) => {
+  const handleIngredientChange = useCallback((index, field, value) => {
       const newIngredients = [...ingredients];
       newIngredients[index][field] = value;
       setIngredients(newIngredients);
       if (updateIngredientsFieldErrors(newIngredients)) {
         setIngredientsFieldsValid(true);
       }
-  };
+  }, [ingredients, setIngredients, setIngredientsFieldsValid, updateIngredientsFieldErrors]);
 
-  const handleIngredientAdd = () => {
+  const handleIngredientAdd = useCallback(() => {
     setIngredientsFieldsValid(true); // Set to true because it is complicated to recompute
     setIngredientsValid(true);
 
@@ -151,7 +152,7 @@ const CreateIngredientsTable = ({
       unit: '',
       name: ''
     }]);
-  };
+  }, [setIngredients, setIngredientsFieldsValid, setIngredientsValid]);
 
   return (
     <>

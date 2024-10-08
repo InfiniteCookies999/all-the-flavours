@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Carousel } from "react-bootstrap";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const acceptedFileTypes = [ 'image/jpg', 'image/jpeg', 'image/png' ];
 const maxImages = 10;
@@ -39,7 +39,7 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
     userSelect: 'none'
   };
 
-  const addNewImage = (file) => {
+  const addNewImage = useCallback((file) => {
     setImagesValid(true);
 
     const newImageUrl = URL.createObjectURL(file);
@@ -51,9 +51,9 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
         
         return updatedImages;
       });
-  };
+  }, [setImages, setImagesValid]);
 
-  const selectImage = () => {
+  const selectImage = useCallback(() => {
     const selector = document.getElementById('file-selector');
 
     selector.onchange = () => {
@@ -64,9 +64,9 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
     };
 
     selector.click();
-  };
+  }, [addNewImage]);
 
-  const deleteImage = (indexToDelete) => {
+  const deleteImage = useCallback((indexToDelete) => {
     setImages((prevImages) => {
       const updatedImages = prevImages.filter((_, index) => index !== indexToDelete);
       
@@ -79,19 +79,19 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
 
       return updatedImages;
     });
-  };
+  }, [activeIndex, setImages]);
 
-  const handleImageDragOver = (event) => {
+  const handleImageDragOver = useCallback((event) => {
     event.preventDefault();
 
     setDraggingImage(true);
-  };
+  }, [setDraggingImage]);
 
   const handleImageDragLeave = () => {
     setDraggingImage(false);
   };
 
-  const handleImageDragDrop = (event) => {
+  const handleImageDragDrop = useCallback((event) => {
     event.preventDefault();
     setDraggingImage(false);
 
@@ -106,7 +106,51 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
         addNewImage(file);
       }
     }
-  };
+  }, [addNewImage]);
+
+  // Allow dragging images over the controls as well.
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    if (!showEdit) {
+      return;
+    }
+
+    const carousel = carouselRef.current?.element;
+
+    if (!carousel) {
+      return;
+    }
+
+    const prevControl = carousel.querySelector('.carousel-control-prev');
+    const nextControl = carousel.querySelector('.carousel-control-next');
+
+    if (prevControl) {
+      prevControl.addEventListener('dragover', handleImageDragOver);
+      prevControl.addEventListener('dragleave', handleImageDragLeave);
+      prevControl.addEventListener('drop', handleImageDragDrop);
+    }
+  
+    if (nextControl) {
+      nextControl.addEventListener('dragover', handleImageDragOver);
+      nextControl.addEventListener('dragleave', handleImageDragLeave);
+      nextControl.addEventListener('drop', handleImageDragDrop);
+    }
+  
+    return () => {
+      if (prevControl) {
+        prevControl.removeEventListener('dragover', handleImageDragOver);
+        prevControl.removeEventListener('dragleave', handleImageDragLeave);
+        prevControl.removeEventListener('drop', handleImageDragDrop);
+      }
+  
+      if (nextControl) {
+        nextControl.removeEventListener('dragover', handleImageDragOver);
+        nextControl.removeEventListener('dropleave', handleImageDragLeave);
+        nextControl.removeEventListener('drop', handleImageDragDrop);
+      }
+    }
+  }, [showEdit, images, handleImageDragDrop, handleImageDragOver]);
 
   const imageSize = '500px';
 
@@ -125,6 +169,7 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
       {images.length > 0 ? (
         <>
           <Carousel
+            ref={carouselRef}
             interval={null} // Prevent auto-scrolling
             activeIndex={activeIndex}
             onSelect={(index) => setActiveIndex(index)}

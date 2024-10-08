@@ -9,7 +9,8 @@ const CreateIngredientRow = ({
   handleIngredientAdd,
   ingredientsFieldsValid,
   ingredientsFieldErrors,
-  addIngredient
+  addIngredient,
+  maxedIngredients
 }) => {
   const amountNotValid = !ingredientsFieldsValid && ingredientsFieldErrors[index].amountError !== '';
   const unitNotValid = !ingredientsFieldsValid && ingredientsFieldErrors[index].unitError !== '';
@@ -90,14 +91,16 @@ const CreateIngredientRow = ({
           justifyContent: 'center',
           width: '100%'
         }}>
-          {addIngredient ? (
-            <span className="material-icons add-ingredient-icon" style={{
-              color: '#383838',
-              transform: 'translateY(0.4rem)'
-            }}
-            onClick={() => handleIngredientAdd()}>
-              add_circle
-            </span>
+          {addIngredient && !maxedIngredients ? (
+              <span className="material-icons add-ingredient-icon" style={{
+                color: '#383838',
+                transform: 'translateY(0.4rem)'
+              }}
+              onClick={() => handleIngredientAdd()}>
+                add_circle
+              </span>
+          ) : addIngredient && maxedIngredients ? (
+            <span>Max</span>
           ) : (
             <span className="material-icons remove-ingredient-icon" style={{
               color: '#383838',
@@ -182,6 +185,7 @@ const CreateIngredientsTable = ({
                 handleDeleteIngredient={handleIngredientDelete}
                 ingredientsFieldsValid={ingredientsFieldsValid}
                 ingredientsFieldErrors={ingredientsFieldErrors}
+                maxedIngredients={ingredients.length === 50}
                 />
             )}
           </tbody>

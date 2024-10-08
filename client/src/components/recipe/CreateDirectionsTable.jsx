@@ -18,6 +18,8 @@ const CreateDirectionRow = ({
   // been added.
 
   const directionStepNotValid = !directionFieldsValid && directionsFieldErrors[index] !== '';
+  const maxedDirections = numDirections === 30;
+  const addDirection = index === numDirections - 1;
 
   return (
     <tr>
@@ -57,7 +59,7 @@ const CreateDirectionRow = ({
             justifyContent: 'center',
             width: '100%'
           }}>
-            {index === numDirections - 1 ? (
+            {addDirection && !maxedDirections ? (
               <span className="material-icons add-direction-icon" style={{
                 color: '#383838',
                 transform: 'translateY(0.4rem)'
@@ -65,6 +67,8 @@ const CreateDirectionRow = ({
               onClick={() => handleDirectionAdd()}>
                 add_circle
             </span>
+            ) : addDirection && maxedDirections ? (
+              <span>Max</span>
             ) : (
               <span className="material-icons remove-direction-icon" style={{
                 color: '#383838',

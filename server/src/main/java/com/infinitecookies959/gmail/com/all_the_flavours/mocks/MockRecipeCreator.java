@@ -8,6 +8,7 @@ import com.infinitecookies959.gmail.com.all_the_flavours.services.RecipeService;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -474,7 +475,11 @@ public class MockRecipeCreator implements MockCreator {
 
         for (Recipe recipeMock : recipeMocks) {
             if (!recipeService.recipeExists(recipeMock.getTitle())) {
-                recipeService.saveRecipe(recipeMock);
+                try {
+                    recipeService.saveRecipe(recipeMock);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

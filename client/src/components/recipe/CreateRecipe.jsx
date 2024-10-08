@@ -6,6 +6,7 @@ import theme from "../../theme";
 import CreateIngredientsTable from "./CreateIngredientsTable";
 import CreateDirectionsTable from "./CreateDirectionsTable";
 import PrimaryButton from "../PrimaryButton";
+import axios from "axios";
 
 const CreateRecipeContainer = styled.div`
   width: 100%;
@@ -197,7 +198,63 @@ const CreateRecipe = () => {
       return;
     }
 
-    // TODO: send request!
+    const getFractionAmount = (ingredient) => {
+      switch (ingredient.fractionAmount) {
+      case '0': return 0;
+      case '½': return 0.5;
+      case '⅓': return 0.333333;
+      case '⅔': return 0.666666;
+      case '¼': return 0.25;
+      case '¾': return 0.75;
+      default: return 0;
+      }
+    };
+
+    const fileHolder = document.getElementById('imgs-file-input-holder');
+    const images = fileHolder.files;
+
+    // Using FormData so that the images may transfer correctly.
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("description", description);
+    
+    directions.slice(0, -1).forEach((direction, index) => {
+      formData.append(`directions[${index}].text`, direction);
+    });
+
+    // Append every ingredient as a JSON string.
+    ingredients.forEach((ingredient, index) => {
+      if (index === ingredients.length - 1) return;
+
+      formData.append(`ingredients[${index}].quantity`, Number.parseInt(ingredient.wholeAmount) + getFractionAmount(ingredient));
+      formData.append(`ingredients[${index}].unit`, ingredient.unit);
+      formData.append(`ingredients[${index}].name`, ingredient.name);
+    });
+
+    for (let i = 0; i < images.length; i++) {
+      formData.append("uploadImages", images[i]);
+    }
+
+
+    axios.post("/api/recipes", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(() => {
+        console.log("SUCCESS!!");
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401 &&
+          error.response.data) {
+          //setSubmitError(error.response.data);
+          //setSubmitValid(false);
+          return;
+        }
+        //setError(error);
+      });
+      //.finally(() => setLoading(false));*/
   };
 
   useEffect(() => {

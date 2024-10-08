@@ -14,4 +14,5 @@ public class RecipeConstraints {
 
     public static final int MAX_INGREDIENT_NAME_LENGTH = 100;
     public static final int MAX_INGREDIENT_UNIT_LENGTH = 50;
+
 }

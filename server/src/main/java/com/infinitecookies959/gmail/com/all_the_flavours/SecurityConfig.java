@@ -20,6 +20,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // TODO: This is wrong for authentication. It should be checking user I am pretty sure.
         return http
                 // Disable Cross-Origin Request protection because we want the frontend
                 // to still be able to make requests.

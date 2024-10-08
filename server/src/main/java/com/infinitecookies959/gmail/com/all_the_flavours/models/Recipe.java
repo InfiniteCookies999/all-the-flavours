@@ -1,6 +1,8 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,7 +64,15 @@ public class Recipe {
     @Column(name = "image_path")
     @NotEmpty
     @Size(max = RecipeConstraints.MAX_NUMBER_OF_IMAGES)
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
     private List<String> images;
+
+    @Transient // Do not save to database.
+    @NotNull
+    @JsonProperty(required = true, access = JsonProperty.Access.WRITE_ONLY)
+    // TODO: Hardcoded this because it does not consider a final array a constant.
+    @FileType(accepted = { "image/jpg", "image/jpeg", "image/png" })
+    private MultipartFile[] uploadImages;
 
     public Recipe(String title, String description) {
         this.title = title;

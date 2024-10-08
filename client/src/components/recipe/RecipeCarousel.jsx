@@ -42,15 +42,23 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
   const addNewImage = useCallback((file) => {
     setImagesValid(true);
 
+    const fileHolder = document.getElementById('imgs-file-input-holder');
+    const transfer = new DataTransfer();
+    for (const f of fileHolder.files) {
+      transfer.items.add(f);
+    }
+    transfer.items.add(file);
+    fileHolder.files = transfer.files;
+
     const newImageUrl = URL.createObjectURL(file);
-      setImages(prevImages => {
-        const updatedImages = [...prevImages, newImageUrl];
-        
-        setDisableTransition(true);
-        setActiveIndex(updatedImages.length - 1);
-        
-        return updatedImages;
-      });
+    setImages(prevImages => {
+      const updatedImages = [...prevImages, newImageUrl];
+      
+      setDisableTransition(true);
+      setActiveIndex(updatedImages.length - 1);
+      
+      return updatedImages;
+    });
   }, [setImages, setImagesValid]);
 
   const selectImage = useCallback(() => {
@@ -67,6 +75,16 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
   }, [addNewImage]);
 
   const deleteImage = useCallback((indexToDelete) => {
+    
+    const fileHolder = document.getElementById('imgs-file-input-holder');
+    const newFiles = Array.from(fileHolder.files);
+    newFiles.splice(indexToDelete, 1);
+    const transfer = new DataTransfer();
+    for (const f of newFiles) {
+      transfer.items.add(f);
+    }
+    fileHolder.files = transfer.files;
+
     setImages((prevImages) => {
       const updatedImages = prevImages.filter((_, index) => index !== indexToDelete);
       
@@ -166,6 +184,12 @@ const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=fal
         type="file"
         accept={acceptedFileTypes.join(', ')}
         hidden={true} />
+
+      <input
+        id="imgs-file-input-holder"
+        type="file"
+        name="file-holder" multiple="multiple" hidden={true}
+        />
       {images.length > 0 ? (
         <>
           <Carousel

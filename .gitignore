@@ -39,3 +39,6 @@ image-converting/images/
 */.vscode/
 
 */.env
+
+server/public/images/upload/recipes/*
+!server/public/images/upload/recipes/mock*

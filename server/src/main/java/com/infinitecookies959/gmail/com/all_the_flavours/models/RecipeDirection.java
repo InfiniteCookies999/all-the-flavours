@@ -22,6 +22,7 @@ public class RecipeDirection {
 
     @Column(nullable = false)
     @NotNull
+    @JsonIgnore
     private Integer stepNumber;
 
     @Column(length = RecipeConstraints.MAX_DIRECTION_TEXT_LENGTH, nullable = false)

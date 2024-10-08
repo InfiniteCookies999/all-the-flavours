@@ -1,25 +1,41 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
+import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRepository;
+import jakarta.servlet.ServletContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 public class RecipeService {
 
-    private final RecipeRepository recipeRepository;
+    private static final Map<String, String> FILE_TYPE_MAPPING = Map.of(
+            "image/png", "png",
+            "image/jpg", "jpg",
+            "image/jpeg", "jpeg"
+    );
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    private static final String IMAGE_UPLOAD_PATH = "images/upload/recipes";
+
+    private final RecipeRepository recipeRepository;
+    private final FileUploadService fileUploadService;
+
+    public RecipeService(RecipeRepository recipeRepository, ServletContext servletContext, FileUploadService fileUploadService) {
         this.recipeRepository = recipeRepository;
+        this.fileUploadService = fileUploadService;
     }
 
     private Recipe prefixImages(Recipe recipe) {
@@ -53,17 +69,33 @@ public class RecipeService {
     }
 
     @Transactional
-    public Recipe saveRecipe(Recipe recipe) {
+    public Recipe saveRecipe(Recipe recipe) throws IOException {
+
         // Setting step numbers for directions and recipe.
         List<RecipeDirection> directions = recipe.getDirections();
         for (int i = 0; i < directions.size(); i++) {
             directions.get(i).setStepNumber(i + 1);
             directions.get(i).setRecipe(recipe);
         }
+
         // Setting recipe for ingredients
         for (RecipeIngredient ingredient : recipe.getIngredients()) {
             ingredient.setRecipe(recipe);
         }
+
+        if (recipe.getUploadImages() != null) {
+            recipe.setImages(new ArrayList<>());
+
+            MultipartFile[] files = recipe.getUploadImages();
+
+            fileUploadService.transferFiles(files, IMAGE_UPLOAD_PATH, file -> {
+                String randomFileName = UUID.randomUUID() + "."
+                        + FILE_TYPE_MAPPING.get(file.getContentType());
+                recipe.getImages().add(randomFileName);
+                return randomFileName;
+            });
+        }
+
         return recipeRepository.save(recipe);
     }
 

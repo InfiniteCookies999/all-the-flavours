@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import ReviewBox from "../review/ReviewBox";
+import useCollapsed from "../../hooks/useCollapsed";
 
 const RecipeContainer = styled.div`
   width: 100%;
@@ -26,6 +27,8 @@ const Recipe = () => {
   const [recipe, setRecipe] = useState(null);
 
   const { setError } = useError();
+
+  const collapsed = useCollapsed();
 
   document.title = "Recipe";
   
@@ -55,7 +58,14 @@ const Recipe = () => {
         <RecipeDescription style={{ marginTop: '1rem' }} />
         <RecipeIngredients style={{ marginTop: '1rem' }} />
         <RecipeDirections style={{ marginTop: '1rem' }} />
-        <ReviewBox  style={{ marginTop: '5rem' }} recipeTitle={recipe.title} />
+
+        <div style={{ marginTop: '5rem' }}>
+          <h1>Reviews</h1>
+          <ReviewBox style={{
+            width: collapsed ? '100%' : '80%',
+            marginTop: '1rem'
+            }} recipeTitle={recipe.title} />
+        </div>
       </RecipeContainer>
     </RecipeContext.Provider>
   );

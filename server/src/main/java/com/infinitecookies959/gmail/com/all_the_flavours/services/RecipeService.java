@@ -83,6 +83,7 @@ public class RecipeService {
             ingredient.setRecipe(recipe);
         }
 
+        // Upload the images for the recipe.
         if (recipe.getUploadImages() != null) {
             recipe.setImages(new ArrayList<>());
 

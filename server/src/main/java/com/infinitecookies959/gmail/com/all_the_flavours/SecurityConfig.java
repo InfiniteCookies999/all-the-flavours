@@ -2,6 +2,7 @@ package com.infinitecookies959.gmail.com.all_the_flavours;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,16 +31,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow the user to get recipes.
-                        .requestMatchers("GET", "/api/recipes").permitAll()
-                        .requestMatchers("GET", "/api/recipes/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/recipes").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/recipes/*").permitAll()
                         // Login and registration are only for non-logged in users.
-                        .requestMatchers("POST", "/api/auth/login").anonymous()
-                        .requestMatchers("POST", "/api/auth/register").anonymous()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register").anonymous()
                         // Anyone can check if they are logged in.
-                        .requestMatchers("GET", "/api/auth/is-logged-in").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/is-logged-in").permitAll()
                         // All other api requests must require login.
-                        .requestMatchers("/api/*").authenticated()
                         // Allow access to all other non-API requests.
+                        .requestMatchers("/api/*").authenticated()
                         .anyRequest().permitAll()
                 )
                 .logout(logout -> {

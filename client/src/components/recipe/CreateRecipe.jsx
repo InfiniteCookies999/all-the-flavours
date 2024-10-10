@@ -7,6 +7,7 @@ import CreateIngredientsTable from "./CreateIngredientsTable";
 import CreateDirectionsTable from "./CreateDirectionsTable";
 import PrimaryButton from "../PrimaryButton";
 import axios from "axios";
+import { useError } from "../../contexts/ErrorContext";
 
 const CreateRecipeContainer = styled.div`
   width: 100%;
@@ -46,6 +47,8 @@ const CreateRecipe = () => {
   const [ingredientsFieldsValid, setIngredientsFieldsValid] = useState(true);
   const [directionsValid, setDirectionsValid] = useState(true);
   const [directionFieldsValid, setDirectionsFieldsValid] = useState(true);
+
+  const { setError } = useError();
 
   document.title = "Create recipe";
 
@@ -246,15 +249,15 @@ const CreateRecipe = () => {
         console.log("SUCCESS!!");
       })
       .catch((error) => {
-        if (error.response && error.response.status === 401 &&
-          error.response.data) {
+        if (error.response?.status === 401 &&
+            error.response?.data) {
           //setSubmitError(error.response.data);
           //setSubmitValid(false);
           return;
         }
-        //setError(error);
+        setError(error);
       });
-      //.finally(() => setLoading(false));*/
+      //.finally(() => setLoading(false));
   };
 
   useEffect(() => {

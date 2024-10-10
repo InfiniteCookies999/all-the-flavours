@@ -14,6 +14,7 @@ import SignUp from "./components/auth/SignUp";
 import { AuthProvider } from "./contexts/AuthContext";
 import RecipeListing from "./components/recipe/RecipeListing";
 import CreateRecipe from "./components/recipe/CreateRecipe";
+import AboutUs from "./components/AboutUs";
 
 const App = () => {
 
@@ -37,6 +38,10 @@ const App = () => {
     {
       path: '/create-recipe',
       element: <CreateRecipe />
+    },
+    {
+      path: '/about-us',
+      element: <AboutUs />
     },
     {
       path: '*',

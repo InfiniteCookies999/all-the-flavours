@@ -53,6 +53,10 @@ const CreateRecipe = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
+  const [submitValid, setSubmitValid] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
   document.title = "Create recipe";
 
   const updateTitleError = () => {
@@ -159,10 +163,22 @@ const CreateRecipe = () => {
       }
 
       const directionStep = directions[i];
+      let fieldValid = true;
       if (directionStep === '') {
-        fieldsValid = false;
+        fieldValid = false;
+        fieldErrors.push('empty');
       }
-      fieldErrors.push(directionStep === '' ? 'empty' : '');
+
+      if (directionStep.length < 3) {
+        fieldValid = false;
+        fieldErrors.push('too short');
+      }
+
+      if (!fieldValid) {
+        fieldsValid = false;
+      } else {
+        fieldErrors.push('');  
+      }
     }
 
     setDirectionsFieldErrors(fieldErrors);
@@ -187,12 +203,12 @@ const CreateRecipe = () => {
     setDirectionsFieldsValid(directionsFieldsValid);
 
     return !(
-      titleValid,
-      descriptionValid,
-      imagesValid,
-      ingredientsValid,
-      ingredientsFieldsValid,
-      directionsValid,
+      titleValid &&
+      descriptionValid &&
+      imagesValid &&
+      ingredientsValid &&
+      ingredientsFieldsValid &&
+      directionsValid &&
       directionsFieldsValid
     );
   };
@@ -201,6 +217,7 @@ const CreateRecipe = () => {
     event.preventDefault();
   
     if (updateErrors()) {
+      setSubmitValid(false);
       return;
     }
 
@@ -242,25 +259,17 @@ const CreateRecipe = () => {
       formData.append("uploadImages", images[i]);
     }
 
-
     axios.post("/api/recipes", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
-      .then(() => {
-        console.log("SUCCESS!!");
+      .then(response => {
+        const recipeId = response.data.id;
+        window.location.href = "/recipe/" + recipeId;
       })
-      .catch((error) => {
-        if (error.response?.status === 401 &&
-            error.response?.data) {
-          //setSubmitError(error.response.data);
-          //setSubmitValid(false);
-          return;
-        }
-        setError(error);
-      });
-      //.finally(() => setLoading(false));
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -356,12 +365,16 @@ const CreateRecipe = () => {
           updateDirectionsFieldsErrors={updateDirectionsFieldsErrors}
           />
 
-        <PrimaryButton
-          type="submit"
-          style={{ width: '9rem', height: '3rem' }}
-          className={"mt-4"}>
-          Submit
-        </PrimaryButton>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+          <PrimaryButton
+            type="submit"
+            style={{ width: '9rem', height: '3rem' }}
+            className={"mt-4 submit-btn " + (!submitValid ? 'submit-invalid-btn' : '')}
+            disabled={loading}>
+            Submit
+          </PrimaryButton>
+          {!descriptionValid && <div className="text-danger mt-1">There is one or more errors in your form</div>}
+        </div>
 
       </Form>
       <style>
@@ -376,6 +389,8 @@ const CreateRecipe = () => {
             outline: none !important;
             box-shadow: none !important;
           }
+
+          ${theme.styles.submitBtn}
         `}
       </style>
     </CreateRecipeContainer>

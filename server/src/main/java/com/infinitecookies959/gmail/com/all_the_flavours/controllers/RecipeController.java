@@ -4,6 +4,7 @@ import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.RecipeService;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class RecipeController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Long>> createRecipe(@ModelAttribute Recipe recipe,
+    public ResponseEntity<Map<String, Long>> createRecipe(@Valid @ModelAttribute Recipe recipe,
                                                           @AuthenticationPrincipal SessionPrincipal session)
             throws IOException {
 

@@ -53,16 +53,17 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotEmpty
     @Size(max = RecipeConstraints.MAX_NUMBER_OF_INGREDIENTS)
+    @NotNull
     private List<RecipeIngredient> ingredients;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @Size(max = RecipeConstraints.MAX_NUMBER_OF_DIRECTIONS)
+    @NotNull
     private List<RecipeDirection> directions;
 
     @ElementCollection
     @CollectionTable(name = "recipe_images", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "image_path")
-    @NotEmpty
     @Size(max = RecipeConstraints.MAX_NUMBER_OF_IMAGES)
     @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
     private List<String> images;

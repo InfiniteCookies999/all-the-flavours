@@ -1,6 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.CredentialTakenException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;

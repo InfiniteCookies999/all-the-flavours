@@ -1,4 +1,4 @@
-package com.infinitecookies959.gmail.com.all_the_flavours;
+package com.infinitecookies959.gmail.com.all_the_flavours.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

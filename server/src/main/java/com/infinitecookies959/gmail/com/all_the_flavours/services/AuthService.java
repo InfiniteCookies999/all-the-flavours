@@ -1,13 +1,13 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.CredentialTakenException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.UserRepository;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionToken;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
@@ -50,9 +50,7 @@ public class AuthService {
     }
 
     private void authenticate(HttpSession session, User user) {
-        // TODO: Probably a good idea to not rely on the UsernamePasswordAuthenticationToken
-        //       and just replicate the logic ourselves.
-        Authentication auth = new UsernamePasswordAuthenticationToken(
+        Authentication auth = new SessionToken(
                 new SessionPrincipal(user.getId()),
                 null,
                 AuthorityUtils.createAuthorityList("ROLE_USER")

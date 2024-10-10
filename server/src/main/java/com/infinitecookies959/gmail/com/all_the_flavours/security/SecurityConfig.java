@@ -1,4 +1,4 @@
-package com.infinitecookies959.gmail.com.all_the_flavours;
+package com.infinitecookies959.gmail.com.all_the_flavours.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

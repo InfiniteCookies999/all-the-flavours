@@ -1,6 +1,5 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
@@ -9,14 +8,11 @@ import jakarta.servlet.ServletContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service

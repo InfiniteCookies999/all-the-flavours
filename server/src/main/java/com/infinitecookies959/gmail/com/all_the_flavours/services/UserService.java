@@ -1,6 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.SessionPrincipal;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

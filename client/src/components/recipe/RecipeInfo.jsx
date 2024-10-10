@@ -84,7 +84,7 @@ const RecipeInfo = () => {
           color: 'gray',
           fontSize: '0.9rem',
           }}>
-            Last updated {timeAgo(context.lastUpdated)}
+            Last updated {timeAgo(new Date(context.lastUpdated))}
           </span>
         <style>
           {`

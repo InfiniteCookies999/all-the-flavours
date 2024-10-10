@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
+import ReviewBox from "../review/ReviewBox";
 
 const RecipeContainer = styled.div`
   width: 100%;
@@ -54,6 +55,7 @@ const Recipe = () => {
         <RecipeDescription style={{ marginTop: '1rem' }} />
         <RecipeIngredients style={{ marginTop: '1rem' }} />
         <RecipeDirections style={{ marginTop: '1rem' }} />
+        <ReviewBox  style={{ marginTop: '5rem' }} recipeTitle={recipe.title} />
       </RecipeContainer>
     </RecipeContext.Provider>
   );

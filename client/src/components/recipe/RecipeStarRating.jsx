@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from "react";
 import theme from "../../theme";
-import useWindowResize from "../../hooks/useWindowResize";
 
 const StarState = Object.freeze({
   EMPTY: 0,
@@ -62,10 +61,34 @@ const Star = ({ state }) => {
   );
 }
 
-const StarRating = ({ rating, numberReviews, style }) => {
+const StarRating = ({ rating, children, style, changeOnHover=false }) => {
 
-  const fullStars = Math.floor(rating);
-  const hasHalf = (rating - Math.floor(rating)) >= 0.5;
+  const [hoverRating, setHoverRating] = useState(rating);
+  const [selectedRating, setSelectedRating] = useState(rating);
+
+  const fullStars = Math.floor(hoverRating);
+  const hasHalf = (hoverRating - fullStars) >= 0.5;
+  const starsRef = useRef();
+
+  const handleMouseMove = (e) => {
+    if (!changeOnHover) return;
+    if (!starsRef.current) return;
+
+    const rect = starsRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const width = rect.width;
+    const starWidth = width / 5; // 5 stars
+    const newRating = Math.min(5, Math.max(0, Math.round((offsetX / starWidth) * 2) / 2));
+    setHoverRating(newRating);
+  };
+
+  const handleMouseLeave = () => {
+    setHoverRating(selectedRating); // Reset to the original rating on mouse leave
+  };
+
+  const onClick = () => {
+    setSelectedRating(hoverRating);
+  };
 
   const stars = Array.from({ length: 5 }, (_, i) => {
     switch (true) {
@@ -75,56 +98,29 @@ const StarRating = ({ rating, numberReviews, style }) => {
     }
   });
 
-  // Code for deteching overflow in reviews and removing the element if
-  // need be.
-  const reviewsTextRef = useRef(null);
-  const [isReviewsOverflowing, setReviewsOverflowing] = useState(false);
-
-  useWindowResize(() => {
-    const element = reviewsTextRef.current;
-    if (element) {
-      setReviewsOverflowing(element.scrollWidth > element.clientWidth);
-    }
-  });
-
   return (
     <div href="/" style={{
       display: 'flex',
       alignItems: 'center',
+      width: 'fit-items',
       ...(style ? style : {})
-    }}>
+    }}
+    onMouseMove={handleMouseMove}
+    onMouseLeave={handleMouseLeave}
+    onClick={onClick}
+    >
       <div className="star-rating-stars" style={{
         display: 'flex',
         alignItems: 'center',
         flexShrink: 0
-      }}>
+      }}
+      ref={starsRef}>
         {stars.map((state, index) => (
           <Star state={state} key={index} />  
         ))}
       </div>
-      
-      <span ref={reviewsTextRef} style={{
-        marginLeft: '0.5rem',
-        fontWeight: 'bold',
-        fontSize: '0.95rem',
-        whiteSpace: 'nowrap',
-        width: '10rem',
-        // Ask for it to cutoff if it overflows to help detect a difference in
-        // scrollWidth and clientWidth
-        overflow: 'hidden',
-        // Use opacity to hide the element so that it retains its width information
-        // and can continue to properly calculate if it should render of not.
-        opacity: isReviewsOverflowing ? 0 : 1
-      }}>
-        {rating.toFixed(1)}
-        <span style={{
-          marginLeft: '0.3rem',
-          color: '#7d7d7d',
-          fontWeight: 'normal'
-        }}>
-          ({numberReviews} reviews)
-        </span>
-      </span>
+
+      {children}
     
       <style>
         {`
@@ -140,7 +136,7 @@ const StarRating = ({ rating, numberReviews, style }) => {
 StarRating.propTypes = {
   style: PropTypes.object,
   rating: PropTypes.number.isRequired,
-  numberReviews: PropTypes.number.isRequired
+  changeOnHover: PropTypes.bool
 };
 
 export default StarRating;

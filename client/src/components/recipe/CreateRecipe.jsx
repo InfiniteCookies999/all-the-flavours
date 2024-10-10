@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import RecipeCarousel from "./RecipeCarousel";
@@ -8,6 +8,7 @@ import CreateDirectionsTable from "./CreateDirectionsTable";
 import PrimaryButton from "../PrimaryButton";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const CreateRecipeContainer = styled.div`
   width: 100%;
@@ -49,6 +50,8 @@ const CreateRecipe = () => {
   const [directionFieldsValid, setDirectionsFieldsValid] = useState(true);
 
   const { setError } = useError();
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   document.title = "Create recipe";
 
@@ -277,6 +280,11 @@ const CreateRecipe = () => {
       window.removeEventListener('drop', handleDrop);
     };
   }, []);
+
+  if (!isLoggedIn) {
+    window.location.href = "/";
+    return null;
+  }
   
   return (
     <CreateRecipeContainer>

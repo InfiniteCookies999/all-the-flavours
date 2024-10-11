@@ -33,7 +33,7 @@ const Rating = ({ reviewsRef }) => {
     if (!reviewsRef.current) return;
 
     reviewsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
+  }, [reviewsRef]);
 
   useWindowResize(() => {
     const element = reviewsTextRef.current;

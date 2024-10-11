@@ -107,5 +107,40 @@ public class MockReviewsCreator implements MockCreator {
         review10.setRating(1, false);
         reviewService.saveReview(review10);
 
+        Review review11 = new Review();
+        review11.setReviewer(reviewer1);
+        review11.setRecipe(recipe);
+        review11.setText("The ramen was pretty good, but the egg was a little overcooked.");
+        review11.setRating(4, false);
+        reviewService.saveReview(review11);
+
+        Review review12 = new Review();
+        review12.setReviewer(reviewer2);
+        review12.setRecipe(recipe);
+        review12.setText("Decent ramen, but I felt it was lacking some spice.");
+        review12.setRating(3, true);
+        reviewService.saveReview(review12);
+
+        Review review13 = new Review();
+        review13.setReviewer(reviewer3);
+        review13.setRecipe(recipe);
+        review13.setText("Great flavor and texture, but the broth could have been hotter.");
+        review13.setRating(4, false);
+        reviewService.saveReview(review13);
+
+        Review review14 = new Review();
+        review14.setReviewer(reviewer4);
+        review14.setRecipe(recipe);
+        review14.setText("This is the best ramen I've had outside of Japan. Truly authentic!");
+        review14.setRating(5, false);
+        reviewService.saveReview(review14);
+
+        Review review15 = new Review();
+        review15.setReviewer(reviewer5);
+        review15.setRecipe(recipe);
+        review15.setText("The ramen was too salty and the noodles were a bit soggy.");
+        review15.setRating(2, true);
+        reviewService.saveReview(review15);
+
     }
 }

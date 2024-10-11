@@ -26,6 +26,9 @@ function useFetchRecipes() {
     if (prevPage === page) {
       return;
     }
+    if (noMoreRecipes) {
+      return;
+    }
 
     const controller = new AbortController();
 
@@ -53,7 +56,7 @@ function useFetchRecipes() {
     return () => {
       controller.abort();
     };
-  }, [page, prevPage, setError, searchParams, setNoMoreRecipes]);
+  }, [page, prevPage, setError, searchParams, setNoMoreRecipes, noMoreRecipes]);
 
   return [
     recipes,
@@ -82,7 +85,7 @@ const RecipeListing = () => {
     noMoreRecipes
   ] = useFetchRecipes();
 
-  const loadMoreRef = useRef(null);
+  const loadMoreRef = useRef();
 
   const collapsed = useCollapsed();
 
@@ -144,8 +147,10 @@ const RecipeListing = () => {
   }, [delayed, setDelayed, noMoreRecipes]);
 
   if (recipes.length === 0 && !noMoreRecipes) {
-    return;
+    return null;
   }
+
+  console.log(recipes);
 
   return (
     <div style={{ opacity: delayed ? 0 : 1 }}>

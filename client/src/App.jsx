@@ -15,6 +15,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import RecipeListing from "./components/recipe/RecipeListing";
 import CreateRecipe from "./components/recipe/CreateRecipe";
 import AboutUs from "./components/AboutUs";
+import ReviewsForRecipe from "./components/recipe/ReviewsForRecipe";
 
 const App = () => {
 
@@ -42,6 +43,10 @@ const App = () => {
     {
       path: '/about-us',
       element: <AboutUs />
+    },
+    {
+      path: '/recipe/reviews/:id',
+      element: <ReviewsForRecipe />
     },
     {
       path: '*',

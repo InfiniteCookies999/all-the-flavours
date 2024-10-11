@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import InfoSeperationBar from "../InfoSeperationBar";
 import StarRating from "./RecipeStarRating";
 import RecipeContext from "../../contexts/RecipeContext";
@@ -20,7 +20,7 @@ const getRankingPostfix = (ranking) => {
   }
 }
 
-const Rating = () => {
+const Rating = ({ reviewsRef }) => {
   
   const context = useContext(RecipeContext);
 
@@ -28,6 +28,12 @@ const Rating = () => {
   // need be.
   const reviewsTextRef = useRef(null);
   const [isReviewsOverflowing, setReviewsOverflowing] = useState(false);
+
+  const onStarsClicked = useCallback(() => {
+    if (!reviewsRef.current) return;
+
+    reviewsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   useWindowResize(() => {
     const element = reviewsTextRef.current;
@@ -41,7 +47,7 @@ const Rating = () => {
       display: 'flex',
       alignItems: 'center'
     }}>
-      <StarRating rating={context.rating}>
+      <StarRating rating={context.rating} onStarsClicked={onStarsClicked}>
         <span ref={reviewsTextRef} style={{
           marginLeft: '0.5rem',
           fontWeight: 'bold',

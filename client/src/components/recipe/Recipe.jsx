@@ -6,11 +6,14 @@ import RecipeIngredients from "./RecipeIngredients";
 import RecipeContext from "../../contexts/RecipeContext";
 import RecipeDirections from "./RecipeDirections";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import ReviewBox from "../review/ReviewBox";
 import useCollapsed from "../../hooks/useCollapsed";
+import theme from "../../theme";
+import StarRating from "./RecipeStarRating";
+import UserAvatar from "../UserAvatar";
 
 const RecipeContainer = styled.div`
   width: 100%;
@@ -28,6 +31,8 @@ const Recipe = () => {
   const [firstReviews, setFirstReviews] = useState(null);
 
   const { setError } = useError();
+
+  const reviewsRef = useRef();
 
   const collapsed = useCollapsed();
 
@@ -60,7 +65,7 @@ const Recipe = () => {
     }}>
       <RecipeContainer>
         <h1>{recipe.title}</h1>
-        <RecipeInfo />
+        <RecipeInfo reviewsRef={reviewsRef} />
         <div style={{ marginTop: '1rem' }}>
           <RecipeCarousel images={recipe.images} />
         </div>
@@ -68,17 +73,46 @@ const Recipe = () => {
         <RecipeIngredients style={{ marginTop: '1rem' }} />
         <RecipeDirections style={{ marginTop: '1rem' }} />
 
-        <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }}>
+        <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }} ref={reviewsRef}>
           <h1>Reviews</h1>
           <ReviewBox style={{ marginTop: '1rem' }} recipeTitle={recipe.title} />
           {firstReviews.elements.length === 0 ? (
             <span>No reviews yet</span>
           ) : (
-            firstReviews.elements.map(review => (
-              <div>
-                <p>{review.text}</p>
-              </div>
-            ))
+            <div style={{
+              backgroundColor: theme.colors.backgroundLight,
+              marginTop: '2rem',
+              padding: '1rem',
+              borderRadius: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem'
+              }}>
+              {firstReviews.elements.map(review => (
+                <div style={{
+                  backgroundColor: 'white',
+                  padding: '0.5rem',
+                  boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)'
+                }}>
+                  <StarRating rating={review.rating / 2} showCursor={false} />
+                  <a href={`/user/${review.reviewer.id}`} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    textDecoration: 'none',
+                    width: 'fit-content'
+                    }}>
+                    <UserAvatar src="/example-profile.jpg" style={{
+                      width: '1.5rem',
+                      height: '1.5rem'
+                      }} />
+                    <span style={{ color: 'gray' }}>
+                      by {review.reviewer.firstName} {review.reviewer.lastName}
+                    </span>
+                  </a>
+                  <p className="mt-2">{review.text}</p>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </RecipeContainer>

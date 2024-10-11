@@ -51,13 +51,13 @@ const timeAgo = (date) => {
   return `Just now`;
 };
 
-const RecipeInfo = () => {
+const RecipeInfo = ({ reviewsRef }) => {
 
   const context = useContext(RecipeContext);
 
   return (
     <>
-      <Rating />
+      <Rating reviewsRef={reviewsRef} />
       <div style={{
         display: 'flex',
         alignItems: 'center',

@@ -47,7 +47,6 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "reviewer_id", nullable = false)
-    @JsonIgnore
     private User reviewer;
 
     public void setRating(int fullStars, boolean halfStar) {

@@ -61,7 +61,7 @@ const Star = ({ state }) => {
   );
 }
 
-const StarRating = ({ rating, children, style, changeOnHover=false }) => {
+const StarRating = ({ rating, children, style, onStarsClicked, showCursor=true, changeOnHover=false }) => {
 
   const [hoverRating, setHoverRating] = useState(rating);
   const [selectedRating, setSelectedRating] = useState(rating);
@@ -88,6 +88,9 @@ const StarRating = ({ rating, children, style, changeOnHover=false }) => {
 
   const onClick = () => {
     setSelectedRating(hoverRating);
+    if (onStarsClicked) {
+      onStarsClicked();
+    }
   };
 
   const stars = Array.from({ length: 5 }, (_, i) => {
@@ -99,44 +102,48 @@ const StarRating = ({ rating, children, style, changeOnHover=false }) => {
   });
 
   return (
-    <div href="/" style={{
+    <div style={{
       display: 'flex',
       alignItems: 'center',
       width: 'fit-items',
       ...(style ? style : {})
-    }}
-    onMouseMove={handleMouseMove}
-    onMouseLeave={handleMouseLeave}
-    onClick={onClick}
-    >
-      <div className="star-rating-stars" style={{
+    }}>
+      <div className={showCursor ? "star-rating-stars" : ""} style={{
         display: 'flex',
         alignItems: 'center',
-        flexShrink: 0
+        flexShrink: 0,
+        userSelect: 'none'
       }}
-      ref={starsRef}>
+      ref={starsRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}>
         {stars.map((state, index) => (
           <Star state={state} key={index} />  
         ))}
       </div>
 
       {children}
-    
-      <style>
-        {`
-          .star-rating-stars {
-            cursor: pointer;
-          }
-        `}
-      </style>
+        
+      {showCursor && (
+        <style>
+          {`
+            .star-rating-stars {
+              cursor: pointer;
+            }
+          `}
+        </style>
+      )}
     </div>
-  )
+  );
 }
 
 StarRating.propTypes = {
   style: PropTypes.object,
   rating: PropTypes.number.isRequired,
-  changeOnHover: PropTypes.bool
+  changeOnHover: PropTypes.bool,
+  showCursor: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
 export default StarRating;

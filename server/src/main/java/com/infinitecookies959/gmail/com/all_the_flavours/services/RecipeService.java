@@ -21,7 +21,8 @@ public class RecipeService {
     private static final Map<String, String> FILE_TYPE_MAPPING = Map.of(
             "image/png", "png",
             "image/jpg", "jpg",
-            "image/jpeg", "jpeg"
+            "image/jpeg", "jpeg",
+            "image/webp", "webp"
     );
 
     private static final String IMAGE_UPLOAD_PATH = "images/upload/recipes";
@@ -91,6 +92,8 @@ public class RecipeService {
                 recipe.getImages().add(randomFileName);
                 return randomFileName;
             });
+        } else {
+            recipe.setUploadImages(new MultipartFile[]{});
         }
 
         return recipeRepository.save(recipe);
@@ -99,5 +102,10 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public boolean recipeExists(String title) {
         return recipeRepository.findByTitle((title)).isPresent();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Recipe> getRecipeByTitle(String title) {
+        return recipeRepository.findByTitle(title);
     }
 }

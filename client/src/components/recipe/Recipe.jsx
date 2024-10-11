@@ -25,6 +25,7 @@ const Recipe = () => {
   const { id } = useParams();
 
   const [recipe, setRecipe] = useState(null);
+  const [firstReviews, setFirstReviews] = useState(null);
 
   const { setError } = useError();
 
@@ -37,8 +38,16 @@ const Recipe = () => {
       .then(response => setRecipe(response.data))
       .catch(error => setError(error));
   }, [id, setError]);
+
+  useEffect(() => {
+    if (!recipe) return;
+
+    axios.get(`/api/reviews?recipeId=${recipe.id}&page=0`)
+      .then(response => setFirstReviews(response.data))
+      .catch(error => setError(error));
+  }, [recipe, setError]);
   
-  if (!recipe) {
+  if (!recipe || !firstReviews) {
     return <div>Loading...</div>;
   }
 
@@ -59,12 +68,18 @@ const Recipe = () => {
         <RecipeIngredients style={{ marginTop: '1rem' }} />
         <RecipeDirections style={{ marginTop: '1rem' }} />
 
-        <div style={{ marginTop: '5rem' }}>
+        <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }}>
           <h1>Reviews</h1>
-          <ReviewBox style={{
-            width: collapsed ? '100%' : '80%',
-            marginTop: '1rem'
-            }} recipeTitle={recipe.title} />
+          <ReviewBox style={{ marginTop: '1rem' }} recipeTitle={recipe.title} />
+          {firstReviews.elements.length === 0 ? (
+            <span>No reviews yet</span>
+          ) : (
+            firstReviews.elements.map(review => (
+              <div>
+                <p>{review.text}</p>
+              </div>
+            ))
+          )}
         </div>
       </RecipeContainer>
     </RecipeContext.Provider>

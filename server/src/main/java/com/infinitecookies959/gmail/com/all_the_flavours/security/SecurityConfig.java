@@ -30,9 +30,11 @@ public class SecurityConfig {
                 // probably not have this.
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // Allow the user to get recipes.
+                        // Allow the user to get recipes and reviews.
                         .requestMatchers(HttpMethod.GET, "/api/recipes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/recipes/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reviews/*").permitAll()
                         // Login and registration are only for non-logged in users.
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").anonymous()

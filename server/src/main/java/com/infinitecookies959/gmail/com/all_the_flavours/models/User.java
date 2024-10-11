@@ -2,7 +2,6 @@ package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.UserConstraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -81,5 +80,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Recipe> recipes;
+
+    @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Review> reviews;
 
 }

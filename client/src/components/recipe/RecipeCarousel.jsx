@@ -3,7 +3,7 @@ import { Carousel } from "react-bootstrap";
 import useResponsiveValue from "../../hooks/useResponsitveValue";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const acceptedFileTypes = [ 'image/jpg', 'image/jpeg', 'image/png' ];
+const acceptedFileTypes = [ 'image/jpg', 'image/jpeg', 'image/png', 'image/webp' ];
 const maxImages = 10;
 
 const RecipeCarousel = ({ images, setImages, style, setImagesValid, showEdit=false }) => {

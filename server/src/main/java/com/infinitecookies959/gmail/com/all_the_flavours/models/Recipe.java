@@ -1,5 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.RecipeConstraints;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
@@ -72,8 +73,12 @@ public class Recipe {
     @NotNull
     @JsonProperty(required = true, access = JsonProperty.Access.WRITE_ONLY)
     // TODO: Hardcoded this because it does not consider a final array a constant.
-    @FileType(accepted = { "image/jpg", "image/jpeg", "image/png" })
+    @FileType(accepted = { "image/jpg", "image/jpeg", "image/png", "image/webp" })
     private MultipartFile[] uploadImages;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Review> reviews;
 
     public Recipe(String title, String description) {
         this.title = title;

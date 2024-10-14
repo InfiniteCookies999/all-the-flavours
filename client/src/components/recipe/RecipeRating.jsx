@@ -67,7 +67,7 @@ const Rating = ({ reviewsRef }) => {
             color: '#7d7d7d',
             fontWeight: 'normal'
           }}>
-            ({context.numberReviews} reviews)
+            ({context.numberOfReviews} reviews)
           </span>
         </span>
       </StarRating>

@@ -80,6 +80,14 @@ public class Recipe {
     @JsonIgnore
     private List<Review> reviews;
 
+    @Transient // Do not save to database.
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    private double rating;
+
+    @Transient // Do not save to database.
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    private long numberOfReviews;
+
     public Recipe(String title, String description) {
         this.title = title;
         this.description = description;

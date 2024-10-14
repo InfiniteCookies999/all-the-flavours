@@ -206,7 +206,7 @@ const RecipeListing = () => {
                   marginBottom: '0rem',
                   }}>
                   <h3 className="recipe-title">{recipe.title}</h3>
-                  <StarRating rating={4.5} numberReviews={20} style={{
+                  <StarRating rating={recipe.rating} style={{
                     overflow: 'hidden'
                   }} />
                 </div>

@@ -29,27 +29,39 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final FileUploadService fileUploadService;
+    private final ReviewService reviewService;
 
-    public RecipeService(RecipeRepository recipeRepository, ServletContext servletContext, FileUploadService fileUploadService) {
+    public RecipeService(RecipeRepository recipeRepository, ServletContext servletContext, FileUploadService fileUploadService, ReviewService reviewService) {
         this.recipeRepository = recipeRepository;
         this.fileUploadService = fileUploadService;
+        this.reviewService = reviewService;
     }
 
-    private Recipe prefixImages(Recipe recipe) {
+    private void prefixImages(Recipe recipe) {
         List<String> prefixedImages = recipe.getImages().stream()
                 .map(image -> "/images/upload/recipes/" + image)
                 .toList();
         recipe.setImages(prefixedImages);
+    }
+
+    private void setReviewInfo(Recipe recipe) {
+        recipe.setRating(reviewService.getAverageRating(recipe));
+        recipe.setNumberOfReviews(reviewService.getNumberOfReviews(recipe));
+    }
+
+    private Recipe fixupRecipe(Recipe recipe) {
+        setReviewInfo(recipe);
+        prefixImages(recipe);
         return recipe;
     }
 
     @Transactional(readOnly = true)
     public Optional<Recipe> getRecipeById(Long id) {
-        return recipeRepository.findById(id).map(this::prefixImages);
+        return recipeRepository.findById(id).map(this::fixupRecipe);
     }
 
     private List<Recipe> fixupRecipes(Page<Recipe> recipePage) {
-        return recipePage.getContent().stream().map(this::prefixImages).toList();
+        return recipePage.getContent().stream().map(this::fixupRecipe).toList();
     }
 
     @Transactional(readOnly = true)

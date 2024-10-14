@@ -1,5 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
+import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Review;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.ReviewRepository;
 import org.springframework.data.domain.Page;
@@ -26,5 +27,16 @@ public class ReviewService {
     public Page<Review> getReviews(long recipeId, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         return reviewRepository.findByRecipeId(recipeId, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Double getAverageRating(Recipe recipe) {
+        Double average = reviewRepository.findAverageRatingByRecipeId(recipe.getId());
+        return average != null ? average : 0;
+    }
+
+    @Transactional(readOnly = true)
+    public long getNumberOfReviews(Recipe recipe){
+        return reviewRepository.countByRecipeId(recipe.getId());
     }
 }

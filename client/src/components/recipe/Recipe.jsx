@@ -53,14 +53,12 @@ const Recipe = () => {
   }, [recipe, setError]);
   
   if (!recipe || !firstReviews) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
     <RecipeContext.Provider value={{
       ...recipe,
-      rating: 3.63,
-      numberReviews: 20,
       ranking: 201
     }}>
       <RecipeContainer>

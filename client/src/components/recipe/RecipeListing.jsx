@@ -150,8 +150,6 @@ const RecipeListing = () => {
     return null;
   }
 
-  console.log(recipes);
-
   return (
     <div style={{ opacity: delayed ? 0 : 1 }}>
       <div style={{

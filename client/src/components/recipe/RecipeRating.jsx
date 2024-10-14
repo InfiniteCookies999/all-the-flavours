@@ -74,19 +74,27 @@ const Rating = ({ reviewsRef }) => {
       <InfoSeperationBar height={'20px'} margin="1rem" />
       {/* Indication of how popular in comparison it is. */}
       <div style={{ fontSize: '1.1rem' }}>
-        <span style={{ fontWeight: 'bold' }}>
-          #
-        </span>
-        <span style={{
-          color: 'black'
-        }}>
-          {context.ranking}
-        </span>
-        <span style={{
-          color: 'gray'
-        }}>
-          {getRankingPostfix(context.ranking)} rated
-        </span>
+        {context.ranking ? (
+          <>
+            <span style={{ fontWeight: 'bold' }}>
+              #
+            </span>
+            <span style={{
+              color: 'black'
+            }}>
+              {context.ranking}
+            </span>
+            <span style={{
+              color: 'gray'
+            }}>
+              {getRankingPostfix(context.ranking)} rated
+            </span>
+          </>
+        ) : (
+          <span style={{ color: 'gray' }}>
+            not rated
+          </span>
+        )}
       </div>
     </div>
   );

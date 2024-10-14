@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "recipe_directions")
@@ -33,6 +34,7 @@ public class RecipeDirection {
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Recipe recipe;
 
     public RecipeDirection(String text) {

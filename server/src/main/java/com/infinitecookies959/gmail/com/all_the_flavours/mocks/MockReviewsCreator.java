@@ -22,8 +22,7 @@ public class MockReviewsCreator implements MockCreator {
         this.recipeService = recipeService;
     }
 
-    @Override
-    public void createMocks() {
+    private void addMocksToTonkotsuRamen() {
         Recipe recipe = recipeService.getRecipeByTitle("Tonkotsu Ramen").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
@@ -141,6 +140,142 @@ public class MockReviewsCreator implements MockCreator {
         review15.setText("The ramen was too salty and the noodles were a bit soggy.");
         review15.setRating(2, true);
         reviewService.saveReview(review15);
+    }
 
+    private void addMocksToSausageWithPasta() {
+        Recipe recipe = recipeService.getRecipeByTitle("Sausage with Pasta").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("susan-smith@gmail.com").orElseThrow();
+        User reviewer2 = userService.getUserByEmail("john-doe@gmail.com").orElseThrow();
+        User reviewer3 = userService.getUserByEmail("jane-doe@gmail.com").orElseThrow();
+        User reviewer4 = userService.getUserByEmail("alice-johnson@gmail.com").orElseThrow();
+        User reviewer5 = userService.getUserByEmail("bob-williams@gmail.com").orElseThrow();
+
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("The Sausage with Pasta was decent, but I expected more flavor from the sauce.");
+        review1.setRating(3, true);
+        reviewService.saveReview(review1);
+
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("It was okay, but the pasta was a bit overcooked for my liking.");
+        review2.setRating(2, true);
+        reviewService.saveReview(review2);
+
+        Review review3 = new Review();
+        review3.setReviewer(reviewer3);
+        review3.setRecipe(recipe);
+        review3.setText("The dish was filling, but it lacked seasoning.");
+        review3.setRating(2, true);
+        reviewService.saveReview(review3);
+
+        Review review4 = new Review();
+        review4.setReviewer(reviewer4);
+        review4.setRecipe(recipe);
+        review4.setText("Not bad, but I've had much better sausage dishes.");
+        review4.setRating(3, false);
+        reviewService.saveReview(review4);
+
+        Review review5 = new Review();
+        review5.setReviewer(reviewer5);
+        review5.setRecipe(recipe);
+        review5.setText("The sausage was okay, but the dish felt unbalanced and heavy.");
+        review5.setRating(2, false);
+        reviewService.saveReview(review5);
+
+        Review review6 = new Review();
+        review6.setReviewer(reviewer1);
+        review6.setRecipe(recipe);
+        review6.setText("A bit bland, I had to add salt and pepper to make it enjoyable.");
+        review6.setRating(3, false);
+        reviewService.saveReview(review6);
+
+        Review review7 = new Review();
+        review7.setReviewer(reviewer2);
+        review7.setRecipe(recipe);
+        review7.setText("It was hearty, but the flavors didn’t really pop.");
+        review7.setRating(2, true);
+        reviewService.saveReview(review7);
+
+    }
+
+    private void addMocksToHawaiianPizza() {
+        Recipe recipe = recipeService.getRecipeByTitle("Hawaiian Pizza").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("susan-smith@gmail.com").orElseThrow();
+        User reviewer2 = userService.getUserByEmail("john-doe@gmail.com").orElseThrow();
+        User reviewer3 = userService.getUserByEmail("jane-doe@gmail.com").orElseThrow();
+        User reviewer4 = userService.getUserByEmail("alice-johnson@gmail.com").orElseThrow();
+        User reviewer5 = userService.getUserByEmail("bob-williams@gmail.com").orElseThrow();
+
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("Absolutely delicious! The combination of sweet pineapple and savory ham is unbeatable!");
+        review1.setRating(5, false);
+        reviewService.saveReview(review1);
+
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("The best Hawaiian pizza I've ever had! Perfectly cooked with great flavors.");
+        review2.setRating(5, false);
+        reviewService.saveReview(review2);
+
+        Review review3 = new Review();
+        review3.setReviewer(reviewer3);
+        review3.setRecipe(recipe);
+        review3.setText("Fantastic! The sweetness of the pineapple balances out the savory ham perfectly.");
+        review3.setRating(5, false);
+        reviewService.saveReview(review3);
+
+        Review review4 = new Review();
+        review4.setReviewer(reviewer4);
+        review4.setRecipe(recipe);
+        review4.setText("A delightful pizza! I loved every bite. Would highly recommend it!");
+        review4.setRating(5, false);
+        reviewService.saveReview(review4);
+
+        Review review5 = new Review();
+        review5.setReviewer(reviewer5);
+        review5.setRecipe(recipe);
+        review5.setText("This Hawaiian Pizza is a must-try! The flavors meld beautifully together.");
+        review5.setRating(5, false);
+        reviewService.saveReview(review5);
+
+        Review review6 = new Review();
+        review6.setReviewer(reviewer1);
+        review6.setRecipe(recipe);
+        review6.setText("Incredible! The crust was perfect, and the toppings were plentiful and fresh.");
+        review6.setRating(5, false);
+        reviewService.saveReview(review6);
+
+        Review review7 = new Review();
+        review7.setReviewer(reviewer2);
+        review7.setRecipe(recipe);
+        review7.setText("Simply the best! The cheese was melty and the toppings were top-notch.");
+        review7.setRating(5, false);
+        reviewService.saveReview(review7);
+
+    }
+
+    @Override
+    public void createMocks() {
+        addMocksToTonkotsuRamen();
+        addMocksToSausageWithPasta();
+        addMocksToHawaiianPizza();
     }
 }

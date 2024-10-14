@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Recipe recipe;
 
     @ManyToOne

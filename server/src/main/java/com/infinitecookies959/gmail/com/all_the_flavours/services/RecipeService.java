@@ -3,8 +3,9 @@ package com.infinitecookies959.gmail.com.all_the_flavours.services;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeRank;
+import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRankRepository;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRepository;
-import jakarta.servlet.ServletContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +31,15 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final FileUploadService fileUploadService;
     private final ReviewService reviewService;
+    private final RecipeRankRepository recipeRankRepository;
 
-    public RecipeService(RecipeRepository recipeRepository, ServletContext servletContext, FileUploadService fileUploadService, ReviewService reviewService) {
+    public RecipeService(RecipeRepository recipeRepository,
+                         FileUploadService fileUploadService,
+                         ReviewService reviewService, RecipeRankRepository recipeRankRepository) {
         this.recipeRepository = recipeRepository;
         this.fileUploadService = fileUploadService;
         this.reviewService = reviewService;
+        this.recipeRankRepository = recipeRankRepository;
     }
 
     private void prefixImages(Recipe recipe) {
@@ -108,7 +113,17 @@ public class RecipeService {
             recipe.setUploadImages(new MultipartFile[]{});
         }
 
-        return recipeRepository.save(recipe);
+        Recipe newRecipe = recipeRepository.save(recipe);
+
+        // Initialize the rank.
+        RecipeRank initialRank = new RecipeRank();
+        initialRank.setRecipe(newRecipe);
+        initialRank = recipeRankRepository.save(initialRank);
+
+        // Set the initial rank.
+        newRecipe.setRecipeRank(initialRank);
+
+        return newRecipe;
     }
 
     @Transactional(readOnly = true)

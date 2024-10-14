@@ -56,10 +56,12 @@ const Recipe = () => {
     return null;
   }
 
+  console.log("recipe: ", recipe);
+
   return (
     <RecipeContext.Provider value={{
       ...recipe,
-      ranking: 201
+      ranking: recipe.recipeRank.value
     }}>
       <RecipeContainer>
         <h1>{recipe.title}</h1>

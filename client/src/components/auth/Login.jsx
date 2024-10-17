@@ -68,7 +68,7 @@ const Login = () => {
     return !emailValid || !passwordValid;
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     
     if (updateErrors()) {

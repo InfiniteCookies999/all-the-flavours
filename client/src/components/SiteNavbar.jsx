@@ -1,10 +1,11 @@
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import SiteLogo from './SiteLogo';
 import theme from '../theme';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import RecipeSearchInput from './recipe/RecipeSearchInput';
 import useResponsiveValue from '../hooks/useResponsitveValue';
+import UserAvatar from "./UserAvatar";
 
 const navbarHoverClass ='navbar-hover';
 
@@ -24,6 +25,8 @@ const SiteNavbar = () => {
   if (loading) {
     return null;
   }
+
+  //<Nav.Link className='nav-link' onClick={onLogout}>Logout</Nav.Link>
 
   return (
     <div>
@@ -62,12 +65,41 @@ const SiteNavbar = () => {
             }} />
           <Navbar.Toggle aria-controls='collapsable-navbar' />
           <Navbar.Collapse id='collapsable-navbar'>
-            <Nav className="ms-auto">
+            <Nav className="ms-auto" style={{
+              alignItems: collapsed ? "flex-start" : "center"
+              
+              }}>
               <Nav.Link className='nav-link' href='/'>Home</Nav.Link>
               <Nav.Link className='nav-link' href='/about-us'>About Us</Nav.Link>
               <Nav.Link className='nav-link' href='/recipes'>Search Recipes</Nav.Link>
-              {isLoggedIn ? <Nav.Link className='nav-link' onClick={onLogout}>Logout</Nav.Link>
-                          : <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>}
+              {isLoggedIn ? (
+                <>
+                  <Dropdown align="end">
+                    <Dropdown.Toggle
+                      as="div"
+                      style={{
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        marginLeft: '1rem'
+                      }}
+                    >
+                      <UserAvatar src={"/example-profile.jpg"} style={{
+                        width: '2.5rem',
+                        height: '2.5rem'
+                      }} />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item className="nav-dropdown-item-link" href="/profile">Profile</Dropdown.Item>
+                      <Dropdown.Item className="nav-dropdown-item-link" href="/create-recipe">Create Recipe</Dropdown.Item>
+                      <Dropdown.Item className="nav-dropdown-item-link" onClick={onLogout}>Logout</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              ) : (
+                <Nav.Link className='nav-link' href='/login'>Login</Nav.Link>
+              )}
               
             </Nav>
             <style>
@@ -95,6 +127,10 @@ const SiteNavbar = () => {
                 /* Changing the color of the svg to the light orange */
                 .navbar-toggler-icon:hover {
                   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='${encodeURIComponent(theme.colors.primaryLight)}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+                }
+
+                .nav-dropdown-item-link:hover {
+                  background-color: ${theme.colors.primary} !important;
                 }
               `}
             </style>

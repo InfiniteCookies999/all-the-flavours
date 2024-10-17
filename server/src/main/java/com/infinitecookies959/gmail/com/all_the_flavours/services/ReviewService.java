@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.UpdateNonExistentModelException;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -158,6 +159,7 @@ public class ReviewService {
         return reviewRepository.countByRecipeId(recipe.getId());
     }
 
+    @Transactional(readOnly = true)
     public Optional<Review> getReviewByUserIdAndRecipe(Long userId, Recipe recipe) {
         return reviewRepository.findByRecipeIdAndReviewerId(recipe.getId(), userId);
     }

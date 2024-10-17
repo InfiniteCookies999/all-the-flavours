@@ -16,6 +16,7 @@ import RecipeListing from "./components/recipe/RecipeListing";
 import CreateRecipe from "./components/recipe/CreateRecipe";
 import AboutUs from "./components/AboutUs";
 import ReviewsForRecipe from "./components/recipe/ReviewsForRecipe";
+import HomePage from "./components/HomePage";
 
 const App = () => {
 
@@ -47,6 +48,10 @@ const App = () => {
     {
       path: '/recipe/reviews/:id',
       element: <ReviewsForRecipe />
+    },
+    {
+      path: '/',
+      element: <HomePage />
     },
     {
       path: '*',

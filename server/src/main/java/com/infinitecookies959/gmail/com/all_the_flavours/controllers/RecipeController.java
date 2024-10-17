@@ -44,6 +44,16 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipes(page, VIEWING_PAGE_SIZE, search));
     }
 
+    @GetMapping("/popular")
+    public ResponseEntity<List<Recipe>> getPopularRecipes() {
+        return ResponseEntity.ok(recipeService.getPopularRecipes());
+    }
+
+    @GetMapping("/latest")
+    public ResponseEntity<List<Recipe>> getLatestRecipes() {
+        return ResponseEntity.ok(recipeService.getLatestRecipes());
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Long>> createRecipe(@Valid @ModelAttribute Recipe recipe,
                                                           @AuthenticationPrincipal SessionPrincipal session)

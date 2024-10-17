@@ -87,6 +87,21 @@ public class RecipeService {
         return fixupRecipes(recipePage);
     }
 
+    @Transactional(readOnly = true)
+    public List<Recipe> getPopularRecipes() {
+        return recipeRankRepository.findFirst8ByValueIsNotNullOrderByValueAsc().stream()
+                .map(RecipeRank::getRecipe)
+                .map(this::fixupRecipe)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> getLatestRecipes() {
+        return recipeRepository.findFirst8ByOrderByCreationDateDesc().stream()
+                .map(this::fixupRecipe)
+                .toList();
+    }
+
     @Transactional
     public Recipe saveRecipe(Recipe recipe) throws IOException {
 

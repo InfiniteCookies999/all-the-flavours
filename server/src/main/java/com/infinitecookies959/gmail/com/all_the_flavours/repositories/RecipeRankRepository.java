@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RecipeRankRepository extends JpaRepository<RecipeRank, Long> {
 
@@ -25,5 +27,7 @@ public interface RecipeRankRepository extends JpaRepository<RecipeRank, Long> {
     @Modifying
     @Query("UPDATE RecipeRank r SET r.value = r.value + 1 WHERE r.value >= :startValue")
     void incrementRanksFromValueToMax(@Param("startValue") Long startValue);
+
+    List<RecipeRank> findFirst8ByValueIsNotNullOrderByValueAsc();
 
 }

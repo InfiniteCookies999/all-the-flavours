@@ -102,7 +102,7 @@ const ReviewsForRecipe = () => {
           height: '1.6rem',
           marginRight: '0.5rem'
         }}>
-          <span class="material-icons" style={{
+          <span className="material-icons" style={{
             transform: 'translateY(0.1rem)'
           }}>arrow_back</span>
         </div>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import theme from "../../theme";
 
 const StarState = Object.freeze({
@@ -65,6 +65,12 @@ const StarRating = ({ rating, children, style, onStarsClicked, showCursor=true, 
 
   const [hoverRating, setHoverRating] = useState(rating);
   const [selectedRating, setSelectedRating] = useState(rating);
+
+  // Handle specific case of prop changing rather than just mounting.
+  useEffect(() => {
+    setHoverRating(rating);
+    setSelectedRating(rating);
+  }, [rating]);
 
   const fullStars = Math.floor(hoverRating);
   const hasHalf = (hoverRating - fullStars) >= 0.5;

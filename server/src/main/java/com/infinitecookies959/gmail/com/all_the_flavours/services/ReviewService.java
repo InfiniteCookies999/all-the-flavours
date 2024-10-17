@@ -108,7 +108,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void saveReview(Review review) {
+    public Review saveReview(Review review) {
 
         Review existingReview = reviewRepository.findByRecipeIdAndReviewerId(
                 review.getRecipe().getId(),
@@ -121,10 +121,12 @@ public class ReviewService {
 
         review = reviewRepository.save(review);
         updateRecipeRank(review.getRecipe());
+
+        return review;
     }
 
     @Transactional
-    public void updateReview(Review review) {
+    public Review updateReview(Review review) {
 
         Review existingReview = reviewRepository.findByRecipeIdAndReviewerId(
                 review.getRecipe().getId(),
@@ -135,6 +137,8 @@ public class ReviewService {
 
         review = reviewRepository.save(review);
         updateRecipeRank(review.getRecipe());
+
+        return review;
     }
 
     @Transactional(readOnly = true)

@@ -29,7 +29,8 @@ const Recipe = () => {
   const { id } = useParams();
 
   const [recipe, setRecipe] = useState(null);
-  const [firstReviews, setFirstReviews] = useState(null);
+  const [reviews, setReviews] = useState(null);
+  const [totalReviews, setTotalReviews] = useState(null);
 
   const { isLoggedIn } = useContext(AuthContext);
 
@@ -51,15 +52,17 @@ const Recipe = () => {
     if (!recipe) return;
 
     axios.get(`/api/reviews?recipeId=${recipe.id}&page=0`)
-      .then(response => setFirstReviews(response.data))
+      .then(response => {
+        const firstReviews = response.data;
+        setReviews(firstReviews.elements);
+        setTotalReviews(firstReviews.totalReviews);
+      })
       .catch(error => setError(error));
   }, [recipe, setError]);
   
-  if (!recipe || !firstReviews) {
+  if (!recipe || !reviews || totalReviews === null) {
     return null;
   }
-
-  console.log(recipe);
 
   return (
     <RecipeContext.Provider value={{
@@ -84,7 +87,8 @@ const Recipe = () => {
               style={{ marginTop: '1rem' }}
               recipeId={parseInt(id)}
               recipeTitle={recipe.title}
-              existingReview={recipe.existingReview} />
+              existingReview={recipe.existingReview}
+              setReviews={setReviews} />
           ) : (
             <div style={{
               backgroundColor: theme.colors.backgroundLight,
@@ -110,12 +114,12 @@ const Recipe = () => {
               flexDirection: 'column',
               gap: '1rem'
               }}>
-                {firstReviews.elements.length === 0 ? (
+                {reviews.length === 0 ? (
                   <span>No reviews yet</span>
                 ) : (
                   <>
-                    <ReviewListing reviews={firstReviews.elements} />
-                    {firstReviews.totalReviews > 10 && (
+                    <ReviewListing reviews={reviews} />
+                    {totalReviews > 10 && (
                       <PrimaryButton onClick={() => {
                         window.location.href="/recipe/reviews/" + recipe.id;
                       }}>

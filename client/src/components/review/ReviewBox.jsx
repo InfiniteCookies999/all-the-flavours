@@ -7,7 +7,7 @@ import PrimaryButton from "../PrimaryButton";
 import { useError } from '../../contexts/ErrorContext';
 import axios from 'axios';
 
-const ReviewBox = ({ recipeId, style, recipeTitle, existingReview }) => {
+const ReviewBox = ({ recipeId, style, recipeTitle, existingReview, setReviews }) => {
 
   const [hasReviewed, setHasReviewed] = useState(existingReview != null);
 
@@ -72,8 +72,23 @@ const ReviewBox = ({ recipeId, style, recipeTitle, existingReview }) => {
       rating: Math.floor(rating * 2),
       recipe: { id: recipeId }
     })
-      .then(() => {
+      .then(response => {
+        const newReview = response.data;
+
         setHasReviewed(true);
+        setReviews(prevReviews => {
+          const reviewIndex = prevReviews.findIndex(review => review.id === newReview.id);
+
+          if (reviewIndex !== -1) {
+            // The review already exist so updating it!
+            const updatedReviews = [...prevReviews];
+            updatedReviews[reviewIndex] = newReview;
+            return updatedReviews;
+          } else {
+            // The review does not exist, so adding it to the list.
+            return [newReview, ...prevReviews];
+          }
+        })
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));

@@ -38,16 +38,16 @@ public class ReviewController {
     }
 
     @PostMapping
-    public void createReview(@RequestBody Review review,
+    public ResponseEntity<Review> createReview(@RequestBody Review review,
                              @AuthenticationPrincipal SessionPrincipal session) {
         review.setReviewer(userService.getSessionUser(session));
-        reviewService.saveReview(review);
+        return ResponseEntity.ok(reviewService.saveReview(review));
     }
 
     @PutMapping
-    public void updateReview(@RequestBody Review review,
+    public ResponseEntity<Review> updateReview(@RequestBody Review review,
                              @AuthenticationPrincipal SessionPrincipal session) {
         review.setReviewer(userService.getSessionUser(session));
-        reviewService.updateReview(review);
+        return ResponseEntity.ok(reviewService.updateReview(review));
     }
 }

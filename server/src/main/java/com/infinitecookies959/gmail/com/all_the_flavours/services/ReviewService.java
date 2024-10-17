@@ -1,5 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.ReviewAlreadyExistException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeRank;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Review;
@@ -10,8 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.UpdateNonExistentModelException;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -105,10 +108,33 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review saveReview(Review review) {
+    public void saveReview(Review review) {
+
+        Review existingReview = reviewRepository.findByRecipeIdAndReviewerId(
+                review.getRecipe().getId(),
+                review.getReviewer().getId()
+        ).orElse(null);
+
+        if (existingReview != null) {
+            throw new ReviewAlreadyExistException();
+        }
+
         review = reviewRepository.save(review);
         updateRecipeRank(review.getRecipe());
-        return review;
+    }
+
+    @Transactional
+    public void updateReview(Review review) {
+
+        Review existingReview = reviewRepository.findByRecipeIdAndReviewerId(
+                review.getRecipe().getId(),
+                review.getReviewer().getId()
+        ).orElseThrow(() -> new UpdateNonExistentModelException(Review.class));
+
+        review.setId(existingReview.getId());
+
+        review = reviewRepository.save(review);
+        updateRecipeRank(review.getRecipe());
     }
 
     @Transactional(readOnly = true)
@@ -126,5 +152,9 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public long getNumberOfReviews(Recipe recipe){
         return reviewRepository.countByRecipeId(recipe.getId());
+    }
+
+    public Optional<Review> getReviewByUserIdAndRecipe(Long userId, Recipe recipe) {
+        return reviewRepository.findByRecipeIdAndReviewerId(recipe.getId(), userId);
     }
 }

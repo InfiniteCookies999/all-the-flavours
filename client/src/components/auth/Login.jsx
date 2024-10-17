@@ -90,7 +90,7 @@ const Login = () => {
         }
         setError(error);
       })
-      .finally(() => setLoading(false));    
+      .finally(() => setLoading(false));
   };
 
   if (isLoggedIn) {

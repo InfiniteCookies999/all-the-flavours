@@ -31,8 +31,9 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
-        Optional<Recipe> recipe = recipeService.getRecipeById(id);
+    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id,
+                                                @AuthenticationPrincipal SessionPrincipal session) {
+        Optional<Recipe> recipe = recipeService.getRecipeById(id, session);
         return recipe.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }

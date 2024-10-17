@@ -1,19 +1,29 @@
+import PropTypes from 'prop-types';
 import { Form } from "react-bootstrap";
 import theme from "../../theme";
 import StarRating from "../recipe/RecipeStarRating";
 import { useState } from "react";
 import PrimaryButton from "../PrimaryButton";
+import { useError } from '../../contexts/ErrorContext';
+import axios from 'axios';
 
-const ReviewBox = ({ style, recipeTitle }) => {
+const ReviewBox = ({ recipeId, style, recipeTitle, existingReview }) => {
 
-  const [text, setText] = useState('');
-  const [hasClickedStar, setHasClickedStar] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(existingReview != null);
+
+  const [text, setText] = useState(existingReview != null ? existingReview.text : '');
+  const [hasClickedStar, setHasClickedStar] = useState(hasReviewed);
+  const [rating, setRating] = useState(existingReview != null ? existingReview.rating / 2 : 0);
 
   const [textValid, setTextValid] = useState(true);
   const [starsValid, setStarsValid] = useState(true);
 
   const [textError, setTextError] = useState('');
   const [starsError, setStarsError] = useState('');
+
+  const { setError } = useError();
+
+  const [loading, setLoading] = useState(false);
 
   const updateTextError = () => {
     if (text.length === 0) {
@@ -47,17 +57,32 @@ const ReviewBox = ({ style, recipeTitle }) => {
   };
 
   const onSubmit = () => {
+    if (loading) return;
     
     if (updateErrors()) {
       return;
     }
 
-    // TODO: send off to server!
+    setLoading(true);
+
+    const method = hasReviewed ? axios.put : axios.post;
+
+    method("/api/reviews", {
+      text,
+      rating: Math.floor(rating * 2),
+      recipe: { id: recipeId }
+    })
+      .then(() => {
+        setHasReviewed(true);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   };
 
-  const onStarClicked = () => {
+  const onStarClicked = (rating) => {
     setHasClickedStar(true);
     setStarsValid(true);
+    setRating(rating);
   };
 
   return (
@@ -72,8 +97,15 @@ const ReviewBox = ({ style, recipeTitle }) => {
           padding: '1rem',
           boxShadow: '0 0 4px rgba(0, 0, 0, 0.2)'
           }}>
-          <h4>Add review for {recipeTitle}</h4>
-          <StarRating rating={0} onStarsClicked={onStarClicked} changeOnHover={true}>
+          {hasReviewed ? (
+            <h4>Edit your review for {recipeTitle}</h4>
+          ) : (
+            <h4>Add review for {recipeTitle}</h4>
+          )}
+          <StarRating
+            rating={rating}
+            onStarsClicked={onStarClicked}
+            changeOnHover={true}>
             <span style={{
               marginLeft: '0.5rem',
               color: 'gray'
@@ -100,8 +132,8 @@ const ReviewBox = ({ style, recipeTitle }) => {
           />
           {!textValid && <div className="text-danger mt-1">{textError}</div>}
 
-          <PrimaryButton className='mt-4' onClick={onSubmit}>
-            Add Review!
+          <PrimaryButton className='mt-4' onClick={onSubmit} disabled={loading}>
+            {hasReviewed ? <>Change Review!</> : <>Add Review!</>}
           </PrimaryButton>
         </div>
         <style>
@@ -121,5 +153,12 @@ const ReviewBox = ({ style, recipeTitle }) => {
     </div>
   );
 }
+
+ReviewBox.propTypes = {
+  recipeId: PropTypes.number.isRequired,
+  style: PropTypes.object,
+  recipeTitle: PropTypes.string.isRequired,
+  existingReview: PropTypes.object
+};
 
 export default ReviewBox;

@@ -6,7 +6,7 @@ import RecipeIngredients from "./RecipeIngredients";
 import RecipeContext from "../../contexts/RecipeContext";
 import RecipeDirections from "./RecipeDirections";
 import { useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import ReviewBox from "../review/ReviewBox";
@@ -14,6 +14,7 @@ import useCollapsed from "../../hooks/useCollapsed";
 import theme from "../../theme";
 import PrimaryButton from "../PrimaryButton";
 import ReviewListing from "../review/ReviewListing";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const RecipeContainer = styled.div`
   width: 100%;
@@ -29,6 +30,8 @@ const Recipe = () => {
 
   const [recipe, setRecipe] = useState(null);
   const [firstReviews, setFirstReviews] = useState(null);
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   const { setError } = useError();
 
@@ -56,7 +59,7 @@ const Recipe = () => {
     return null;
   }
 
-  console.log("recipe: ", recipe);
+  console.log(recipe);
 
   return (
     <RecipeContext.Provider value={{
@@ -75,7 +78,29 @@ const Recipe = () => {
 
         <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }} ref={reviewsRef}>
           <h1>Reviews</h1>
-          <ReviewBox style={{ marginTop: '1rem' }} recipeTitle={recipe.title} />
+          
+          {isLoggedIn ? (
+            <ReviewBox
+              style={{ marginTop: '1rem' }}
+              recipeId={parseInt(id)}
+              recipeTitle={recipe.title}
+              existingReview={recipe.existingReview} />
+          ) : (
+            <div style={{
+              backgroundColor: theme.colors.backgroundLight,
+              padding: '1rem',
+              borderRadius: '10px',
+              marginTop: '1rem'
+            }}>
+              <h5>You must be logged in to add a review</h5>
+              <PrimaryButton onClick={() => {
+                window.location.href = "/login";
+              }}>
+                Login
+              </PrimaryButton>
+            </div>
+          )}
+
           <div style={{
               backgroundColor: theme.colors.backgroundLight,
               marginTop: '2rem',

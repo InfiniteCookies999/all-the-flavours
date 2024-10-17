@@ -8,10 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    Page<Review> findByRecipeId(long recipeId, Pageable pageable);
+    Page<Review> findByRecipeId(Long recipeId, Pageable pageable);
+
+    Optional<Review> findByRecipeIdAndReviewerId(Long recipeId, Long userId);
 
     @Query("SELECT AVG(r.rating) / 2 FROM Review r WHERE r.recipe.id = :recipeId")
     Double findAverageRatingByRecipeId(@Param("recipeId") Long recipeId);

@@ -1,13 +1,13 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Review;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.ReviewService;
+import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +19,11 @@ public class ReviewController {
     public static final int VIEWING_PAGE_SIZE = 10;
 
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, UserService userService) {
         this.reviewService = reviewService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -33,5 +35,19 @@ public class ReviewController {
                 "elements", reviews,
                 "totalReviews", reviewPage.getTotalElements()
         ));
+    }
+
+    @PostMapping
+    public void createReview(@RequestBody Review review,
+                             @AuthenticationPrincipal SessionPrincipal session) {
+        review.setReviewer(userService.getSessionUser(session));
+        reviewService.saveReview(review);
+    }
+
+    @PutMapping
+    public void updateReview(@RequestBody Review review,
+                             @AuthenticationPrincipal SessionPrincipal session) {
+        review.setReviewer(userService.getSessionUser(session));
+        reviewService.updateReview(review);
     }
 }

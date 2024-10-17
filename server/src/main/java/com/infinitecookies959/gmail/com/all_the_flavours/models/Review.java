@@ -1,6 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.ReviewConstraints;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -43,8 +42,8 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
-    @JsonIgnore
-    @ToString.Exclude
+    @JsonProperty(required = true, access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull
     private Recipe recipe;
 
     @ManyToOne

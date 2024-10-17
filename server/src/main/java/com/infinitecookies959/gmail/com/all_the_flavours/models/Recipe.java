@@ -93,6 +93,11 @@ public class Recipe {
     @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
     private long numberOfReviews;
 
+    // This is the review given by the current logged-in user.
+    @Transient // Do not save to database.
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Review existingReview;
+
     public Recipe(String title, String description) {
         this.title = title;
         this.description = description;

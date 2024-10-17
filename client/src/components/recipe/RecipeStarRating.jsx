@@ -89,7 +89,7 @@ const StarRating = ({ rating, children, style, onStarsClicked, showCursor=true, 
   const onClick = () => {
     setSelectedRating(hoverRating);
     if (onStarsClicked) {
-      onStarsClicked();
+      onStarsClicked(hoverRating);
     }
   };
 

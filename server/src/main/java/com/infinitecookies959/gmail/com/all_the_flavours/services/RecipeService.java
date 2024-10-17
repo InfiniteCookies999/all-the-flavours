@@ -1,14 +1,13 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeDirection;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeIngredient;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeRank;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.*;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRankRepository;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.RecipeRepository;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,8 +60,14 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Recipe> getRecipeById(Long id) {
-        return recipeRepository.findById(id).map(this::fixupRecipe);
+    public Optional<Recipe> getRecipeById(Long id, SessionPrincipal session) {
+        return recipeRepository.findById(id).map(this::fixupRecipe).map(recipe -> {
+            if (session != null) {
+                reviewService.getReviewByUserIdAndRecipe(session.getUserId(), recipe)
+                        .ifPresent(recipe::setExistingReview);
+            }
+            return recipe;
+        });
     }
 
     private List<Recipe> fixupRecipes(Page<Recipe> recipePage) {

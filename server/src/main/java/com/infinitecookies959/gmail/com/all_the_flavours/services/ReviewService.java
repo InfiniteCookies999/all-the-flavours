@@ -144,7 +144,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Page<Review> getReviews(long recipeId, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return reviewRepository.findByRecipeId(recipeId, pageable);
+        return reviewRepository.findByRecipeIdOrderByCreationDateDesc(recipeId, pageable);
     }
 
     @Transactional(readOnly = true)

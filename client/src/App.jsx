@@ -17,6 +17,7 @@ import CreateRecipe from "./components/recipe/CreateRecipe";
 import AboutUs from "./components/AboutUs";
 import ReviewsForRecipe from "./components/recipe/ReviewsForRecipe";
 import HomePage from "./components/HomePage";
+import Profile from "./components/Profile";
 
 const App = () => {
 
@@ -52,6 +53,10 @@ const App = () => {
     {
       path: '/',
       element: <HomePage />
+    },
+    {
+      path: '/profile',
+      element: <Profile />
     },
     {
       path: '*',

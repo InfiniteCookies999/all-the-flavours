@@ -67,7 +67,6 @@ const RecipeInfo = ({ reviewsRef }) => {
         <div className="profile-link" style={{
           display: 'flex',
           alignItems: 'center',
-          alignContent: 'center',
           width: 'fit-content'
         }}>
           {/* TODO: loading the user profile */}
@@ -75,9 +74,15 @@ const RecipeInfo = ({ reviewsRef }) => {
             width: '40px',
             height: '40px'
           }}/>
-          <span style={{ marginLeft: '0.2rem', color: '#1c1c1c' }}>
-            {context.user.firstName} {context.user.lastName}
-          </span>
+            <div style={{ lineHeight: '0.9rem' }}>
+              <span style={{ marginLeft: '0.2rem', color: '#1c1c1c' }}>
+                {context.user.firstName} {context.user.lastName}
+              </span>
+              <br/>
+              <span style={{ fontSize: '0.8rem', marginLeft: '0.2rem', color: 'gray' }}>
+                @{context.user.username}
+              </span>
+            </div>
         </div>
         <InfoSeperationBar height={'20px'} margin="0.8rem" />
         <span style={{

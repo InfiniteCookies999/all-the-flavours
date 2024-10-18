@@ -26,8 +26,6 @@ const SiteNavbar = () => {
     return null;
   }
 
-  //<Nav.Link className='nav-link' onClick={onLogout}>Logout</Nav.Link>
-
   return (
     <div>
       <Navbar bg='dark' variant='dark' expand='lg' style={{
@@ -82,12 +80,17 @@ const SiteNavbar = () => {
                         display: "flex",
                         alignItems: "center",
                         marginLeft: '1rem'
-                      }}
-                    >
-                      <UserAvatar src={"/example-profile.jpg"} style={{
-                        width: '2.5rem',
-                        height: '2.5rem'
-                      }} />
+                      }}>
+                      <div className='nav-user-avatar' style={{
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <UserAvatar src={"/example-profile.jpg"} style={{
+                          width: '2.5rem',
+                          height: '2.5rem'
+                        }} />
+                      </div>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
@@ -104,6 +107,14 @@ const SiteNavbar = () => {
             </Nav>
             <style>
               {`
+                .nav-user-avatar {
+                  transition: box-shadow 0.2s ease-in-out;
+                }
+
+                .nav-user-avatar:hover {
+                  box-shadow: 0 0 6px ${theme.colors.primaryLight} !important;
+                }
+
                 .nav-link {
                   margin-left: 1.5rem;
                 }

@@ -1,6 +1,7 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.UserNameUpdateRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
@@ -40,6 +41,8 @@ public class UserController {
     }
 
     private boolean isUserAuthorizedToUpdate(SessionPrincipal session, Long userId) {
+        // If we were to allow admin code then we would also check if they are an
+        // admin here.
         return Objects.equals(userService.getSessionUser(session).getId(), userId);
     }
 
@@ -50,14 +53,28 @@ public class UserController {
                                                @FileType(accepted = { "image/jpg", "image/jpeg", "image/png", "image/webp" })
                                                MultipartFile file,
                                                @AuthenticationPrincipal SessionPrincipal session) throws IOException {
-        // If we were to allow admin code then we would also check if they are an
-        // admin here.
         if (!isUserAuthorizedToUpdate(session, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         try {
             userService.updateAvatarImage(userId, file);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/name")
+    public ResponseEntity<?> updateUserName(@PathVariable Long userId,
+                                            @RequestBody UserNameUpdateRequest request,
+                                            @AuthenticationPrincipal SessionPrincipal session) {
+        if (!isUserAuthorizedToUpdate(session, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+            userService.updateUserName(userId, request.getFirstName(), request.getLastName());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

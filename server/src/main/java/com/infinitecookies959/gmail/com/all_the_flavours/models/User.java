@@ -3,8 +3,8 @@ package com.infinitecookies959.gmail.com.all_the_flavours.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.UserConstraints;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.RegistrationValidationGroup;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.ValidName;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -34,16 +34,10 @@ public class User {
     @CreationTimestamp
     private LocalDateTime joinDate;
 
-    @Column(length = UserConstraints.MAX_NAME_LENGTH, nullable = false)
-    @NotEmpty
-    @Size(max = UserConstraints.MAX_NAME_LENGTH)
-    @Pattern(regexp = UserConstraints.NAME_PATTERN)
+    @ValidName
     private String firstName;
 
-    @Column(length = UserConstraints.MAX_NAME_LENGTH, nullable = false)
-    @NotEmpty
-    @Size(max = UserConstraints.MAX_NAME_LENGTH)
-    @Pattern(regexp = UserConstraints.NAME_PATTERN)
+    @ValidName
     private String lastName;
 
     // COLLATE utf8mb4_general_ci tells the database to treat the email as if it is case-insensitive.

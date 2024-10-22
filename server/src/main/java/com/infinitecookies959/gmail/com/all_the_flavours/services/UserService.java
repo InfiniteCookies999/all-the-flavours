@@ -85,4 +85,15 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUserName(Long userId, String firstName, String lastName) {
+        User user = getUserById(userId).orElseThrow(
+                () -> new EntityNotFoundException("User not found with id: " + userId));
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+
+        userRepository.save(user);
+    }
 }

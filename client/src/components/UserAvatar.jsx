@@ -10,7 +10,7 @@ const UserAvatar = ({ src, style, children, ...props }) => {
       height: 'fit-content',
     }}
     {...props}>
-      <img src={src ? src : '/example-profile.jpg'} alt="User Avatar" style={{
+      <img src={src ? src : '/default-avatar.jpg'} alt="User Avatar" style={{
         ...style,
         borderRadius: '50%',
         aspectRatio: '1/1'

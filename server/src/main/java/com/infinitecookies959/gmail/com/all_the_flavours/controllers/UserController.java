@@ -1,16 +1,20 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -33,5 +37,30 @@ public class UserController {
         Optional<User> user = userService.getUserById(userId);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    private boolean isUserAuthorizedToUpdate(SessionPrincipal session, Long userId) {
+        return Objects.equals(userService.getSessionUser(session).getId(), userId);
+    }
+
+    @PatchMapping(value = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateAvatarImage(@PathVariable Long userId,
+                                               @RequestParam("file")
+                                               @Validated
+                                               @FileType(accepted = { "image/jpg", "image/jpeg", "image/png", "image/webp" })
+                                               MultipartFile file,
+                                               @AuthenticationPrincipal SessionPrincipal session) throws IOException {
+        // If we were to allow admin code then we would also check if they are an
+        // admin here.
+        if (!isUserAuthorizedToUpdate(session, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+            userService.updateAvatarImage(userId, file);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
     }
 }

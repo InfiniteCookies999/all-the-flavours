@@ -69,8 +69,7 @@ const RecipeInfo = ({ reviewsRef }) => {
           alignItems: 'center',
           width: 'fit-content'
         }}>
-          {/* TODO: loading the user profile */}
-          <UserAvatar src={'/example-profile.jpg'} style={{
+          <UserAvatar src={context.user.avatarSrc} style={{
             width: '40px',
             height: '40px'
           }}/>

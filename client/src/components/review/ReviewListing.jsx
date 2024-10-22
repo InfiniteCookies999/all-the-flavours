@@ -19,11 +19,11 @@ const ReviewListing = ({ reviews, loadMoreRef=null }) => {
             textDecoration: 'none',
             width: 'fit-content'
             }}>
-            <UserAvatar src="/example-profile.jpg" style={{
+            <UserAvatar src={review.reviewer.avatarSrc} style={{
               width: '1.5rem',
               height: '1.5rem'
               }} />
-            <span style={{ color: 'gray' }}>
+            <span style={{ color: 'gray', marginLeft: '0.5rem' }}>
               by {review.reviewer.firstName} {review.reviewer.lastName}
             </span>
           </a>

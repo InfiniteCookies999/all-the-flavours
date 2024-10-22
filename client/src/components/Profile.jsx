@@ -34,7 +34,7 @@ const Profile = () => {
 
   const { setError } = useError();
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setAvatarSrc } = useContext(AuthContext);
 
   document.title = "Profile";
 
@@ -62,8 +62,15 @@ const Profile = () => {
 
         setUser(prevUser => ({
           ...prevUser,
-          avatarImage: newImageUrl
+          avatarSrc: newImageUrl
         }));
+        setAvatarSrc(newImageUrl);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        axios.patch(`/api/users/${user.id}/avatar`, formData)
+          .catch(error => setError(error));
       }
     };
 
@@ -94,6 +101,8 @@ const Profile = () => {
     return null;
   }
 
+  console.log(user);
+
   return (
     <AuthContainer xs={12} md={10} lg={8}>
       <div style={{
@@ -118,7 +127,7 @@ const Profile = () => {
             padding: 0
           }}>
             <UserAvatar 
-              src={user.avatarImage} 
+              src={user.avatarSrc} 
               style={{
                 width: avatarSize,
                 height: avatarSize

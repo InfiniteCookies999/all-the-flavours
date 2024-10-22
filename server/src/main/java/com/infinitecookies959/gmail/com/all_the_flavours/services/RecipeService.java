@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class RecipeService {
@@ -45,7 +48,7 @@ public class RecipeService {
 
     private void prefixImages(Recipe recipe) {
         List<String> prefixedImages = recipe.getImages().stream()
-                .map(image -> "/images/upload/recipes/" + image)
+                .map(image -> "/" + IMAGE_UPLOAD_PATH + "/" + image)
                 .toList();
         recipe.setImages(prefixedImages);
     }
@@ -126,8 +129,7 @@ public class RecipeService {
             MultipartFile[] files = recipe.getUploadImages();
 
             fileUploadService.transferFiles(files, IMAGE_UPLOAD_PATH, file -> {
-                String randomFileName = UUID.randomUUID() + "."
-                        + FILE_TYPE_MAPPING.get(file.getContentType());
+                String randomFileName = FileUploadService.getRandomizedFileName(file);
                 recipe.getImages().add(randomFileName);
                 return randomFileName;
             });

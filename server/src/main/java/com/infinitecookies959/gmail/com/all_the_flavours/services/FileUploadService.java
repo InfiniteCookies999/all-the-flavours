@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -25,12 +26,15 @@ public class FileUploadService {
         this.servletContext = servletContext;
     }
 
+    public static String getRandomizedFileName(MultipartFile file) {
+        return UUID.randomUUID() + "." + FILE_TYPE_MAPPING.get(file.getContentType());
+    }
+
     public void transferFile(MultipartFile file,
                              String destinationDirectory,
                              String destinationFileName) throws IOException {
 
-        String realPath = servletContext.getRealPath(destinationDirectory);
-        Path directoryPath = Paths.get(realPath);
+        Path directoryPath = getPath(destinationDirectory);
 
         Path filePath = directoryPath.resolve(destinationFileName);
 
@@ -45,5 +49,9 @@ public class FileUploadService {
         for (MultipartFile file : files) {
             transferFile(file, destinationDirectory, destinationFileNameCB.apply(file));
         }
+    }
+
+    public Path getPath(String pathLocation) {
+        return Paths.get(servletContext.getRealPath(pathLocation));
     }
 }

@@ -11,7 +11,7 @@ const navbarHoverClass ='navbar-hover';
 
 const SiteNavbar = () => {
 
-  const { isLoggedIn, loading, onLogout } = useContext(AuthContext);
+  const { isLoggedIn, avatarSrc, loading, onLogout } = useContext(AuthContext);
 
   const collapsedBreakpoints = {
     small: true,
@@ -86,7 +86,7 @@ const SiteNavbar = () => {
                         display: 'flex',
                         alignItems: 'center'
                       }}>
-                        <UserAvatar src={"/example-profile.jpg"} style={{
+                        <UserAvatar src={avatarSrc} style={{
                           width: '2.5rem',
                           height: '2.5rem'
                         }} />

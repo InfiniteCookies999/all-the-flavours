@@ -42,3 +42,5 @@ image-converting/images/
 
 server/public/images/upload/recipes/*
 !server/public/images/upload/recipes/mock*
+
+server/public/images/upload/avatars/*

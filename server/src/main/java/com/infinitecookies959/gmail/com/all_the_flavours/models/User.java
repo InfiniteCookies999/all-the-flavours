@@ -3,6 +3,8 @@ package com.infinitecookies959.gmail.com.all_the_flavours.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.constraints.UserConstraints;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.RegistrationValidationGroup;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -56,8 +58,8 @@ public class User {
     private String encodedPassword;
 
     @Transient // Do not save to database.
-    @NotEmpty
-    @Pattern(regexp = UserConstraints.PASSWORD_PATTERN)
+    @NotEmpty(groups = RegistrationValidationGroup.class)
+    @Pattern(regexp = UserConstraints.PASSWORD_PATTERN, groups = RegistrationValidationGroup.class)
     @JsonProperty(required = true, access = JsonProperty.Access.WRITE_ONLY) // Enforce that when the user sends this object they include the password.
     private String password;
 
@@ -85,7 +87,11 @@ public class User {
     @ToString.Exclude
     private List<Review> reviews;
 
-    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
+    @ToString.Exclude
     private String avatarImage;
+
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    private String avatarSrc;
 
 }

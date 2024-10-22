@@ -5,12 +5,14 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [avatarSrc, setAvatarSrc] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      axios.get("/api/auth/is-logged-in")
+      axios.get("/api/auth/session-info")
         .then(reponse => {
-          setIsLoggedIn(reponse.data.status)
+          setAvatarSrc(reponse.data.avatarSrc);
+          setIsLoggedIn(reponse.data.isLoggedIn);
           setLoading(false);
         })
         .catch(error => console.log(error));
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, loading, onLogout }}>
+        <AuthContext.Provider value={{ isLoggedIn, avatarSrc, setAvatarSrc, loading, onLogout }}>
             {children}
         </AuthContext.Provider>
     );

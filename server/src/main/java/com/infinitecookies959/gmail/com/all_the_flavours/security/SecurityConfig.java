@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").anonymous()
                         // Anyone can check if they are logged in.
-                        .requestMatchers(HttpMethod.GET, "/api/auth/is-logged-in").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/session-info").permitAll()
                         // All other api requests must require login.
                         // Allow access to all other non-API requests.
                         .requestMatchers("/api/*").authenticated()

@@ -10,6 +10,8 @@ import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         try {
             authService.authenticate(loginRequest, request.getSession(true));
             return ResponseEntity.ok().build();
@@ -77,10 +79,9 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @Validated({ Default.class, RegistrationValidationGroup.class })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Validated(RegistrationValidationGroup.class)
-                                      @RequestBody
-                                      User userRequest,
+    public ResponseEntity<?> register(@RequestBody User userRequest,
                                       HttpServletRequest request) {
         try {
             User user = authService.register(userRequest, request.getSession(true));

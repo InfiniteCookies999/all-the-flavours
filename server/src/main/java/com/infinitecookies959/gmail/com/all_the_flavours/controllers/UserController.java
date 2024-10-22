@@ -6,6 +6,7 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileT
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +41,10 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    private boolean isUserAuthorizedToUpdate(SessionPrincipal session, Long userId) {
+    private boolean notAuthorizedToUpdate(SessionPrincipal session, Long userId) {
         // If we were to allow admin code then we would also check if they are an
         // admin here.
-        return Objects.equals(userService.getSessionUser(session).getId(), userId);
+        return !Objects.equals(userService.getSessionUser(session).getId(), userId);
     }
 
     @PatchMapping(value = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -53,7 +54,7 @@ public class UserController {
                                                @FileType(accepted = { "image/jpg", "image/jpeg", "image/png", "image/webp" })
                                                MultipartFile file,
                                                @AuthenticationPrincipal SessionPrincipal session) throws IOException {
-        if (!isUserAuthorizedToUpdate(session, userId)) {
+        if (notAuthorizedToUpdate(session, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -67,9 +68,9 @@ public class UserController {
 
     @PatchMapping("/{userId}/name")
     public ResponseEntity<?> updateUserName(@PathVariable Long userId,
-                                            @RequestBody UserNameUpdateRequest request,
+                                            @Valid @RequestBody UserNameUpdateRequest request,
                                             @AuthenticationPrincipal SessionPrincipal session) {
-        if (!isUserAuthorizedToUpdate(session, userId)) {
+        if (notAuthorizedToUpdate(session, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

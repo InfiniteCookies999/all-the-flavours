@@ -4,6 +4,7 @@ import com.infinitecookies959.gmail.com.all_the_flavours.models.Review;
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.ReviewService;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +29,7 @@ public class ReviewController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getReviews(@RequestParam long recipeId,
-                                                           @RequestParam(defaultValue = "0") int page) {
+                                                          @RequestParam(defaultValue = "0") int page) {
         Page<Review> reviewPage = reviewService.getReviews(recipeId, page, VIEWING_PAGE_SIZE);
         List<Review> reviews = reviewPage.getContent();
         return ResponseEntity.ok(Map.of(
@@ -38,15 +39,15 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody Review review,
-                             @AuthenticationPrincipal SessionPrincipal session) {
+    public ResponseEntity<Review> createReview(@Valid @RequestBody Review review,
+                                               @AuthenticationPrincipal SessionPrincipal session) {
         review.setReviewer(userService.getSessionUser(session));
         return ResponseEntity.ok(reviewService.saveReview(review));
     }
 
     @PutMapping
-    public ResponseEntity<Review> updateReview(@RequestBody Review review,
-                             @AuthenticationPrincipal SessionPrincipal session) {
+    public ResponseEntity<Review> updateReview(@Valid @RequestBody Review review,
+                                               @AuthenticationPrincipal SessionPrincipal session) {
         review.setReviewer(userService.getSessionUser(session));
         return ResponseEntity.ok(reviewService.updateReview(review));
     }

@@ -72,9 +72,6 @@ public class User {
     @Pattern(regexp = UserConstraints.PHONE_PATTERN)
     private String phone;
 
-    @Column
-    private String profileImage;
-
     @Column(length = UserConstraints.MAX_BIO_LENGTH)
     private String bio;
 
@@ -87,5 +84,8 @@ public class User {
     @JsonIgnore
     @ToString.Exclude
     private List<Review> reviews;
+
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    private String avatarImage;
 
 }

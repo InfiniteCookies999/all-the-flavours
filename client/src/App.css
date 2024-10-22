@@ -26,8 +26,42 @@
 
 /* Large screens */
 @media (min-width: 992px) {
-  .med-responsive-text {
+  .sm-responsive-text {
     font-size: 1.5rem;
+  }
+}
+
+
+/* Default font size */
+.sm-responsive-text {
+  font-size: 1.5rem;
+}
+
+/* Mobile screens */
+@media (max-width: 575px) {
+  .sm-responsive-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small screens */
+@media (min-width: 576px) and (max-width: 767px) {
+  .sm-responsive-text {
+    font-size: 1rem;
+  }
+}
+
+/* Medium screens */
+@media (min-width: 768px) and (max-width: 991px) {
+  .sm-responsive-text {
+    font-size: 1.1em;
+  }
+}
+
+/* Large screens */
+@media (min-width: 992px) {
+  .sm-responsive-text {
+    font-size: 1.1rem;
   }
 }
 

@@ -1,6 +1,5 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.HttpException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.UserEmailUpdateRequest;
@@ -39,12 +38,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        try {
-            authService.authenticate(loginRequest, request.getSession(true));
-            return ResponseEntity.ok().build();
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+        authService.authenticate(loginRequest, request.getSession(true));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/session-info")
@@ -84,38 +79,26 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User userRequest,
                                       HttpServletRequest request) {
-        try {
-            User user = authService.register(userRequest, request.getSession(true));
-            return ResponseEntity.ok(user);
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+
+        User user = authService.register(userRequest, request.getSession(true));
+        return ResponseEntity.ok(user);
     }
 
     @PatchMapping("/email")
     public ResponseEntity<?> updateUserEmail(@Valid @RequestBody UserEmailUpdateRequest request,
                                              @AuthenticationPrincipal SessionPrincipal session) {
-        User user = userService.getSessionUser(session);
 
-        try {
-            authService.updateEmail(user.getId(), request.getEmail(), request.getPassword());
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+        User user = userService.getSessionUser(session);
+        authService.updateEmail(user.getId(), request.getEmail(), request.getPassword());
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<?> updateUserPassword(@Valid @RequestBody UserPasswordUpdateRequest request,
                                                 @AuthenticationPrincipal SessionPrincipal session) {
+
         User user = userService.getSessionUser(session);
-
-        try {
-            authService.updatePassword(user.getId(), request.getCurrentPassword(), request.getNewPassword());
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
-
+        authService.updatePassword(user.getId(), request.getCurrentPassword(), request.getNewPassword());
         return ResponseEntity.ok().build();
     }
 }

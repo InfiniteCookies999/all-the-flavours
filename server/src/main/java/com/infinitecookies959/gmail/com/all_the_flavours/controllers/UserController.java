@@ -1,6 +1,5 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.HttpException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.UserNameUpdateRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.UserPhoneUpdateRequest;
@@ -61,11 +60,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        try {
-            userService.updateAvatarImage(userId, file);
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+        userService.updateAvatarImage(userId, file);
         return ResponseEntity.ok().build();
     }
 
@@ -77,11 +72,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        try {
-            userService.updateUserName(userId, request.getFirstName(), request.getLastName());
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+        userService.updateUserName(userId, request.getFirstName(), request.getLastName());
         return ResponseEntity.ok().build();
     }
 
@@ -93,11 +84,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        try {
-            userService.updateUserUsername(userId, request.getUsername());
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
+        userService.updateUserUsername(userId, request.getUsername());
         return ResponseEntity.ok().build();
     }
 
@@ -109,12 +96,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        try {
-            userService.updatePhone(userId, request.getPhone());
-        } catch (HttpException e) {
-            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
-        }
-
+        userService.updatePhone(userId, request.getPhone());
         return ResponseEntity.ok().build();
     }
 }

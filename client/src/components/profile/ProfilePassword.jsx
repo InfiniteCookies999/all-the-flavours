@@ -67,18 +67,18 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
       return;
     }
 
-    const currentPasswordHasErrors = updateCurrentPasswordError();
-    const newPasswordHasErrors = updateNewPasswordError();
+    const currentPasswordValid = updateCurrentPasswordError();
+    const newPasswordValid = updateNewPasswordError();
     
-    if (!currentPasswordHasErrors) {
+    if (!currentPasswordValid) {
       setCurrentPasswordValid(false);
     }
 
-    if (!newPasswordHasErrors) {
+    if (!newPasswordValid) {
       setNewPasswordValid(false);
     }
 
-    if (!currentPasswordHasErrors || !newPasswordHasErrors) {
+    if (!currentPasswordValid || !newPasswordValid) {
       return;
     }
 

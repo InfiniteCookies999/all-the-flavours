@@ -109,6 +109,9 @@ const SignUp = () => {
     } else if (!/[@$!%*?&]/.test(password)) {
       setPasswordError("missing special character");
       return false;
+    } else if (!passwordPattern.test(password)) {
+      setPasswordError("invalid characters in password");
+      return false;
     }
     return true;
   };
@@ -368,10 +371,6 @@ const SignUp = () => {
                   maxLength={100}
                   onChange={(e) => {
                     const password = e.target.value;
-                    if (!passwordPattern.test(password)) {
-                      e.preventDefault();
-                      return;
-                    }
 
                     if (updateRepeatedPasswordError(repeatedPassword, password)) {
                       setRepeatedPasswordValid(true);

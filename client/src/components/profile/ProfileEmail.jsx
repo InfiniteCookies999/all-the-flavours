@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { useError } from "../../contexts/ErrorContext";
 import axios from "axios";
+import ShowPasswordCheckbox from "../auth/ShowPasswordCheckBox";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 
@@ -18,6 +19,8 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
   const [password, setPassword] = useState('');
 
   const [sendingRequest, setSendingRequest] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const { setError } = useError();
 
@@ -122,7 +125,7 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
           {!emailValid && <div className="text-danger mt-1">{emailError}</div>}
           <Form.Control
             id="email-password-input"
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={"auth-input mt-2 " + (!passwordValid ? 'is-invalid' : '')}
             style={{ height: '2.2rem' }}
             value={password}
@@ -139,6 +142,7 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
             }}
             />
           {!passwordValid && <div className="text-danger mt-1">{passwordError}</div>}
+          <ShowPasswordCheckbox showPassword={showPassword} setShowPassword={setShowPassword} />
         </>
       ) : (
         <th style={valueStyle}>{user.email}</th>

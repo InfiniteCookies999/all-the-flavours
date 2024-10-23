@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { useError } from "../../contexts/ErrorContext";
+import ShowPasswordCheckbox from "../auth/ShowPasswordCheckBox";
 
 const passwordPattern = /^[a-zA-Z0-9@$!%*?&]*$/;
 
@@ -19,6 +20,8 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
   const [newPasswordError, setNewPasswordError] = useState('');
 
   const [sendingRequest, setSendingRequest] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const { setError } = useError();
 
@@ -50,6 +53,9 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
       return false;
     } else if (!/[@$!%*?&]/.test(newPassword)) {
       setNewPasswordError("missing special character");
+      return false;
+    } else if (!passwordPattern.test(newPassword)) {
+      setNewPasswordError("invalid characters in password");
       return false;
     }
     return true;
@@ -102,7 +108,7 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
         <>
           <Form.Control
             id="current-password-input"
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={"auth-input " + (!currentPasswordValid ? 'is-invalid' : '')}
             style={{ height: '2.2rem' }}
             placeholder="current password"
@@ -119,18 +125,13 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
           {!currentPasswordValid && <div className="text-danger mt-1">{currentPasswordError}</div>}
           <Form.Control
             id="new-password-input"
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={"auth-input mt-2 " + (!newPasswordValid ? 'is-invalid' : '')}
             style={{ height: '2.2rem' }}
             placeholder="new password"
             maxLength={100}
             onChange={(e) => {
               const newPassword = e.target.value;
-
-              if (!passwordPattern.test(newPassword)) {
-                e.preventDefault();
-                return;
-              }
 
               if (updateNewPasswordError()) {
                 setNewPasswordValid(true);
@@ -140,6 +141,7 @@ const ProfilePassword = ({ valueStyle, editIconStyle }) => {
             }}
             />
           {!newPasswordValid && <div className="text-danger mt-1">{newPasswordError}</div>}
+          <ShowPasswordCheckbox showPassword={showPassword} setShowPassword={setShowPassword} />
         </>
       ) : (
         <th style={valueStyle}>*************</th>

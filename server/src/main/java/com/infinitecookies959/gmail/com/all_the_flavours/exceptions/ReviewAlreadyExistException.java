@@ -1,7 +1,9 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.exceptions;
 
-public class ReviewAlreadyExistException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class ReviewAlreadyExistException extends HttpException {
     public ReviewAlreadyExistException() {
-        super("Review already exists");
+        super(HttpStatus.CONFLICT, "review already exists");
     }
 }

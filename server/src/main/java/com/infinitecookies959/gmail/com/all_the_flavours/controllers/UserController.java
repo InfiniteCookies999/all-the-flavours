@@ -1,11 +1,14 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.HttpException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.UserNameUpdateRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.UserPhoneUpdateRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.UserUsernameUpdateRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
+import com.infinitecookies959.gmail.com.all_the_flavours.services.AuthService;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +28,7 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthService authService) {
         this.userService = userService;
     }
 
@@ -60,8 +63,8 @@ public class UserController {
 
         try {
             userService.updateAvatarImage(userId, file);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
         return ResponseEntity.ok().build();
     }
@@ -76,9 +79,42 @@ public class UserController {
 
         try {
             userService.updateUserName(userId, request.getFirstName(), request.getLastName());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/username")
+    public ResponseEntity<?> updateUserUsername(@PathVariable Long userId,
+                                                @Valid @RequestBody UserUsernameUpdateRequest request,
+                                                @AuthenticationPrincipal SessionPrincipal session) {
+        if (notAuthorizedToUpdate(session, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+            userService.updateUserUsername(userId, request.getUsername());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/phone")
+    public ResponseEntity<?> updateUserPhone(@PathVariable Long userId,
+                                             @Valid @RequestBody UserPhoneUpdateRequest request,
+                                             @AuthenticationPrincipal SessionPrincipal session) {
+        if (notAuthorizedToUpdate(session, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+            userService.updatePhone(userId, request.getPhone());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+
         return ResponseEntity.ok().build();
     }
 }

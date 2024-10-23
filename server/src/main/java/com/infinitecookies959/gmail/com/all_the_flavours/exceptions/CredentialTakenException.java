@@ -1,7 +1,9 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.exceptions;
 
-public class CredentialTakenException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class CredentialTakenException extends HttpException {
     public CredentialTakenException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT, message);
     }
 }

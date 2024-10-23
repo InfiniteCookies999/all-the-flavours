@@ -8,11 +8,11 @@ import axios from "axios";
 import theme from "../../theme";
 import { AuthContext } from "../../contexts/AuthContext";
 import useCollapsed from "../../hooks/useCollapsed";
+import phoneInputRestrictor from "../../util/phoneInputRestrictor";
 
 const emailPattern = /^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 const namePattern = /^[A-Za-z\s-]*$/;
 const usernamePattern = /^[A-Za-z0-9_-]*$/;
-const phonePattern = /^(\d)*(-(\d)*)?(-(\d)*)?$/;
 const passwordPattern = /^[a-zA-Z0-9@$!%*?&]*$/;
 
 const FormError = ({ valid, otherValid, errorMsg, collapsed }) => {
@@ -173,7 +173,7 @@ const SignUp = () => {
         window.location.href = "/";
       })
       .catch((error) => {
-        if (error.response && error.response.status === 409 &&
+        if (error.response?.status === 409 &&
           error.response.data) {
           setSubmitError(error.response.data);
           setSubmitValid(false);
@@ -338,27 +338,9 @@ const SignUp = () => {
                   className={"auth-input " + (!phoneValid ? 'is-invalid' : '')}
                   maxLength={12}
                   onChange={(e) => {
-                    let phone = e.target.value;
-                    // Making sure it is either all digits or
-                    // digits with dashes in the correct positions.
-                    if (!phonePattern.test(phone)) {
-                      e.preventDefault();
+                    let phone = phoneInputRestrictor(e);
+                    if (phone === null) {
                       return;
-                    }
-
-                    // Inserting dashes at appropriate locations.
-                    const phoneNoDashes = phone.replaceAll("-", "");
-                    if (phoneNoDashes.length > 6) {
-                      phone = phoneNoDashes.substring(0, 3) + '-' +
-                              phoneNoDashes.substring(3, 6) + '-' +
-                              phoneNoDashes.substring(6);
-                    } else if (phoneNoDashes.length > 3) {
-                      phone = phoneNoDashes.substring(0, 3) + '-' +
-                              phoneNoDashes.substring(3);
-                    }
-
-                    if (phone.endsWith('-')) {
-                      phone = phone.substring(0, phone.length - 1);
                     }
 
                     if (updatePhoneError(phone)) {

@@ -1,6 +1,7 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.CredentialTakenException;
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.WrongCredentialsException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
 import com.infinitecookies959.gmail.com.all_the_flavours.repositories.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,14 +33,18 @@ public class AuthService {
         this.userService = userService;
     }
 
+    public boolean passwordsDoNotMatch(String password, User user) {
+        return !passwordEncoder.matches(password, user.getEncodedPassword());
+    }
+
     @Transactional(readOnly = true)
     public User checkCredentials(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+                .orElseThrow(() -> new WrongCredentialsException("Invalid email or password"));
 
         // Check the provided password against the encoded password.
-        if (!passwordEncoder.matches(request.getPassword(), user.getEncodedPassword())) {
-            throw new BadCredentialsException("Invalid email or password");
+        if (passwordsDoNotMatch(request.getPassword(), user)) {
+            throw new WrongCredentialsException("Invalid email or password");
         }
 
         return user;
@@ -80,5 +86,40 @@ public class AuthService {
         authenticate(session, user);
 
         return user;
+    }
+
+    @Transactional
+    public void updateEmail(Long userId, String email, String password) {
+
+        User user = userService.getUserOrThrow(userId);
+
+        // Only need to check if the email is taken if the email they are
+        // trying to change is not the email they already have.
+        if (!Objects.equals(email.toLowerCase(), user.getEmail().toLowerCase())) {
+            Optional<User> userByEmail = userRepository.findByEmail(email);
+            if (userByEmail.isPresent()) {
+                throw new CredentialTakenException("email taken");
+            }
+        }
+
+        if (passwordsDoNotMatch(password, user)) {
+            throw new WrongCredentialsException("wrong password");
+        }
+
+        user.setEmail(email);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updatePassword(Long userId, String currentPassword, String newPassword) {
+
+        User user = userService.getUserOrThrow(userId);
+        if (passwordsDoNotMatch(currentPassword, user)) {
+            throw new WrongCredentialsException("wrong password");
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setEncodedPassword(encodedPassword);
+        userRepository.save(user);
     }
 }

@@ -1,10 +1,12 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.RegistrationValidationGroup;
-import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
-import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.CredentialTakenException;
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.HttpException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.LoginRequest;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.UserEmailUpdateRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.UserPasswordUpdateRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.RegistrationValidationGroup;
+import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.AuthService;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,10 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
@@ -41,8 +42,8 @@ public class AuthController {
         try {
             authService.authenticate(loginRequest, request.getSession(true));
             return ResponseEntity.ok().build();
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
@@ -86,8 +87,35 @@ public class AuthController {
         try {
             User user = authService.register(userRequest, request.getSession(true));
             return ResponseEntity.ok(user);
-        } catch (CredentialTakenException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
+    }
+
+    @PatchMapping("/email")
+    public ResponseEntity<?> updateUserEmail(@Valid @RequestBody UserEmailUpdateRequest request,
+                                             @AuthenticationPrincipal SessionPrincipal session) {
+        User user = userService.getSessionUser(session);
+
+        try {
+            authService.updateEmail(user.getId(), request.getEmail(), request.getPassword());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<?> updateUserPassword(@Valid @RequestBody UserPasswordUpdateRequest request,
+                                                @AuthenticationPrincipal SessionPrincipal session) {
+        User user = userService.getSessionUser(session);
+
+        try {
+            authService.updatePassword(user.getId(), request.getCurrentPassword(), request.getNewPassword());
+        } catch (HttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

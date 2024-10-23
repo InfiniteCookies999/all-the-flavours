@@ -17,7 +17,7 @@ import CreateRecipe from "./components/recipe/CreateRecipe";
 import AboutUs from "./components/AboutUs";
 import ReviewsForRecipe from "./components/recipe/ReviewsForRecipe";
 import HomePage from "./components/HomePage";
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
 
 const App = () => {
 

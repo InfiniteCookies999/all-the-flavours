@@ -22,6 +22,8 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [originalEmail, setOriginalEmail] = useState('');
+
   const { setError } = useError();
 
   const updateEmailError = () => {
@@ -54,23 +56,34 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
   };
 
   const saveNewEmail = () => {
-    if (!updateEmailError()) {
-      setEmailValid(false);
-      return false;
-    }
-
-    if (!updatePasswordError()) {
-      setPasswordValid(false);
-      return false;
-    }
-  
-    setSendingRequest(true);
 
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('email-password-input');
 
     const email = emailInput.value;
     const password = passwordInput.value;
+
+    if (originalEmail === email) {
+      setShowEmailEdit(false);
+      return;
+    }
+    
+    const emailValid = updateEmailError();
+    const passwordValid = updatePasswordError();
+    
+    if (!emailValid) {
+      setEmailValid(false);
+    }
+
+    if (!passwordValid) {
+      setPasswordValid(false);
+    }
+
+    if (!emailValid || !passwordValid) {
+      return;
+    }
+  
+    setSendingRequest(true);
 
     axios.patch(`/api/auth/email`, {
       email,
@@ -92,8 +105,6 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
       setError(error);
     })
     .finally(() => setSendingRequest(false));
-
-    return true;
   };
 
   return (
@@ -157,7 +168,9 @@ const ProfileEmail = ({ user, setUser, valueStyle, editIconStyle }) => {
               saveNewEmail();
             } else {
               setPassword('');
+              setPasswordValid(true);
               setShowEmailEdit(true);  
+              setOriginalEmail(user.email);
             }
           }}>
           {showEmailEdit ? <>save</> : <>edit</>}

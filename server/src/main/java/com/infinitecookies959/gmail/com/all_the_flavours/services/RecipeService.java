@@ -107,6 +107,14 @@ public class RecipeService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<Recipe> getRecipesByUserId(Long userId, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return recipeRepository.findByUser_Id(userId, pageable).stream()
+                .map(this::fixupRecipe)
+                .toList();
+    }
+
     @Transactional
     public Recipe saveRecipe(Recipe recipe) throws IOException {
 

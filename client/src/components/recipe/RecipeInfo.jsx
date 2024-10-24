@@ -68,6 +68,9 @@ const RecipeInfo = ({ reviewsRef }) => {
           display: 'flex',
           alignItems: 'center',
           width: 'fit-content'
+        }}
+        onClick={() => {
+          window.location.href = "/user/" + context.user.username;
         }}>
           <UserAvatar src={context.user.avatarSrc} style={{
             width: '40px',

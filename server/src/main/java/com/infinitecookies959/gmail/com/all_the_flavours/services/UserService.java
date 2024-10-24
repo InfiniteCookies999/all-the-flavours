@@ -49,18 +49,25 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    private User fixupUser(User user) {
+        String existingAvatarImage = user.getAvatarImage();
+        if (existingAvatarImage != null) {
+            // We want to store it into a different variable because JPA will
+            // have state persistence across a request which can lead to this
+            // having the wrong state on multiple calls.
+            user.setAvatarSrc("/" + AVATAR_IMAGE_UPLOAD_PATH + "/" + existingAvatarImage);
+        }
+        return user;
+    }
+
     @Transactional(readOnly = true)
     public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id).map(user -> {
-            String existingAvatarImage = user.getAvatarImage();
-            if (existingAvatarImage != null) {
-                // We want to store it into a different variable because JPA will
-                // have state persistence across a request which can lead to this
-                // having the wrong state on multiple calls.
-                user.setAvatarSrc("/" + AVATAR_IMAGE_UPLOAD_PATH + "/" + existingAvatarImage);
-            }
-            return user;
-        });
+        return userRepository.findById(id).map(this::fixupUser);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username).map(this::fixupUser);
     }
 
     public User getSessionUser(SessionPrincipal session) {

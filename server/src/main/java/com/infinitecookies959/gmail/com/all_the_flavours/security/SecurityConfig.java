@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/reviews/*").permitAll()
                         // Allow the user to get other user's profiles
                         .requestMatchers(HttpMethod.GET, "/api/users/{userId:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/by-username/*").permitAll()
                         // Login and registration are only for non-logged in users.
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").anonymous()

@@ -13,7 +13,7 @@ const ReviewListing = ({ reviews, loadMoreRef=null }) => {
         ref={index === reviews.length - 1 ? loadMoreRef : null}
         >
           <StarRating rating={review.rating / 2} showCursor={false} />
-          <a href={`/user/${review.reviewer.id}`} style={{
+          <a href={`/user/${review.reviewer.username}`} style={{
             display: 'flex',
             alignItems: 'center',
             textDecoration: 'none',

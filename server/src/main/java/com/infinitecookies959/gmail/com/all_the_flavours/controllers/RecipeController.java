@@ -54,6 +54,12 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getLatestRecipes());
     }
 
+    @GetMapping("/by-user")
+    public ResponseEntity<List<Recipe>> getRecipesByUser(@RequestParam Long userId,
+                                                         @RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok(recipeService.getRecipesByUserId(userId, page, VIEWING_PAGE_SIZE));
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Long>> createRecipe(@Valid @ModelAttribute Recipe recipe,
                                                           @AuthenticationPrincipal SessionPrincipal session)

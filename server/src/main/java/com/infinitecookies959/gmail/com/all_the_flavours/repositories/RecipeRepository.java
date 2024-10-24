@@ -18,4 +18,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     List<Recipe> findFirst8ByOrderByCreationDateDesc();
 
+    Page<Recipe> findByUser_Id(Long userId, Pageable pageable);
+
 }

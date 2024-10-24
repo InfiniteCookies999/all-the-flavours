@@ -283,10 +283,143 @@ public class MockReviewsCreator implements MockCreator {
 
     }
 
+    public void addMocksToClassicChocolateChipCookies() {
+        Recipe recipe = recipeService.getRecipeByTitle("Classic Chocolate Chip Cookies").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("jane-doe@gmail.com").orElseThrow();
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("These cookies are perfection! Crispy on the outside and chewy on the inside.");
+        review1.setRating(2, false);
+        reviewService.saveReview(review1);
+
+        User reviewer2 = userService.getUserByEmail("david-clark@gmail.com").orElseThrow();
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("The best chocolate chip cookies I've ever tasted. Melt-in-your-mouth goodness!");
+        review2.setRating(3, true);
+        reviewService.saveReview(review2);
+
+    }
+
+    public void addMocksToSkilletPork() {
+
+        Recipe recipe = recipeService.getRecipeByTitle("Skillet Garlic/Pepper Pork Chops").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("susan-smith@gmail.com").orElseThrow();
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("Delicious skillet pork! The seasoning was perfect, and it was cooked to perfection.");
+        review1.setRating(5, false);
+        reviewService.saveReview(review1);
+
+        User reviewer2 = userService.getUserByEmail("john-doe@gmail.com").orElseThrow();
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("The best skillet pork I've ever made! Tender and flavorful, a must-try.");
+        review2.setRating(5, false);
+        reviewService.saveReview(review2);
+
+    }
+
+    public void addMocksToSoftServeIceCream() {
+        Recipe recipe = recipeService.getRecipeByTitle("Soft Serve Ice Cream").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("jane-doe@gmail.com").orElseThrow();
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("Incredibly smooth and creamy soft serve! It’s like getting it fresh from an ice cream truck.");
+        review1.setRating(4, false);
+        reviewService.saveReview(review1);
+
+        User reviewer2 = userService.getUserByEmail("alice-johnson@gmail.com").orElseThrow();
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("Delicious soft serve ice cream! It has the perfect texture and sweetness.");
+        review2.setRating(4, false);
+        reviewService.saveReview(review2);
+    }
+
+    public void addMocksToRiceSushiBowl() {
+        Recipe recipe = recipeService.getRecipeByTitle("Rice Sushi Bowl").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("bob-williams@gmail.com").orElseThrow();
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("This sushi bowl is so fresh and flavorful! It's like having sushi but easier to make.");
+        review1.setRating(5, false);
+        reviewService.saveReview(review1);
+
+        User reviewer2 = userService.getUserByEmail("charlie-brown@gmail.com").orElseThrow();
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("A perfect combination of ingredients! It tasted like a deconstructed sushi roll. So good!");
+        review2.setRating(5, false);
+        reviewService.saveReview(review2);
+    }
+
+    public void addMocksToCookedShrimp() {
+        Recipe recipe = recipeService.getRecipeByTitle("Cooked Shrimp").orElseThrow();
+
+        Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
+        if (!existingReviews.isEmpty()) {
+            return; // Return if there are already reviews
+        }
+
+        User reviewer1 = userService.getUserByEmail("david-clark@gmail.com").orElseThrow();
+        Review review1 = new Review();
+        review1.setReviewer(reviewer1);
+        review1.setRecipe(recipe);
+        review1.setText("Absolutely delicious shrimp! Perfectly cooked and seasoned, just the way I like it.");
+        review1.setRating(4, false);
+        reviewService.saveReview(review1);
+
+        User reviewer2 = userService.getUserByEmail("alice-johnson@gmail.com").orElseThrow();
+        Review review2 = new Review();
+        review2.setReviewer(reviewer2);
+        review2.setRecipe(recipe);
+        review2.setText("The shrimp came out amazing! Tender and full of flavor, a fantastic dish.");
+        review2.setRating(3, true);
+        reviewService.saveReview(review2);
+    }
+
     @Override
     public void createMocks() {
         addMocksToTonkotsuRamen();
         addMocksToSausageWithPasta();
         addMocksToHawaiianPizza();
+        addMocksToClassicChocolateChipCookies();
+        addMocksToSkilletPork();
+        addMocksToSoftServeIceCream();
+        addMocksToRiceSushiBowl();
+        addMocksToCookedShrimp();
     }
 }

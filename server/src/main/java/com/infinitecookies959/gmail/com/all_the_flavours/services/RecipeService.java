@@ -17,18 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class RecipeService {
-
-    private static final Map<String, String> FILE_TYPE_MAPPING = Map.of(
-            "image/png", "png",
-            "image/jpg", "jpg",
-            "image/jpeg", "jpeg",
-            "image/webp", "webp"
-    );
 
     private static final String IMAGE_UPLOAD_PATH = "images/upload/recipes";
 

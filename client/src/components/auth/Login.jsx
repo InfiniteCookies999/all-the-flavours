@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
 import theme from "../../theme";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useError } from "../../contexts/ErrorContext";
 import AuthContainer from "./AuthContainer";
@@ -39,7 +39,9 @@ const Login = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  document.title = "Login";
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
 
   const updatePasswordError = (password) => {
     const passwordValid = password.length > 0;

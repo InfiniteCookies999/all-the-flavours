@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import ErrorInfo from "./ErrorInfo";
 
 const NotFound = () => {
   const location = window.location;
 
-  document.title = "Not found (404)";
-
+  useEffect(() => {
+    document.title = "Not found (404)";
+  }, []);
+  
   return <ErrorInfo infoColumn={
     <>
       <span style={{ fontSize: '5rem' }}>404</span>

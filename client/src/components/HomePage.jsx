@@ -52,7 +52,9 @@ const HomePage = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  document.title = "Home";
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
 
   useEffect(() => {
   

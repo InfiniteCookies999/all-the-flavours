@@ -40,7 +40,9 @@ const Profile = () => {
 
   const { isLoggedIn, setAvatarSrc } = useContext(AuthContext);
 
-  document.title = "Profile";
+  useEffect(() => {
+    document.title = "Profile";
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) return;

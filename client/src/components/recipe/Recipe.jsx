@@ -40,7 +40,9 @@ const Recipe = () => {
 
   const collapsed = useCollapsed();
 
-  document.title = "Recipe";
+  useEffect(() => {
+    document.title = "Recipe";
+  }, []);
   
   useEffect(() => {
     axios.get(`/api/recipes/${id}`)

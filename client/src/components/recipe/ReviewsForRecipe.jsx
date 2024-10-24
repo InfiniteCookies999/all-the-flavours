@@ -20,6 +20,10 @@ const ReviewsForRecipe = () => {
   const { setError } = useError();
 
   useEffect(() => {
+    document.title = "Reviews";
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
     if (prevPage === page) {
       return;

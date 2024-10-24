@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useWindowResize from "../hooks/useWindowResize";
 import theme from "../theme";
 import useResponsiveValue from "../hooks/useResponsitveValue";
@@ -25,7 +25,9 @@ const AboutUs = () => {
 
   const paragraphPadding = useResponsiveValue(paragraphPaddingBreakpoints);
 
-  document.title = "About Us";
+  useEffect(() => {
+    document.title = "About Us";
+  }, []);
 
   const imageHeightChange = useCallback(() => {
     const imageCover = imageCoverRef.current;

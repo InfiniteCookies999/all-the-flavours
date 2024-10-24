@@ -22,6 +22,10 @@ function useFetchRecipes() {
   const { setError } = useError();
 
   useEffect(() => {
+    document.title = "Recipes";
+  }, []);
+
+  useEffect(() => {
     if (prevPage === page) {
       return;
     }
@@ -87,8 +91,6 @@ const RecipeListing = () => {
   const loadMoreRef = useRef();
 
   const collapsed = useCollapsed();
-
-  document.title = "Recipes";
 
   // Code to detect intersection with last element and so that
   // more recipes can be loaded.

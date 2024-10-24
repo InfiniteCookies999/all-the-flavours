@@ -23,7 +23,9 @@ const UserPage = () => {
 
   const { setError } = useError();
   
-  document.title = "User Page";
+  useEffect(() => {
+    document.title = "User Page";
+  }, []);
 
   useEffect(() => {
     if (!username) {

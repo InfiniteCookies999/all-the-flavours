@@ -1,6 +1,6 @@
 import { Col, Form, Row } from "react-bootstrap";
 import AuthContainer from "./AuthContainer";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PrimaryButton from "../PrimaryButton";
 import ShowPasswordCheckbox from "./ShowPasswordCheckBox";
 import { useError } from "../../contexts/ErrorContext";
@@ -64,7 +64,9 @@ const SignUp = () => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  document.title = "Sign up";
+  useEffect(() => {
+    document.title = "Sign up";
+  }, []);
 
   const updateNotEmptyError = (field, setError) => {
     const fieldValid = field.length !== 0;

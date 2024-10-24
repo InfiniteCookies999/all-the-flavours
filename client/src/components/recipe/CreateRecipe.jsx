@@ -57,7 +57,9 @@ const CreateRecipe = () => {
 
   const [loading, setLoading] = useState(false);
 
-  document.title = "Create recipe";
+  useEffect(() => {
+    document.title = "Create recipe";
+  }, []);
 
   const updateTitleError = () => {
     if (title.length === 0) {

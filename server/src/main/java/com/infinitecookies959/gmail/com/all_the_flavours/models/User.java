@@ -69,6 +69,7 @@ public class User {
     private String phone;
 
     @Column(length = UserConstraints.MAX_BIO_LENGTH)
+    @Size(max = UserConstraints.MAX_BIO_LENGTH)
     private String bio;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

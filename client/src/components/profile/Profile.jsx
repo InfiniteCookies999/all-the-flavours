@@ -12,6 +12,7 @@ import ProfileUsername from "./ProfileUsername";
 import ProfileEmail from "./ProfileEmail";
 import ProfilePhone from "./ProfilePhone";
 import ProfilePassword from "./ProfilePassword";
+import PrimaryButton from "../PrimaryButton";
 
 const valueStyle = {
   color: 'gray',
@@ -31,6 +32,10 @@ const Profile = () => {
 
   const [user, setUser] = useState(null);
 
+  const [bioError, setBioError] = useState('');
+  const [bioValid, setBioValid] = useState(true);
+  const [bioSubmittedMsg, setBioSubmittedMsg] = useState('');
+
   const { setError } = useError();
 
   const { isLoggedIn, setAvatarSrc } = useContext(AuthContext);
@@ -49,7 +54,6 @@ const Profile = () => {
   }, [setError, isLoggedIn]);
 
   const onSelectAvatar = () => {
-    
     const selector = document.getElementById('avatar-selector');
 
     selector.onchange = () => {
@@ -77,6 +81,30 @@ const Profile = () => {
     };
 
     selector.click();
+  };
+
+  const updateBioErrors = () => {
+    const input = document.getElementById('bio-input');
+
+    const bio = input.value;
+    if (bio === '') {
+      setBioError("empty");
+      return false;
+    }
+    return true;
+  };
+
+  const saveNewBio = () => {
+    
+    if (!updateBioErrors()) {
+      setBioValid(false);
+      return;
+    }
+
+    const bio = user.bio;
+    axios.patch(`/api/users/${user.id}/bio`, { bio })
+      .then(() => setBioSubmittedMsg("Successfully updated bio"))
+      .catch(error => setError(error));
   };
 
   if (!isLoggedIn) {
@@ -187,14 +215,48 @@ const Profile = () => {
         <div>
           <h4>Biography</h4>
           <Form.Control
-            className="auth-input"
+            id="bio-input"
+            className={"auth-input " + (!bioValid ? 'is-invalid' : '')}
             style={{ marginTop: '2rem' }}
             as="textarea" 
             rows={5}
-            value={user.bio}
+            value={user.bio || ''}
             maxLength={500}
+            onChange={(e) => {
+              const bio = e.target.value;
+
+              setBioSubmittedMsg('');
+
+              if (updateBioErrors()) {
+                setBioValid(true);
+              }
+
+              setUser(prevUser => ({
+                ...prevUser,
+                bio
+              }));
+            }}
             placeholder="Describe yourself!"
           />
+          {!bioValid && <div className="text-danger mt-1">{bioError}</div>}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <PrimaryButton className="mt-2" onClick={saveNewBio}>
+              Save Bio
+            </PrimaryButton>
+            <span style={{ color: 'gray', marginLeft: '0.5rem' }}>{bioSubmittedMsg}</span>
+          </div>
+
+          <div className="mt-4">
+            <h4>See your user page</h4>
+            <PrimaryButton onClick={() => {
+              window.location.href = "/user/" + user.username;
+            }}>
+              User Page
+            </PrimaryButton>
+          </div>
         </div>
         <style>
           {`

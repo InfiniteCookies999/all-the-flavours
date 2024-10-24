@@ -1,9 +1,6 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.controllers;
 
-import com.infinitecookies959.gmail.com.all_the_flavours.models.User;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.UserNameUpdateRequest;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.UserPhoneUpdateRequest;
-import com.infinitecookies959.gmail.com.all_the_flavours.models.UserUsernameUpdateRequest;
+import com.infinitecookies959.gmail.com.all_the_flavours.models.*;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.validation.FileType;
 import com.infinitecookies959.gmail.com.all_the_flavours.security.SessionPrincipal;
 import com.infinitecookies959.gmail.com.all_the_flavours.services.AuthService;
@@ -97,6 +94,18 @@ public class UserController {
         }
 
         userService.updatePhone(userId, request.getPhone());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/bio")
+    public ResponseEntity<?> updateUserBio(@PathVariable Long userId,
+                                           @Valid @RequestBody UserBioUpdateRequest request,
+                                           @AuthenticationPrincipal SessionPrincipal session) {
+        if (notAuthorizedToUpdate(session, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        userService.updateBio(userId, request.getBio());
         return ResponseEntity.ok().build();
     }
 }

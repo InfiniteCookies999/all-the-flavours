@@ -127,4 +127,11 @@ public class UserService {
         user.setPhone(phone);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateBio(Long userId, String bio) {
+        User user = getUserOrThrow(userId);
+        user.setBio(bio);
+        userRepository.save(user);
+    }
 }

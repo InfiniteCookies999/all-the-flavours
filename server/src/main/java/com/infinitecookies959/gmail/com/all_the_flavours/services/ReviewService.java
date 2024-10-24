@@ -1,6 +1,7 @@
 package com.infinitecookies959.gmail.com.all_the_flavours.services;
 
 import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.ReviewAlreadyExistException;
+import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.UpdateNonExistentModelException;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Recipe;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.RecipeRank;
 import com.infinitecookies959.gmail.com.all_the_flavours.models.Review;
@@ -11,9 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.infinitecookies959.gmail.com.all_the_flavours.exceptions.UpdateNonExistentModelException;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,10 +21,12 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final RecipeRankRepository recipeRankRepository;
+    private final ImageResolveService imageResolveService;
 
-    public ReviewService(ReviewRepository reviewRepository, RecipeRankRepository recipeRankRepository) {
+    public ReviewService(ReviewRepository reviewRepository, RecipeRankRepository recipeRankRepository, ImageResolveService imageResolveService) {
         this.reviewRepository = reviewRepository;
         this.recipeRankRepository = recipeRankRepository;
+        this.imageResolveService = imageResolveService;
     }
 
     public double getRecipeScore(Recipe recipe) {
@@ -142,10 +143,16 @@ public class ReviewService {
         return review;
     }
 
+    private Review fixupReview(Review review) {
+        imageResolveService.fixupUserAvatarSrc(review.getReviewer());
+        return review;
+    }
+
     @Transactional(readOnly = true)
     public Page<Review> getReviews(long recipeId, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return reviewRepository.findByRecipeIdOrderByCreationDateDesc(recipeId, pageable);
+        return reviewRepository.findByRecipeIdOrderByCreationDateDesc(recipeId, pageable)
+                .map(this::fixupReview);
     }
 
     @Transactional(readOnly = true)
@@ -161,6 +168,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Optional<Review> getReviewByUserIdAndRecipe(Long userId, Recipe recipe) {
-        return reviewRepository.findByRecipeIdAndReviewerId(recipe.getId(), userId);
+        return reviewRepository.findByRecipeIdAndReviewerId(recipe.getId(), userId)
+                .map(this::fixupReview);
     }
 }

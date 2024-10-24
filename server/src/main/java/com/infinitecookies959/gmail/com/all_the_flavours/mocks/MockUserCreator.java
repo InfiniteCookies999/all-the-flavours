@@ -26,6 +26,8 @@ public class MockUserCreator implements MockCreator {
         user.setPassword("Password123!");
         user.setUsername("susan-smith");
         user.setPhone("222-333-4444");
+        user.setBio("I’ve always had a passion for baking cookies! There's something magical about the aroma of freshly baked cookies filling the kitchen. I love experimenting with different flavors and sharing my favorite recipes with others, hoping to bring joy and sweetness to their lives.");
+        user.setAvatarImage("mock-avatar.png");
         return user;
     }
 

@@ -24,21 +24,25 @@ const CreateDirectionRow = ({
   return (
     <tr>
       <td>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <span 
-            className={"material-icons " + (index === 0 ? '' : 'direction-hover-pos-icon')}
-            style={{ fontSize: '2rem', color: index === 0 ? 'gray' : 'inherit', }}
-            onClick={() => handleDirectionMoveUp(index)}>
-            keyboard_arrow_up
-          </span>
-          <span style={{ fontSize: '1.3rem' }}>{index + 1}</span>
-          <span 
-            className={"material-icons " + (index === numDirections - 1 ? '' : 'direction-hover-pos-icon')}
-            style={{ fontSize: '2rem', color: index === numDirections - 1 ? 'gray' : 'inherit', }}
-            onClick={() => handleDirectionMoveDown(index)}>
-            keyboard_arrow_down
-          </span>
-        </div>
+        {index !== numDirections - 1 && (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span 
+              className={"material-icons " + (index === 0 ? '' : 'direction-hover-pos-icon')}
+              style={{ fontSize: '2rem', opacity: index === 0 ? 0 : 1 }}
+              onClick={() => handleDirectionMoveUp(index)}>
+              keyboard_arrow_up
+            </span>
+            <span style={{ fontSize: '1.3rem' }}>{index + 1}</span>
+            <span 
+              className={"material-icons " + (index === numDirections - 2 ? '' : 'direction-hover-pos-icon')}
+              style={{ fontSize: '2rem', opacity: index === numDirections - 2 ? 0 : 1 }}
+              onClick={() => handleDirectionMoveDown(index)}>
+              keyboard_arrow_down
+            </span>
+          </div>
+          </>
+        )}
       </td>
       <td>
         <Form.Control 

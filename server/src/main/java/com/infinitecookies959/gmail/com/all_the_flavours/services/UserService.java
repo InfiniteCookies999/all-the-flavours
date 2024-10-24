@@ -21,15 +21,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
-
-    private static final String AVATAR_IMAGE_UPLOAD_PATH = "images/upload/avatars";
+    private final ImageResolveService imageResolveService;
 
     public UserService(PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
-                       FileUploadService fileUploadService) {
+                       FileUploadService fileUploadService, ImageResolveService imageResolveService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.fileUploadService = fileUploadService;
+        this.imageResolveService = imageResolveService;
     }
 
     @Transactional
@@ -50,13 +50,7 @@ public class UserService {
     }
 
     private User fixupUser(User user) {
-        String existingAvatarImage = user.getAvatarImage();
-        if (existingAvatarImage != null) {
-            // We want to store it into a different variable because JPA will
-            // have state persistence across a request which can lead to this
-            // having the wrong state on multiple calls.
-            user.setAvatarSrc("/" + AVATAR_IMAGE_UPLOAD_PATH + "/" + existingAvatarImage);
-        }
+        imageResolveService.fixupUserAvatarSrc(user);
         return user;
     }
 
@@ -84,7 +78,7 @@ public class UserService {
         User user = getUserOrThrow(userId);
 
         String randomFileName = FileUploadService.getRandomizedFileName(file);
-        fileUploadService.transferFile(file, AVATAR_IMAGE_UPLOAD_PATH, randomFileName);
+        fileUploadService.transferFile(file, ImageResolveService.AVATAR_IMAGE_UPLOAD_PATH, randomFileName);
 
         String existingAvatarSrc = user.getAvatarSrc();
         if (existingAvatarSrc != null) {

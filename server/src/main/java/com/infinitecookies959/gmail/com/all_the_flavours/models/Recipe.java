@@ -67,8 +67,13 @@ public class Recipe {
     @CollectionTable(name = "recipe_images", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "image_path")
     @Size(max = RecipeConstraints.MAX_NUMBER_OF_IMAGES)
-    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
+    @ToString.Exclude
     private List<String> images;
+
+    @Transient
+    @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
+    private List<String> imagesSrc;
 
     @Transient // Do not save to database.
     @NotNull

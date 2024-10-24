@@ -22,27 +22,25 @@ import java.util.Optional;
 @Service
 public class RecipeService {
 
-    private static final String IMAGE_UPLOAD_PATH = "images/upload/recipes";
-
     private final RecipeRepository recipeRepository;
     private final FileUploadService fileUploadService;
     private final ReviewService reviewService;
     private final RecipeRankRepository recipeRankRepository;
+    private final ImageResolveService imageResolveService;
 
     public RecipeService(RecipeRepository recipeRepository,
                          FileUploadService fileUploadService,
-                         ReviewService reviewService, RecipeRankRepository recipeRankRepository) {
+                         ReviewService reviewService, RecipeRankRepository recipeRankRepository, ImageResolveService imageResolveService) {
         this.recipeRepository = recipeRepository;
         this.fileUploadService = fileUploadService;
         this.reviewService = reviewService;
         this.recipeRankRepository = recipeRankRepository;
+        this.imageResolveService = imageResolveService;
     }
 
     private void prefixImages(Recipe recipe) {
-        List<String> prefixedImages = recipe.getImages().stream()
-                .map(image -> "/" + IMAGE_UPLOAD_PATH + "/" + image)
-                .toList();
-        recipe.setImages(prefixedImages);
+        imageResolveService.fixupRecipeImagesSrc(recipe);
+        imageResolveService.fixupUserAvatarSrc(recipe.getUser());
     }
 
     private void setReviewInfo(Recipe recipe) {
@@ -128,7 +126,7 @@ public class RecipeService {
 
             MultipartFile[] files = recipe.getUploadImages();
 
-            fileUploadService.transferFiles(files, IMAGE_UPLOAD_PATH, file -> {
+            fileUploadService.transferFiles(files, ImageResolveService.IMAGE_UPLOAD_PATH, file -> {
                 String randomFileName = FileUploadService.getRandomizedFileName(file);
                 recipe.getImages().add(randomFileName);
                 return randomFileName;

@@ -6,6 +6,7 @@ import UserAvatar from "./UserAvatar";
 import theme from "../theme";
 import RecipeListItem from "./recipe/RecipeListItem";
 import useResponsiveValue from "../hooks/useResponsitveValue";
+import useCollapsed from "../hooks/useCollapsed";
 
 const UserPage = () => {
 
@@ -108,6 +109,8 @@ const UserPage = () => {
   
   const colClass = useResponsiveValue(colClassBreakpoints);
 
+  const collaposed = useCollapsed();
+
   if (!user) {
     return null;
   }
@@ -143,7 +146,7 @@ const UserPage = () => {
           <span style={{ color: 'gray' }}>@{user.username}</span>
         </div>
 
-        <div style={{ marginLeft: '2rem', padding: '1rem' }}>
+        <div style={{ marginLeft: '2rem', padding: '1rem', width: collaposed ? '100%' : '50%' }}>
           <h3 style={{ marginTop: '1rem' }}>Biography</h3>
           <p style={{ color: 'gray' }}>{user.bio || 'No biography at this time'}</p>
         </div>

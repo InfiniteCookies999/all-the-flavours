@@ -75,7 +75,7 @@ const Recipe = () => {
         <h1>{recipe.title}</h1>
         <RecipeInfo reviewsRef={reviewsRef} />
         <div style={{ marginTop: '1rem' }}>
-          <RecipeCarousel images={recipe.images} />
+          <RecipeCarousel images={recipe.imagesSrc} />
         </div>
         <RecipeDescription style={{ marginTop: '1rem' }} />
         <RecipeIngredients style={{ marginTop: '1rem' }} />

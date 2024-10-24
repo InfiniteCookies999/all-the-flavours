@@ -86,6 +86,7 @@ public class User {
     @ToString.Exclude
     private String avatarImage;
 
+    @Transient
     @JsonProperty(required = true, access = JsonProperty.Access.READ_ONLY)
     private String avatarSrc;
 

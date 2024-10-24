@@ -22,7 +22,7 @@ const RecipeListItem = ({ numberOfRecipes, index, recipe, colClass, loadMoreRef=
           flexGrow: 1
         }}
         to={`/recipe/${recipe.id}`}>
-          <img src={recipe.images[0]}
+          <img src={recipe.imagesSrc[0]}
               alt={`Alt ${recipe.id}`}
               className="d-block w-100"
               style={{

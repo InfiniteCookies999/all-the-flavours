@@ -79,7 +79,7 @@ const Recipe = () => {
         <RecipeIngredients style={{ marginTop: '1rem' }} />
         <RecipeDirections style={{ marginTop: '1rem' }} />
 
-        <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }} ref={reviewsRef}>
+        <div style={{ marginTop: '5rem', width: collapsed ? '100%' : '80%' }} ref={reviewsRef} className="no-print">
           <h1>Reviews</h1>
           
           {isLoggedIn ? (

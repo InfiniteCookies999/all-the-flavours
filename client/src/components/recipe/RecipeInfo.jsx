@@ -92,7 +92,14 @@ const RecipeInfo = ({ reviewsRef }) => {
           fontSize: '0.9rem',
           }}>
             Last updated {timeAgo(new Date(context.lastUpdated))}
-          </span>
+        </span>
+        <InfoSeperationBar height={'20px'} margin="0.8rem" />
+        <span
+          style={{ color: 'gray', fontSize: '1.8rem' }}
+          className="material-icons print-btn"
+          onClick={() => window.print()}>
+          print
+        </span>
         <style>
           {`
             .profile-link:hover {
@@ -101,6 +108,11 @@ const RecipeInfo = ({ reviewsRef }) => {
 
             .profile-link:hover span {
               color: gray !important;
+            }
+
+            .print-btn:hover {
+              cursor: pointer;
+              color: #111 !important;
             }
           `}
         </style>

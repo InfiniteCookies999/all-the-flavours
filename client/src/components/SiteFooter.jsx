@@ -95,7 +95,7 @@ const SiteFooter = () => {
   const notCollapsed = useResponsiveValue(collapsedBreakpoints);
 
   return (
-    <StyledFooter>
+    <StyledFooter className="no-print">
       <Row style={{
         // Remove margin because it causes body to overflow.
         margin: 0,

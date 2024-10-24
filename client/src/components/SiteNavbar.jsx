@@ -27,7 +27,7 @@ const SiteNavbar = () => {
   }
 
   return (
-    <div>
+    <div className="no-print">
       <Navbar bg='dark' variant='dark' expand='lg' style={{
         backgroundColor: theme.colors.primary,
         borderBottom: `2px solid ${theme.colors.primary}`,

@@ -375,7 +375,7 @@ const CreateRecipe = () => {
             disabled={loading}>
             Submit
           </PrimaryButton>
-          {!descriptionValid && <div className="text-danger mt-1">There is one or more errors in your form</div>}
+          {!submitValid && <div className="text-danger mt-1">There is one or more errors in your form</div>}
         </div>
 
       </Form>

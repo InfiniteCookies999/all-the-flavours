@@ -48,7 +48,7 @@ const ProfileUsername = ({ user, setUser, valueStyle, editIconStyle }) => {
       { username })
     .then(() => setShowUsernameEdit(false))
     .catch(error => {
-      if (error.response && error.response.status === 401 &&
+      if ((error.response?.status === 401 || error.response?.status === 409) &&
           error.response.data) {
         setUsernameError(error.response.data);
         setUsernameValid(false);

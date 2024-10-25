@@ -62,6 +62,9 @@ const CreateRecipe = () => {
   }, []);
 
   const updateTitleError = () => {
+    const input = document.getElementById('title-input');
+    const title = input.value;
+    
     if (title.length === 0) {
       setTitleError("empty");
       return false;
@@ -74,6 +77,9 @@ const CreateRecipe = () => {
   };
 
   const updateDescriptionError = () => {
+    const input = document.getElementById('description-input');
+    const description = input.value;
+
     if (description.length === 0) {
       setDescriptionError("empty");
       return false;
@@ -224,15 +230,7 @@ const CreateRecipe = () => {
     }
 
     const getFractionAmount = (ingredient) => {
-      switch (ingredient.fractionAmount) {
-      case '0': return 0;
-      case '½': return 0.5;
-      case '⅓': return 0.333333;
-      case '⅔': return 0.666666;
-      case '¼': return 0.25;
-      case '¾': return 0.75;
-      default: return 0;
-      }
+     return parseFloat(ingredient.fractionAmount);
     };
 
     const fileHolder = document.getElementById('imgs-file-input-holder');
@@ -252,7 +250,7 @@ const CreateRecipe = () => {
     ingredients.forEach((ingredient, index) => {
       if (index === ingredients.length - 1) return;
 
-      formData.append(`ingredients[${index}].quantity`, Number.parseInt(ingredient.wholeAmount) + getFractionAmount(ingredient));
+      formData.append(`ingredients[${index}].quantity`, Number.parseFloat(ingredient.wholeAmount) + getFractionAmount(ingredient));
       formData.append(`ingredients[${index}].unit`, ingredient.unit);
       formData.append(`ingredients[${index}].name`, ingredient.name);
     });
@@ -301,7 +299,8 @@ const CreateRecipe = () => {
     <CreateRecipeContainer>
       <h1>Create Recipe</h1>
       <Form className="mt-3" onSubmit={handleSubmit} noValidate>
-        <Form.Control type="text"
+        <Form.Control id="title-input"
+                      type="text"
                       className={"recipe-input " + (!titleValid ? 'is-invalid' : '')}
                       placeholder="Original Cookies"
                       maxLength={70}
@@ -314,7 +313,7 @@ const CreateRecipe = () => {
                       }} />
         {!titleValid && <div className="text-danger mt-1">{titleError}</div>}
 
-        <RecipeCarousel 
+        <RecipeCarousel
           images={images}
           setImages={setImages}
           setImagesValid={setImagesValid}
@@ -327,7 +326,8 @@ const CreateRecipe = () => {
         {!imagesValid && <div className="text-danger mt-1">{imagesError}</div>}
 
         <Form.Label className="mt-4" style={{ fontSize: '1.5rem' }}>Description</Form.Label>
-        <Form.Control 
+        <Form.Control
+          id="description-input"
           as="textarea" 
           className={"recipe-input " + (!descriptionValid ? 'is-invalid' : '')}
           rows={5}

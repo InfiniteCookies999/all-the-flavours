@@ -55,8 +55,6 @@ const RecipeInfo = ({ reviewsRef }) => {
 
   const context = useContext(RecipeContext);
 
-  console.log("context.user: ", context.user);
-
   return (
     <>
       <Rating reviewsRef={reviewsRef} />

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -70,12 +71,37 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Recipe> getRecipes(int page, int pageSize, String search) {
+    public List<Recipe> getRecipes(int page, int pageSize, String searchTitle, List<String> ingredients) {
 
         Pageable pageable = PageRequest.of(page, pageSize);
+
+        if (ingredients != null && !ingredients.isEmpty()) {
+            ingredients = ingredients.stream()
+                    .map(String::toLowerCase)
+                    .toList();
+            searchTitle = !searchTitle.isEmpty() ? searchTitle : "";
+
+            List<Recipe> filteredRecipes = new ArrayList<>();
+            for (String ingredient : ingredients) {
+                Page<Recipe> recipePage = recipeRepository.findByIngredientNameAndTitle(
+                        ingredient, searchTitle, pageable);
+                List<Recipe> recipes = fixupRecipes(recipePage);
+                if (filteredRecipes.isEmpty()) {
+                    filteredRecipes = recipes;
+                } else {
+                     filteredRecipes = filteredRecipes.stream()
+                             .filter(r1 -> recipes.stream()
+                                .anyMatch(r2 -> Objects.equals(r1.getId(), r2.getId())))
+                             .toList();
+                }
+            }
+
+            return filteredRecipes;
+        }
+
         Page<Recipe> recipePage;
-        if (search != null && !search.isEmpty()) {
-            recipePage = recipeRepository.findByTitleContainingIgnoreCase(search, pageable);
+        if (searchTitle != null && !searchTitle.isEmpty()) {
+            recipePage = recipeRepository.findByTitleLike(searchTitle, pageable);
         } else {
             recipePage = recipeRepository.findAll(pageable);
         }

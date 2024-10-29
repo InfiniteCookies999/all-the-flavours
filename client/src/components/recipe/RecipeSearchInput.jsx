@@ -5,26 +5,32 @@ import theme from "../../theme";
 const RecipeSearchInput = ({ style }) => {
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchIngredients, setSearchIngredients] = useState([]);
   
   useEffect(() => {
-    const getQueryParams = () => {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      return urlParams.get('search') || "";
-    };
-
-    const searchParam = getQueryParams();
-    if (searchParam) {
-      setSearchTerm(searchParam);
-    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    setSearchTerm(urlParams.get("search") || "");
+    setSearchIngredients(urlParams.getAll("ingredients") || "");
+    
   }, []);
 
   const handleSearch = () => {
+    let url = "/recipes?";
+
+    let filters = searchIngredients;
     if (searchTerm !== '') {
-      window.location.href = "/recipes?search=" + searchTerm;
-    } else {
-      window.location.href = "/recipes";
+      url = url + "search=" + searchTerm;
+    } else if (searchIngredients.length !== 0) {
+      url = url + "ingredients=" + filters[0];
+      filters = filters.slice(1);
     }
+    
+    for (const filter of filters) {
+      url += "&ingredients=" + filter;
+    }
+
+    window.location.href = url;
   };
 
   return (

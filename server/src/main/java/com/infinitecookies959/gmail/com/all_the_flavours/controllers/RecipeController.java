@@ -40,8 +40,9 @@ public class RecipeController {
 
     @GetMapping
     public ResponseEntity<List<Recipe>> getRecipes(@RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam(defaultValue = "") String search) {
-        return ResponseEntity.ok(recipeService.getRecipes(page, VIEWING_PAGE_SIZE, search));
+                                                   @RequestParam(defaultValue = "") String search,
+                                                   @RequestParam(defaultValue = "") List<String> ingredients) {
+        return ResponseEntity.ok(recipeService.getRecipes(page, VIEWING_PAGE_SIZE, search, ingredients));
     }
 
     @GetMapping("/popular")

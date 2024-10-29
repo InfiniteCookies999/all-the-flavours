@@ -341,7 +341,6 @@ const SignUp = () => {
                   placeholder="777-777-7777"
                   value={phone}
                   className={"auth-input " + (!phoneValid ? 'is-invalid' : '')}
-                  maxLength={12}
                   onChange={(e) => {
                     let phone = phoneInputRestrictor(e);
                     if (phone === null) {

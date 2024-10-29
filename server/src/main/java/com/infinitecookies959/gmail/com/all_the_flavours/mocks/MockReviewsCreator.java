@@ -23,7 +23,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     private void addMocksToTonkotsuRamen() {
-        Recipe recipe = recipeService.getRecipeByTitle("Tonkotsu Ramen").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Tonkotsu Ramen").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -152,7 +152,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     private void addMocksToSausageWithPasta() {
-        Recipe recipe = recipeService.getRecipeByTitle("Sausage with Pasta").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Sausage with Pasta").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -218,7 +218,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     private void addMocksToHawaiianPizza() {
-        Recipe recipe = recipeService.getRecipeByTitle("Hawaiian Pizza").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Hawaiian Pizza").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -284,7 +284,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     public void addMocksToClassicChocolateChipCookies() {
-        Recipe recipe = recipeService.getRecipeByTitle("Classic Chocolate Chip Cookies").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Classic Chocolate Chip Cookies").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -311,7 +311,7 @@ public class MockReviewsCreator implements MockCreator {
 
     public void addMocksToSkilletPork() {
 
-        Recipe recipe = recipeService.getRecipeByTitle("Skillet Garlic/Pepper Pork Chops").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Skillet Garlic/Pepper Pork Chops").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -337,7 +337,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     public void addMocksToSoftServeIceCream() {
-        Recipe recipe = recipeService.getRecipeByTitle("Soft Serve Ice Cream").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Soft Serve Ice Cream").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -362,7 +362,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     public void addMocksToRiceSushiBowl() {
-        Recipe recipe = recipeService.getRecipeByTitle("Rice Sushi Bowl").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Rice Sushi Bowl").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {
@@ -387,7 +387,7 @@ public class MockReviewsCreator implements MockCreator {
     }
 
     public void addMocksToCookedShrimp() {
-        Recipe recipe = recipeService.getRecipeByTitle("Cooked Shrimp").orElseThrow();
+        Recipe recipe = recipeService.getFirstRecipeByTitle("Cooked Shrimp").orElseThrow();
 
         Page<Review> existingReviews = reviewService.getReviews(recipe.getId(), 0, 1);
         if (!existingReviews.isEmpty()) {

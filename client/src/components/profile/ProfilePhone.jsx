@@ -59,7 +59,6 @@ const ProfilePhone = ({ user, setUser, valueStyle, editIconStyle }) => {
             style={{ height: '2.2rem' }}
             value={user.phone}
             placeholder="214-435-3122"
-            maxLength={12}
             onChange={(e) => {
               const phone = phoneInputRestrictor(e);
               if (phone === null) {

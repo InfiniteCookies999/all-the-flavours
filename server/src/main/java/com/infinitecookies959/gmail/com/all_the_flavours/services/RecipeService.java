@@ -150,11 +150,12 @@ public class RecipeService {
 
     @Transactional(readOnly = true)
     public boolean recipeExists(String title) {
-        return recipeRepository.findByTitle((title)).isPresent();
+        return !recipeRepository.findByTitle((title)).isEmpty();
     }
 
     @Transactional(readOnly = true)
-    public Optional<Recipe> getRecipeByTitle(String title) {
-        return recipeRepository.findByTitle(title);
+    public Optional<Recipe> getFirstRecipeByTitle(String title) {
+        List<Recipe> recipes = recipeRepository.findByTitle(title);
+        return recipes.isEmpty() ? Optional.empty() : Optional.of(recipes.getFirst());
     }
 }
